@@ -1,12 +1,17 @@
-FILE_NAME = 
+FILE_NAME = main.cpp 
+
+TEMPLATES_NAME = templates.tpp
+
+TEMPLATES_DIR = templates
 
 SRCS_DIR = srcs
 
-SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME))
+SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
+	$(addprefix $(TEMPLATES_DIR)/, $(TEMPLATES_NAME))
 
 CXX = g++
 
-INC = -I includes
+INC = -I includes/header.hpp
 
 CXXFLAGS = -Wall -Wextra -Werror $(INC) -std=c++98
 

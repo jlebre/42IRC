@@ -1,0 +1,4 @@
+/*
+To use at the end of an header file.
+Is included automatically.
+*/
