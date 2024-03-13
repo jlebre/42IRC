@@ -1,4 +1,5 @@
-FILE_NAME = main.cpp 
+FILE_NAME = main.cpp parser.cpp \
+		commands.cpp utils.cpp start.cpp
 
 TEMPLATES_NAME = templates.tpp
 
@@ -9,9 +10,9 @@ SRCS_DIR = srcs
 SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
 	$(addprefix $(TEMPLATES_DIR)/, $(TEMPLATES_NAME))
 
-CXX = g++
+CXX = c++
 
-INC = -I includes/header.hpp
+INC = -I includes
 
 CXXFLAGS = -Wall -Wextra -Werror $(INC) -std=c++98
 
@@ -22,7 +23,7 @@ NAME = ircserv
 all: $(NAME)
 
 $(NAME): $(SRCS)
-	@$(CXX) $(CXXFLAGS) $(SRCS) -o $(NAME)
+	@$(CXX) $(CXXFLAGS) -s $(SRCS) -o $(NAME)
 	@echo -e '[0;32m$(NAME) Compiled![0m'
 
 clean:
@@ -33,12 +34,9 @@ fclean: clean
 	@echo -e '[0;31m$(NAME) Removed![0m'
 
 re:
-	@make fclean
-	@make
+	@make -s fclean && make
 
 a:
-	@make re
-	@make clean
-	@./$(NAME) 80 password
+	@make -s re && ./$(NAME) 2000 hello
 
 .PHONY: all clean fclean re a
