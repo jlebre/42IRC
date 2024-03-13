@@ -37,6 +37,6 @@ re:
 	@make -s fclean && make
 
 a:
-	@make -s re && ./$(NAME) 2000 hello
+	@make -s re && ./$(NAME) 5000 hello
 
 .PHONY: all clean fclean re a

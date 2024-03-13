@@ -8,28 +8,36 @@ void IRCServer::start(int argc, char **argv)
 		return ;
 	std::cout << "IRCServer start" << std::endl;
 	create_socket(e.port);
-	std::cout << "Socket created: " << e.port << std::endl;
+	std::cout << "Socket created: " << _sock << std::endl;
 	if (listen(_sock, 5) < 0)
 	{
 		std::cerr << "Error: (Start) " << std::strerror(errno) << std::endl;
-		return;
+		exit(1);
 	}
 	main_loop(&e);
 }
 
 void IRCServer::create_socket(int port)
 {
-	_addr.sin_family = AF_INET;
-	_addr.sin_port = htons(port);
-	_addr.sin_addr.s_addr = INADDR_ANY;
-
 	_sock = socket(AF_INET, SOCK_STREAM, 0);
-	bind(_sock, (sockaddr *)&_addr, sizeof(_addr));
 	if (_sock == -1)
 	{
 		std::cerr << "Error: (Create Socket) " << std::strerror(errno) << std::endl;
-		return;
+		exit(1);
 	}
+
+	sockaddr_in _addr;
+	_addr.sin_family = AF_INET;
+	_addr.sin_addr.s_addr = INADDR_ANY;
+	_addr.sin_port = htons(port);
+
+	if (bind(_sock, (sockaddr *)&_addr, sizeof(_addr)) == -1)
+	{
+		std::cerr << "Error: (Bind) " << std::strerror(errno) << std::endl;
+		close(_sock);
+		exit(1);
+	}
+
 	return;
 }
 
