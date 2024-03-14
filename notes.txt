@@ -1,1 +1,0 @@
-Ports bellow 1024 require root privileges

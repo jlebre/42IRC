@@ -16,7 +16,8 @@
 # include <string>
 # include <sys/time.h>
 	  
-# define BUF_SIZE	4096
+# define BUF_SIZE		1024
+# define MAX_CLIENTS	100
 
 typedef struct s_vars
 {
@@ -64,6 +65,7 @@ class IRCServer
 		t_env   e;
 		int		_sock;
 		struct sockaddr_in _addr;
+		int		_buf[BUF_SIZE];
 		std::vector<int> _clients;
 };
 

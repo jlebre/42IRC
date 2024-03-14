@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+#	In this file:
+#	Start
+#	Create socket
+#	Main loop
+#	Handle client
+*/
+
 void IRCServer::start(int argc, char **argv)
 {
 	t_env e;
@@ -43,10 +51,12 @@ void IRCServer::create_socket(int port)
 
 void    IRCServer::main_loop(t_env *e)
 {
+	(void)e;
 	std::cout << "Main Loop" << std::endl;
 	while (true)
 	{
-		int client = accept(e->port, NULL, NULL);
+		std::cout << "Waiting for client..." << std::endl;
+		int client = accept(_sock, NULL, NULL);
 		if (client < 0)
 			continue;
 		handleClient(client);
@@ -56,5 +66,5 @@ void    IRCServer::main_loop(t_env *e)
 void    IRCServer::handleClient(int client)
 {
 	_clients.push_back(client);
-	std::cout << "Client connected: " << client << std::endl;
+	std::cout << "Client #" << client << " connected!\n";
 }
