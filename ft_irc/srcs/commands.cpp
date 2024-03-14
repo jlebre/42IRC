@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-IRCServer::IRCServer()
+IRCServer::IRCServer(): _fds(MAX_CLIENTS + 1)
 {
 	std::cout << "IRCServer constructor" << std::endl;
 }

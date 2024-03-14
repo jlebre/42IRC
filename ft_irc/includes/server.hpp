@@ -59,6 +59,8 @@ class IRCServer
 		void	create_socket(int port);
 		void	main_loop(t_env *e);
 		void	handleClient(int client);
+		void	activity(t_env *e);
+		void    check_clients();
 		int     parser(t_env *e, int argc, char **argv);
 
 	private:
@@ -67,6 +69,7 @@ class IRCServer
 		struct sockaddr_in _addr;
 		int		_buf[BUF_SIZE];
 		std::vector<int> _clients;
+		std::vector<pollfd> _fds;
 };
 
 
