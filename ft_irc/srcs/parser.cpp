@@ -11,7 +11,11 @@ int    IRCServer::parser(t_env *e, int argc, char **argv)
 	e->port = std::atoi(argv[1]);
 	if (e->port == -1)
 		return 1;
-	std::cout << "Password: " << argv[2] << std::endl;
-	e->vars.password = argv[2];
+	e->maxfd = MAX_CLIENTS;
 	return 0;
 }
+
+/*
+	std::cout << "Password: " << argv[2] << std::endl;
+	e->vars.password = argv[2];
+*/

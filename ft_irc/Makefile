@@ -1,5 +1,7 @@
-FILE_NAME = main.cpp parser.cpp \
-		commands.cpp utils.cpp start.cpp
+FILE_NAME = main.cpp parser.cpp client.cpp \
+		commands.cpp utils.cpp start.cpp \
+		handle_fd.cpp main_loop.cpp \
+		socket.cpp
 
 TEMPLATES_NAME = templates.tpp
 

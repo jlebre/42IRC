@@ -1,13 +1,10 @@
 #include "server.hpp"
 
-IRCServer::IRCServer(): _fds(MAX_CLIENTS + 1)
+void	IRCServer::process_input(t_env *e)
 {
-	std::cout << "IRCServer constructor" << std::endl;
-}
-
-IRCServer::~IRCServer()
-{
-	std::cout << "IRCServer destructor" << std::endl;
+	(void)e;
+	std::cout << "Processing input" << std::endl;
+	//std::cin >> e->buf;
 }
 
 void IRCServer::kick(t_env *e, int fd)
