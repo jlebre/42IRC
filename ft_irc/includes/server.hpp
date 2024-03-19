@@ -23,6 +23,10 @@ class IRCServer
 		void	process_input(t_env *e);
 		void	check_fd_set(t_env *e);
 		void	clean_fd(t_fd *fd);
+		int 	ft_max(int a, int b);
+		void	client_read(t_env *e, int cs);
+		void	client_write(t_env *e, int cs);
+
 
 	private:
 		t_env   e;

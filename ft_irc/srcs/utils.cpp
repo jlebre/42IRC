@@ -1,5 +1,10 @@
 #include "server.hpp"
 
+int IRCServer::ft_max(int a, int b)
+{
+	return (a > b ? a : b);
+}
+
 void close_port(t_env *e)
 {
 	std::cout << "Closing port: " << e->port << std::endl;
