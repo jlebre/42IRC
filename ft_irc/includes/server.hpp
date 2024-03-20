@@ -16,7 +16,6 @@ class IRCServer
 		void	createsocket(t_env *e);
 		void	main_loop(t_env *e);
 		void	handleClient(t_env *e);
-		void	activity(t_env *e);
 		void    check_clients(t_env *e);
 		int     parser(t_env *e, int argc, char **argv);
 		void	build_fd_set(t_env *e);
@@ -26,7 +25,6 @@ class IRCServer
 		int 	ft_max(int a, int b);
 		void	client_read(t_env *e, int cs);
 		void	client_write(t_env *e, int cs);
-
 
 	private:
 		t_env   e;

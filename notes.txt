@@ -1,0 +1,9 @@
+`FD_ISSET` is a macro used in C programming language in conjunction with the `select` system call to check if a file descriptor is set in the file descriptor sets passed to `select`. 
+
+Here's a brief explanation:
+
+- `FD_ISSET(int fd, fd_set *set)` tests whether the file descriptor `fd` is a member of the file descriptor set pointed to by `set`.
+- `fd` is the file descriptor being tested.
+- `set` is a pointer to the `fd_set` data structure which contains a set of file descriptors.
+
+The purpose of `FD_ISSET` is typically seen in conjunction with `select`, `pselect`, `poll`, or `epoll` system calls for multiplexing I/O operations. It's commonly used in network programming to check whether a socket is ready for reading or writing before performing I/O operations on it, to avoid blocking.

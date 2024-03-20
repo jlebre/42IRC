@@ -7,9 +7,7 @@ void    IRCServer::main_loop(t_env *e)
 	{
 		build_fd_set(e);
 		std::cout << "after: " << std::endl;
-		// Change select for poll()
 		e->out = select(FD_SETSIZE, &e->fd_read, &e->fd_write, (fd_set *)0, 0); // Last is timer. Add timer so it does not get stuck
-		//e->out = poll(_fds.data(), _fds.size(), -1);
 		switch (e->out)
 		{
 			case -1:
@@ -62,48 +60,4 @@ void    IRCServer::main_loop(t_env *e)
 				}
 		}
 	}
-}
-
-
-void	IRCServer::activity(t_env *e)
-{
-	(void)e;
-		/*
-	int activity = poll(_fds.data(), _fds.size(), -1);
-	if (activity < 0)
-	{
-		std::cerr << "Error: (Activity) " << std::strerror(errno) << std::endl;
-		exit(1);
-	}
-
-	if (_fds[0].revents & POLLIN)
-		check_clients();
-	for (size_t i = 1; i < _clients.size() + 1; ++i)
-	{
-		if (_fds[i].revents & POLLIN)
-		{
-			e->r = recv(_fds[i].fd, _buf, BUF_SIZE, 0);
-			if (e->r < 0)
-			{
-				std::cerr << "Error: (Activity) " << std::strerror(errno) << std::endl;
-				break ;
-			}
-			else if (e->r == 0)
-			{
-				std::cout << "Client #" << _fds[i].fd << " disconnected" << std::endl;
-				close(_fds[i].fd);
-				_fds.erase(_fds.begin() + i);
-			}
-			else
-			{
-				std::cout << "Received: " << _buf << std::endl;
-				for (size_t  j = 1; j < _fds.size(); j++)
-				{
-					if (j != i)
-						send(_fds[j].fd, _buf, e->r, 0);
-				}
-			}
-		}
-	}
-		*/
 }

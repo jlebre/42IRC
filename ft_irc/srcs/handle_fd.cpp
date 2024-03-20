@@ -19,20 +19,6 @@ void	IRCServer::build_fd_set(t_env *e)
 		}
 		i++;
 	}
-	/*
-	// Read
-	FD_ZERO(&e->fd_read);
-	FD_SET(STDIN_FILENO, &e->fd_read);
-	FD_SET(e->sock, &e->fd_read);
-	
-	// Write
-	FD_ZERO(&e->fd_write);
-	FD_SET(e->sock, &e->fd_read);
-	for (size_t i = 0; e->client[i].id ; ++i)
-	{
-		FD_SET(e->client[i].fd, &e->fd_read);
-	}
-	*/
 }
 
 void	IRCServer::check_fd_set(t_env *e)
