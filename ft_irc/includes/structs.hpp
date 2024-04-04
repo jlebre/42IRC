@@ -8,6 +8,8 @@ typedef struct s_vars
 	std::string password;
 }   t_vars;
 
+
+
 // As of bircd:
 typedef struct	s_fd
 {
@@ -18,21 +20,9 @@ typedef struct	s_fd
 	char	buf_write[BUF_SIZE + 1];
 }		t_fd;
 
-typedef struct s_client
-{
-	int			id;
-	int			fd;
-	int			buf[BUF_SIZE + 1];
-	std::string	nick;
-	std::string	username;
-	std::string	realname;
-	std::string	password;
-}		t_client;
-
 typedef struct	s_env
 {
-	t_fd		*fds;
-	t_client	*client;
+	t_fd	fds[MAX_CLIENTS];
 	int		port;
 	int		sock;
 	int		maxfd;

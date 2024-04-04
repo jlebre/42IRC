@@ -15,7 +15,7 @@ class IRCServer
 		void	mode(t_env *e, std::string mode, char flag);
 		void	createsocket(t_env *e);
 		void	main_loop(t_env *e);
-		void	handleClient(t_env *e);
+		void	handleClient(t_env *e, int i);
 		void    check_clients(t_env *e);
 		int     parser(t_env *e, int argc, char **argv);
 		void	build_fd_set(t_env *e);
@@ -25,15 +25,13 @@ class IRCServer
 		int 	ft_max(int a, int b);
 		void	client_read(t_env *e, int cs);
 		void	client_write(t_env *e, int cs);
+		void	reading(t_env *e);
 
 	private:
 		t_env   e;
 		struct sockaddr_in _addr;
 		int		_buf[BUF_SIZE];
-		std::vector<pollfd> _fds;
-		int		_id;
 };
-
 
 #endif
 

@@ -1,0 +1,110 @@
+Certainly! Let's break down each point in detail, including explanations of concepts, functions, and examples, all within the context of creating an IRC server in C++98:
+
+1. **Setup Server Socket**:
+   - **What it is**: Setting up a server socket involves creating a communication endpoint that listens for incoming connections from clients over a network.
+   - **What it does**: This server socket is the entry point for clients wanting to connect to the IRC server.
+   - **How it works**: Using plain sockets, you create a TCP socket and bind it to a specific port on the server. This socket then listens for incoming connections.
+   - **Example** (using plain sockets):
+     ```cpp
+     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+     struct sockaddr_in serverAddr;
+     serverAddr.sin_family = AF_INET;
+     serverAddr.sin_port = htons(6667); // Listen on port 6667
+     serverAddr.sin_addr.s_addr = INADDR_ANY;
+     bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+     listen(sockfd, 10); // Listen for up to 10 connections
+     ```
+
+2. **Accept Connections**:
+   - **What it is**: Accepting connections means handling incoming connection requests from clients.
+   - **What it does**: It allows clients to establish a connection with the server.
+   - **How it works**: The server socket enters a listening state, waiting for incoming connection requests. When a client connects, the server accepts the connection and creates a new socket to handle communication with that client.
+   - **Example** (using plain sockets):
+     ```cpp
+     struct sockaddr_in clientAddr;
+     socklen_t clientAddrLen = sizeof(clientAddr);
+     int clientSockfd = accept(sockfd, (struct sockaddr*)&clientAddr, &clientAddrLen);
+     // Now clientSockfd can be used to communicate with the client
+     ```
+
+3. **Handle IRC Commands**:
+   - **What it is**: Handling IRC commands involves parsing and processing messages sent by IRC clients according to the IRC protocol.
+   - **What it does**: It interprets the commands sent by clients and executes the corresponding actions.
+   - **How it works**: Incoming messages are parsed to identify the command and its parameters. Based on the command, the server performs actions such as joining channels, sending messages, or updating user information.
+   - **Example** (parsing an IRC message):
+     ```cpp
+     std::string message = "PRIVMSG #channel :Hello!";
+     std::istringstream iss(message);
+     std::string command, target, content;
+     iss >> command >> target;
+     std::getline(iss, content, ':');
+     ```
+
+4. **Manage Channels and Users**:
+   - **What it is**: Managing channels and users involves keeping track of users connected to the server, their nicknames, and the channels they've joined.
+   - **What it does**: It maintains data structures to store this information and updates them as users join or leave channels.
+   - **How it works**: The server keeps track of users and channels using data structures such as maps or arrays. Users are added to channels, and their status (e.g., operator, voice) is updated accordingly.
+   - **Example** (data structures for managing users and channels):
+     ```cpp
+     std::map<std::string, std::vector<std::string>> channels;
+     std::map<std::string, std::string> users;
+     ```
+
+5. **Message Routing**:
+   - **What it is**: Message routing involves directing messages from senders to recipients, such as relaying messages within a channel or delivering private messages.
+   - **What it does**: It ensures that messages are delivered to the appropriate recipients based on the IRC protocol.
+   - **How it works**: The server determines the recipients of each message based on the message type (e.g., channel message, private message) and the target channel or user specified in the message.
+   - **Example** (routing a message to users in a channel):
+     ```cpp
+     void send_message_to_channel(const std::string& channel, const std::string& message) {
+         for (const auto& user : channels[channel]) {
+             // Send message to user
+         }
+     }
+     ```
+
+6. **Error Handling and Responses**:
+   - **What it is**: Error handling involves detecting and responding to errors that occur during communication between the server and clients.
+   - **What it does**: It notifies clients of errors and anomalies and helps maintain the stability and integrity of the IRC server.
+   - **How it works**: When an error is detected (e.g., invalid command, unexpected behavior), the server generates an appropriate error response following the IRC protocol.
+   - **Example** (sending an error response):
+     ```cpp
+     void send_error_response(int sockfd, const std::string& message) {
+         std::string response = "ERROR :" + message + "\r\n";
+         send(sockfd, response.c_str(), response.size(), 0);
+     }
+     ```
+
+7. **Keep-alive Mechanism**:
+   - **What it is**: The keep-alive mechanism ensures that connections remain active and do not time out due to inactivity.
+   - **What it does**: It periodically sends messages to clients to verify that they are still connected and responsive.
+   - **How it works**: The server sends PING messages to clients, and clients respond with PONG messages to indicate that they are still alive. If a client fails to respond within a certain time frame, it may be considered disconnected.
+   - **Example** (sending a PING message):
+     ```cpp
+     void send_ping(int sockfd) {
+         std::string ping_message = "PING :localhost\r\n";
+         send(sockfd, ping_message.c_str(), ping_message.size(), 0);
+     }
+     ```
+
+8. **User Authentication**:
+   - **What it is**: User authentication verifies the identity of connecting users before allowing them to perform certain actions on the server.
+   - **What it does**: It ensures that only authorized users can access the IRC server and participate in chat sessions.
+   - **How it works**: Users provide credentials (e.g., nickname, password) when connecting to the server. The server validates these credentials against a database or authentication mechanism to determine if the user is authorized to access the server.
+   - **Example** (authenticating a user):
+     ```cpp
+     bool authenticate_user(const std::string& nickname, const std::string& password) {
+         // Check if the provided nickname and password are valid
+         // Return true if authentication succeeds, false otherwise
+     }
+     ```
+
+9. **Server Commands**:
+   - **What it is**: Server commands are special commands recognized by the IRC server for administrative purposes or server-specific functions.
+   - **What it does**: It allows server administrators to perform tasks such as configuring server settings, managing channels, or controlling user access.
+   - **How it works**: Clients send server commands to the server, which interprets and executes them accordingly.
+   - **Example** (handling a server command):
+     ```cpp
+     void handle_server_command(const std::string& command, const std::vector<std::string>& parameters) {
+         if (command == "MOTD") {
+             // Send Message of the Day (MOTD) to the client

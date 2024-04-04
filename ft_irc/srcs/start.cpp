@@ -1,14 +1,8 @@
 #include "server.hpp"
 
-IRCServer::IRCServer(): _id(0)
-{
-	//std::cout << "IRCServer constructor" << std::endl;
-}
+IRCServer::IRCServer(){}
 
-IRCServer::~IRCServer()
-{
-	//std::cout << "IRCServer destructor" << std::endl;
-}
+IRCServer::~IRCServer(){}
 
 void IRCServer::start(int argc, char **argv)
 {

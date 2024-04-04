@@ -2,22 +2,19 @@
 
 void	IRCServer::build_fd_set(t_env *e)
 {
-	int	i;
-
-	i = 0;
 	e->max = 0;
+	// READ
 	FD_ZERO(&e->fd_read);
+	FD_SET(STDIN_FILENO, &e->fd_read);
+	FD_SET(e->sock, &e->fd_read);
+	
+	// WRITE
 	FD_ZERO(&e->fd_write);
-	while (i < e->maxfd)
+	FD_SET(e->sock, &e->fd_write);
+	for (int i = 0 ; i < e->maxfd ; i++ )
 	{
-		if (e->fds[i].type != 0)
-		{
-			FD_SET(i, &e->fd_read);
-			if (strlen(e->fds[i].buf_write) > 0)
-				FD_SET(i, &e->fd_write);
-			e->max = ft_max(e->max, i);
-		}
-		i++;
+		FD_SET(e->fds[i].type, &e->fd_read);
+		FD_SET(e->fds[i].type, &e->fd_write);
 	}
 }
 
@@ -47,3 +44,22 @@ void	IRCServer::clean_fd(t_fd *fd)
 	fd->fct_read = NULL;
 	fd->fct_write = NULL;
 }
+
+
+/*
+for (int i = 0 ; i < e->maxfd ; i++ )
+{
+	FD_SET(i, &e->fd_read);
+	if (e->fds[i].type != 0)
+	{
+		std::cout << "Entered if\n";
+		FD_SET(i, &e->fd_read);
+		std::cout << "Entered if FDSET\n";
+		if (strlen(e->fds[i].buf_write) > 0)
+			FD_SET(i, &e->fd_write);
+		std::cout << "Entered if after if\n";
+		e->max = ft_max(e->max, i);
+		std::cout << "Entered if set Max\n";
+	}
+}
+	*/
