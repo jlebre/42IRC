@@ -1,20 +1,36 @@
-FILE_NAME = main.cpp parser.cpp client.cpp \
-		commands.cpp utils.cpp start.cpp \
-		handle_fd.cpp main_loop.cpp \
-		socket.cpp
+#FILE_NAME = srcs/main.cpp Client/client.cpp \
+		srcs/commands.cpp srcs/utils.cpp \
+		srcs/handle_fd.cpp srcs/main_loop.cpp \
+		srcs/socket.cpp Channel/channel.cpp \
+		Server/server.cpp Socket/socket.cpp 
 
-TEMPLATES_NAME = templates.tpp
+#TEMPLATES_NAME = templates.tpp
 
-TEMPLATES_DIR = templates
+#TEMPLATES_DIR = templates
 
-SRCS_DIR = srcs
+#SRCS_DIR = srcs
 
-SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
+#SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
 	$(addprefix $(TEMPLATES_DIR)/, $(TEMPLATES_NAME))
+
+SRCS = main.cpp Client/client.cpp Client/info.cpp \
+		Server/server.cpp Server/main_loop.cpp \
+		Server/connect.cpp Server/execute.cpp \
+		Server/process_input.cpp Server/parser.cpp \
+		Server/reply.cpp \
+		Commands/pass.cpp Commands/nick.cpp \
+		Commands/user.cpp Commands/join.cpp \
+		Commands/part.cpp Commands/quit.cpp \
+		Commands/privmsg.cpp Commands/mode.cpp \
+		Commands/topic.cpp Commands/kick.cpp \
+		Commands/invite.cpp \
+		Channel/channel.cpp \
+		Socket/socket.cpp Socket/read.cpp \
+		Socket/poll.cpp 
 
 CXX = c++
 
-INC = -I includes
+INC = -I includes -I Client -I Server -I Channel
 
 CXXFLAGS = -Wall -Wextra -Werror $(INC) -std=c++98
 

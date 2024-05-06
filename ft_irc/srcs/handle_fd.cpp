@@ -1,16 +1,17 @@
-#include "server.hpp"
+#include "commands.hpp"
 
-void	IRCServer::build_fd_set(t_env *e)
+void	Commands::build_fd_set(t_env *e)
 {
-	e->max = 0;
 	// READ
 	FD_ZERO(&e->fd_read);
 	FD_SET(STDIN_FILENO, &e->fd_read);
 	FD_SET(e->sock, &e->fd_read);
+	FD_SET(e->temp, &e->fd_read);
 	
 	// WRITE
 	FD_ZERO(&e->fd_write);
 	FD_SET(e->sock, &e->fd_write);
+	FD_SET(e->temp, &e->fd_write);
 	for (int i = 0 ; i < e->maxfd ; i++ )
 	{
 		FD_SET(e->fds[i].type, &e->fd_read);
@@ -18,7 +19,7 @@ void	IRCServer::build_fd_set(t_env *e)
 	}
 }
 
-void	IRCServer::check_fd_set(t_env *e)
+void	Commands::check_fd_set(t_env *e)
 {
 	int	i;
 
@@ -38,7 +39,7 @@ void	IRCServer::check_fd_set(t_env *e)
 	}
 }
 
-void	IRCServer::clean_fd(t_fd *fd)
+void	Commands::clean_fd(t_fd *fd)
 {
 	fd->type = 0;
 	fd->fct_read = NULL;

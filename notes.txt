@@ -38,3 +38,26 @@ possible to use read/recv or write/send functions with no poll()
 But it would consume more system resources.
 Thus, if you try to read/recv or write/send in any file descriptor
 without using poll() (or equivalent), your grade will be 0.
+
+
+With epoll you get a list returned containing only the actual events.
+
+EPOLL_CTL_ADD:
+Add an entry to the interest list of the epoll file
+descriptor, epfd.  The entry includes the file descriptor,
+fd, a reference to the corresponding open file description.
+
+EPOLL_CTL_MOD:
+Change the settings associated with fd in the interest
+list to the new settings specified in event.
+
+EPOLL_CTL_DEL:
+Remove (deregister) the target file descriptor fd from the
+interest list.  The event argument is ignored and can be
+NULL (but see BUGS below).
+
+EPOLLIN:
+Available for read operastions.
+
+EPOLLOUT:
+Available for write operations.

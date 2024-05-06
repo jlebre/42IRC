@@ -1,0 +1,7 @@
+001 :Welcome to the Internet Relay Network
+
+381 :You are now logged in
+
+461 :Need more parameters
+462 :Unauthorized command (already registered)
+464 :Password incorrect

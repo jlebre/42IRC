@@ -1,58 +1,52 @@
-#include "server.hpp"
+#include "Server.hpp"
 
-void	IRCServer::process_input(t_env *e)
+void Server::pass(Client& client)
 {
-	(void)e;
-	std::cout << "Processing input" << std::endl;
-	//std::cin >> e->buf;
+	(void)client;
 }
 
-void IRCServer::kick(t_env *e, int fd)
+void Server::nick(Client& client)
 {
-	(void)e;
-	std::cout << "Kicking: " << fd << std::endl;
-	close(fd);
-	//e->clients.erase(fd);
+	(void)client;
 }
 
-void IRCServer::invite(t_env *e, int fd)
+void Server::user(Client& client)
 {
-	(void)e;
-	std::cout << "Inviting: " << fd << std::endl;
-	//e->clients.insert(fd);
+	(void)client;
 }
 
-void IRCServer::topic(t_env *e, std::string topic)
+void Server::join(Client& client)
 {
-	(void)e;
-	std::cout << "Setting topic: " << topic << std::endl;
-	//e->vars.topic = topic;
+	(void)client;
 }
 
-void IRCServer::mode(t_env *e, std::string mode, char flag)
+void Server::part(Client& client)
 {
-	(void)e;
-	std::cout << "Setting mode: " << mode << std::endl;
-	//e->vars.mode = mode;
-	switch (flag)
-	{
-	case 'i':
-		std::cout << "Set/remove Invite-only channel\n";
-		break;
-	case 't':
-		std::cout << " Set/remove the restrictions of the TOPIC command to channel operators\n";
-		break;
-	case 'k':
-		std::cout << "Set/remove the channel key (password)\n";
-		break;
-	case 'o':
-		std::cout << " Give/take channel operator privilege\n";
-		break;
-	case 'l':
-		std::cout << " Set/remove the user limit to channel\n";
-		break;
-	
-	default:
-		break;
-	}
+	(void)client;
 }
+
+void Server::privmsg(Client& client)
+{
+	(void)client;
+}
+
+void Server::mode(Client& client)
+{
+	(void)client;
+}
+
+void Server::topic(Client& client)
+{
+	(void)client;
+}
+
+void Server::kick(Client& client)
+{
+	(void)client;
+}
+
+void Server::invite(Client& client)
+{
+	(void)client;
+}
+
