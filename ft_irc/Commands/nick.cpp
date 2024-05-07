@@ -1,8 +1,12 @@
 #include "server.hpp"
 
+/*******************************************************************/
+/* This function is used to check if a nickname is already in use. */
+/*******************************************************************/
+
 bool    Server::check_nickname(std::string nickname)
 {
-    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) 
     {
         if (it->second->getNick() == nickname)
             return true;
@@ -10,11 +14,17 @@ bool    Server::check_nickname(std::string nickname)
     return false;
 }
 
+/*******************************************************************/
+/* This function is used to change the nickname of a client.       */
+/* If the client is not registered, it will register the client    */
+/* and send a welcome message.                                     */
+/*******************************************************************/
+
 void		Server::nick(Client& client)
 {
     std::cout << "NICK COMMAND\n";
     
-    if (client.getAuth() == true)
+    if (client.getAuth() == true) // If the client is registered
     {
         size_t i = _message.find("NICK");
         if (i != std::string::npos)
@@ -24,7 +34,7 @@ void		Server::nick(Client& client)
             nickname.erase(i, 5);
             nickname = nickname.substr(i);
             nickname = nickname.substr(0, nickname.find("\r\n"));
-            if (nickname.empty())
+            if (nickname.empty()) // If no nickname is given
                 reply(client, "431 :No nickname given");
             else if (nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
                 reply(client, "432 :Erroneous nickname");
@@ -40,7 +50,7 @@ void		Server::nick(Client& client)
                     reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client.getUser() + "@" + "127.0.0.1");
                 }
                 else
-                    reply_all(":" + client.getNick() + " NICK " + nickname + "\r\n");
+                    reply_all(":" + client.getNick() + " NICK " + nickname + "\r\n"); // Send message to all clients in the channel
                 client.setNick(nickname);
             }
         }

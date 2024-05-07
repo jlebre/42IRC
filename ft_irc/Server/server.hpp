@@ -5,7 +5,6 @@
 # include "../Commands/commands.hpp"
 # include "../Channel/channel.hpp"
 # include "../includes/libs.hpp"
-# include "../includes/definitions.hpp"
 
 class Client;
 class Channel;
@@ -80,5 +79,3 @@ class Server
 };
 
 #endif
-
-//int poll(struct pollfd *fds, nfds_t nfds, int timeout);

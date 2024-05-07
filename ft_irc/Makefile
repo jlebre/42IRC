@@ -13,7 +13,7 @@
 #SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
 	$(addprefix $(TEMPLATES_DIR)/, $(TEMPLATES_NAME))
 
-SRCS = main.cpp Client/client.cpp Client/info.cpp \
+SRCS = srcs/main.cpp Client/client.cpp Client/info.cpp \
 		Server/server.cpp Server/main_loop.cpp \
 		Server/connect.cpp Server/execute.cpp \
 		Server/process_input.cpp Server/parser.cpp \
@@ -24,7 +24,7 @@ SRCS = main.cpp Client/client.cpp Client/info.cpp \
 		Commands/privmsg.cpp Commands/mode.cpp \
 		Commands/topic.cpp Commands/kick.cpp \
 		Commands/invite.cpp \
-		Channel/channel.cpp \
+		Channel/channel.cpp Channel/info.cpp \
 		Socket/socket.cpp Socket/read.cpp \
 		Socket/poll.cpp 
 

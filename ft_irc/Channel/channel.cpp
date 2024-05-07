@@ -2,6 +2,27 @@
 
 Channel::Channel()
 {
+    _name = "";
+    _password = "";
+    _mode._invite = false;
+    _mode._key = false;
+    _mode._moderated = false;
+    _mode._limit = false;
+}
+
+Channel::Channel(std::string name) : _name(name) {
+    _password = "";
+    _mode._invite = false;
+    _mode._key = false;
+    _mode._moderated = false;
+    _mode._limit = false;
+}
+
+Channel::Channel(std::string name, std::string password) : _name(name), _password(password) {
+    _mode._invite = false;
+    _mode._key = false;
+    _mode._moderated = false;
+    _mode._limit = false;
 }
 
 Channel::~Channel()
@@ -10,46 +31,34 @@ Channel::~Channel()
 
 Channel::Channel(const Channel &src)
 {
-    (void)src;
+    *this = src;
 }
 
 Channel &Channel::operator=(const Channel &src)
 {
-    (void)src;
+    _name = src.get_name();
+    _topic = src.get_topic();
+    _password = src.get_password();
+    _mode = src.get_mode();
+    _limit = src.get_limit();
+    _clients = src.get_clients();
+    _invited = src.get_invited();
+    _operators = src.get_operators();
+
     return *this;
 }
 
-void Channel::init_channel(std::string channel_name)
+void Channel::add_client(Client& client)
 {
-    this->_channel_name = channel_name;
-}
-
-void Channel::shutdown_channel()
-{
-    while (!_clients.empty())
-    {
-        delete _clients.back();
-        _clients.pop_back();
-        //Need to remove from Client
-    }
-
-    //Remove invite clients
-}
-
-void Channel::add_user(Client *client)
-{
-    ClientIterator it;
-
     _clients.push_back(client);
-    //Check invite list
 }
 
-void Channel::kick_user(Client *client)
+void Channel::add_invited(Client& client)
 {
-    ClientIterator it;
+    _invited.push_back(client);
+}
 
-    it = std::find(_clients.begin(), _clients.end(), client);
-    _clients.erase(it);
-
-    //If kicked is admin create new admin
+void Channel::add_operator(Client& client)
+{
+    _operators.push_back(client);
 }

@@ -1,6 +1,5 @@
 #include "server.hpp"
 
-// Add setRealname method to Client class
 void		Server::user(Client& client)
 {
     std::cout << "USER COMMAND\n";
