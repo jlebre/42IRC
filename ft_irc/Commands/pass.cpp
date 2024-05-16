@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-bool	Server::valid_pass(std::string pass)
+bool	Server::check_pass(std::string pass)
 {
     if (pass == _password)
         return true;
@@ -24,7 +24,7 @@ void	Server::pass(Client& client)
 			password = password.substr(0, password.find("\r\n"));
 			if (password.empty())
 				reply(client, "461 :Need more parameters");
-			client.setAuth(valid_pass(password));
+			client.setAuth(check_pass(password));
 			if (client.getAuth() == false && _message.compare(""))
 				reply(client, "464 :Password incorrect");
 			else

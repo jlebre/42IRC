@@ -8,8 +8,16 @@ Internet is ruled by solid standards protocols that allow connected computers to
 It’s always a good thing to know.
 
 ## Setup
+```
+git clone https://www.github.com/jlebre/42IRC.git
+cd 42IRC/ft_irc
+make a
+```
+
+"make a" deletes all files, compiles the program, and runs it in port 6667 and using "hello" as password.
 
 ## What is an IRC
+Internet Relay Chat
 
 #
 
@@ -18,90 +26,42 @@ It’s always a good thing to know.
 
 ## Classes
 ### Server Class
-```cpp
-#ifndef SERVER_HPP
-# define SERVER_HPP
 
-# include "../Client/client.hpp"
-# include "../Commands/commands.hpp"
-# include "../Channel/channel.hpp"
-# include "../includes/libs.hpp"
+#
 
-class Client;
-class Channel;
-class Command;
+## Commands
+The protocol for each command will follow the same principles almost everytime.
 
-typedef struct socket_s
-{
-    int fd;
-    uint16_t port;
-    std::string ip;
-} socket_t;
+First, check to see if the Client is registered.
+If not, send reply 451.
 
-class Server
-{
-	private:
-		int					_max_clients;
-		char				_buf[BUF_SIZE];
-		std::string			_password;
-		std::string			_message;
-		std::map<int, Client*> _clients;
+Second, separate the the command.
 
-		// SOCKET
-		socket_t _sock;
+Third, apply the changes to all members.
 
-		// POLL
-		int					event_fd;
-		int					n_events;
-		struct epoll_event	_events[200];
-		struct epoll_event	_event;
+### Invite
 
-		// CHANNELS
-		std::vector<Channel>	_channels;
+### Join
 
-	public:
-		Server();
-		Server(const Server &src);
-		Server &operator=(const Server &src);
-		~Server();
+### Kick
 
-		//SERVER
-		void		parse(int argc, char **argv);
-		void		main_loop();
-		void		connect_client();
-		void		reading(Client& cli);
-		void		process_input(Client& cli);
-		int	    	check_command(std::string line);
-		void    	reply(Client &client, std::string msg);
-		void    	reply_all(std::string msg);
-		bool		valid_pass(std::string pass);
-		bool		check_nickname(std::string nickname);
+### Mode
 
-		// SOCK
-		void		init_socket();
-        std::string read();
-        int     	get_fd();
+### Nick
 
-		// POLL
-		void		init_poll();
+### Part
 
-		// COMMANDS
-		void		pass(Client& client);
-		void		nick(Client& client);
-		void		user(Client& client);
-		void		join(Client& client);
-		void		part(Client& client);
-		void		quit(Client& client);
-		void		privmsg(Client& client);
-		void		mode(Client& client);
-		void		topic(Client& client);
-		void		kick(Client& client);
-		void		invite(Client& client);
-};
+### Pass
 
-#endif
+### Privmsg
 
-```
+### Quit
+
+### Topic
+
+### User
+
+#
 
 ## IRC Numeric Reply Codes
 ```

@@ -20,20 +20,20 @@ typedef struct socket_s
 class Server
 {
 	private:
-		int					_max_clients;
-		char				_buf[BUF_SIZE];
-		std::string			_password;
-		std::string			_message;
-		std::map<int, Client*> _clients;
+		int						_max_clients;
+		char					_buf[BUF_SIZE];
+		std::string				_password;
+		std::string				_message;
+		std::map<int, Client*>	_clients;
 
 		// SOCKET
-		socket_t _sock;
+		socket_t 				_sock;
 
 		// POLL
-		int					event_fd;
-		int					n_events;
-		struct epoll_event	_events[200];
-		struct epoll_event	_event;
+		int						event_fd;
+		int						n_events;
+		struct epoll_event		_events[200];
+		struct epoll_event		_event;
 
 		// CHANNELS
 		std::vector<Channel>	_channels;
@@ -45,37 +45,42 @@ class Server
 		~Server();
 
 		//SERVER
-		void		parse(int argc, char **argv);
-		void		main_loop();
-		void		connect_client();
-		void		reading(Client& cli);
-		void		process_input(Client& cli);
-		int	    	check_command(std::string line);
-		void    	reply(Client &client, std::string msg);
-		void    	reply_all(std::string msg);
-		bool		valid_pass(std::string pass);
-		bool		check_nickname(std::string nickname);
+		void					parse(int argc, char **argv);
+		void					main_loop();
+		void					connect_client();
+		void					reading(Client& cli);
+		void					process_input(Client& cli);
+		int	    				check_command(std::string line);
+		void    				reply(Client &client, std::string msg);
+		void    				reply_all(std::string msg);
+
+		// CHECK
+		bool					check_pass(std::string pass);
+		bool					check_nickname(std::string nickname);
+		bool					check_on_channel(std::string nick, std::string channel);
+		bool					check_on_server(std::string nick);
+
 
 		// SOCK
-		void		init_socket();
-        std::string read();
-        int     	get_fd();
+		void					init_socket();
+        std::string 			read();
+        int     				get_fd();
 
 		// POLL
-		void		init_poll();
+		void					init_poll();
 
 		// COMMANDS
-		void		pass(Client& client);
-		void		nick(Client& client);
-		void		user(Client& client);
-		void		join(Client& client);
-		void		part(Client& client);
-		void		quit(Client& client);
-		void		privmsg(Client& client);
-		void		mode(Client& client);
-		void		topic(Client& client);
-		void		kick(Client& client);
-		void		invite(Client& client);
+		void					pass(Client& client);
+		void					nick(Client& client);
+		void					user(Client& client);
+		void					join(Client& client);
+		void					part(Client& client);
+		void					quit(Client& client);
+		void					privmsg(Client& client);
+		void					mode(Client& client);
+		void					topic(Client& client);
+		void					kick(Client& client);
+		void					invite(Client& client);
 };
 
 #endif
