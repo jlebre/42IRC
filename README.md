@@ -24,12 +24,29 @@ Internet Relay Chat
 ## Step by step
 ### Setup Server Socket
 
-## Classes
-### Server Class
+#
+
+# Classes
+## Server Class
+
+To send a message to the client we use the function reply, that takes as parameters the address of the client and the message to be sent.
+
+```cpp
+void   Server::reply(Client &client, std::string msg)
+{
+    msg += "\r\n";
+    send(client.get_fd(), msg.c_str(), msg.length(), 0);
+}
+```
+
+## Client Class
+
+## Channel Class
 
 #
 
 ## Commands
+
 The protocol for each command will follow the same principles almost everytime.
 
 First, check to see if the Client is registered.
@@ -40,28 +57,71 @@ Second, separate the the command.
 Third, apply the changes to all members.
 
 ### Invite
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " INVITE " + invitedNick + " :" + channel_name;  
+```
 
 ### Join
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " JOIN " + channel_name;  
+```
 
 ### Kick
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " KICK " + channel_name + " " + clientToKickNick + " :" + reason;  
+```
 
 ### Mode
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " MODE " + channel_name + " " + mode;  
+
+```
 
 ### Nick
+Message sent to the client:
+```
+std::string msg = ":" + oldNick + " NICK :" + newNick;  
+```
 
 ### Part
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " PART " + channel_name + " :" + reason;  
+```
 
 ### Pass
+Message sent to the client:
+```
+std::string msg = "PASS " + password;  
+```
 
 ### Privmsg
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
+```
 
 ### Quit
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " QUIT :" + reason;  
+```
 
 ### Topic
+Message sent to the client:
+```
+std::string msg = ":" + clientNick + " TOPIC " + channel_name + " :" + topic;  
+```
 
 ### User
-
-#
+Message sent to the client:
+```
+std::string msg = "USER " + username + " 0 * :" + realname;  
+```
 
 ## IRC Numeric Reply Codes
 ```

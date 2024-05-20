@@ -15,9 +15,8 @@
 
 SRCS = srcs/main.cpp Client/client.cpp Client/info.cpp \
 		Server/server.cpp Server/main_loop.cpp \
-		Server/connect.cpp Server/execute.cpp \
+		Server/connect.cpp Server/reply.cpp \
 		Server/process_input.cpp Server/parser.cpp \
-		Server/reply.cpp \
 		Commands/pass.cpp Commands/nick.cpp \
 		Commands/user.cpp Commands/join.cpp \
 		Commands/part.cpp Commands/quit.cpp \

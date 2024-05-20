@@ -23,6 +23,10 @@
 # include <vector>
 # include <algorithm>
 # include <fcntl.h>
+# include <sys/ioctl.h>
+# include <sys/time.h>
+# include <sys/types.h>
+# include <queue>
 
 # define BUF_SIZE		1024
 # define MAX_CLIENTS	5

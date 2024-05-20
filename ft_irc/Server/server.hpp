@@ -57,8 +57,8 @@ class Server
 		// CHECK
 		bool					check_pass(std::string pass);
 		bool					check_nickname(std::string nickname);
-		bool					check_on_channel(std::string nick, std::string channel);
-		bool					check_on_server(std::string nick);
+		bool					check_on_server(std::string nick, std::string channel);
+		bool					check_on_channel(std::string nick);
 
 
 		// SOCK

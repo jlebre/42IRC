@@ -5,6 +5,11 @@
 
 void		Server::topic(Client& client)
 {
-    (void)client;
     std::cout << "TOPIC COMMAND\n";
+    if (client.getRegistered() == false)
+    {
+        reply(client, "451 :You are not registered");
+        return ;
+    }
+    
 }
