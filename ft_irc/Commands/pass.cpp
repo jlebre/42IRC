@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+Usage:
+/pass <password>
+
+Message to Client:
+:PASS <password>
+*/
+
 bool	Server::check_pass(std::string pass)
 {
     if (pass == _password)
@@ -32,3 +40,4 @@ void	Server::pass(Client& client)
 		}
 	}
 }
+ //std::string msg = "PASS " + password;  

@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+Usage:
+/privmsg <target> <message>
+
+Message to Client:
+:<nick> PRIVMSG <target> :<message>
+*/
+
 void		Server::privmsg(Client& client)
 {
     std::cout << "PRIVMSG COMMAND\n";
@@ -14,6 +22,7 @@ void		Server::privmsg(Client& client)
     
         
     //client.getNick()
+    //std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
     // Get the message
 
     // If it is on channel send message to everyone on channel

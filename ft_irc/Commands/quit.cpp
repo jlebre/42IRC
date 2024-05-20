@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+Usage:
+/quit [<message>]
+
+Message to Client:
+:<nick> QUIT :<message>
+*/
+
 void		Server::quit(Client& client)
 {
     std::cout << "QUIT COMMAND\n";
@@ -15,6 +23,5 @@ void		Server::quit(Client& client)
         reason = _message.substr(i + 1);
     client.setStatus(false);
     std::cout << "Client " << client.getNick() << " has quit\n";
-    reply(client, ":" + client.getNick() + " ERROR : " + reason + "\r\n");
-    //client.getNick()
+    reply(client, ":" + client.getNick() + " QUIT : " + reason);
 } 

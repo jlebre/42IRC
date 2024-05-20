@@ -8,17 +8,32 @@ Internet is ruled by solid standards protocols that allow connected computers to
 It’s always a good thing to know.
 
 [Intro](#intro)
+
 [Setup](#setup)
+
 [Epoll](#epoll)
+
 [Classes](#classes)
+
 [ReplyCodes](#irc-numeric-reply-codes)
 
 ## Intro
 
 ### What is an IRC
-Internet Relay Chat
+### What is IRC?
+Internet Relay Chat (IRC) is a protocol for real-time text communication over the internet. It facilitates group (many-to-many) communication in discussion forums called channels, as well as one-on-one (private) messaging.
+
+### Key Features
+1. **Channels**: These are chat rooms that can be joined by multiple users. Channels are usually prefixed with a `#` (e.g., `#example`).
+2. **Private Messaging**: Users can send direct messages to each other.
+3. **Nicknames**: Users identify themselves with unique nicknames.
+4. **Servers and Networks**: IRC operates on a client-server model where users connect to an IRC server, which may be part of a larger network of servers.
 
 ## Setup
+
+Install HexChat
+Setup HexChat
+
 ```
 git clone https://www.github.com/jlebre/42IRC.git
 cd 42IRC/ft_irc
@@ -30,7 +45,75 @@ make a
 #
 
 ## Step by step
-### Setup Server Socket
+
+The main function:
+```cpp
+int main(int argc, char **argv)
+{
+	Server irc;
+	irc.parse(argc, argv);
+	return 0;
+}
+```
+This function creates a Server object and sends the arguments to parse.
+
+```cpp
+void    Server::parse(int argc, char **argv)
+{
+	if (argc != 3)
+	{
+		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
+		return;
+	}
+    _sock.port = std::atoi(argv[1]);
+    if (_sock.port < 1024)
+        std::cerr << "Port should be a number between 1024 and 65534\n";
+    _password = argv[2];
+    _sock.ip = "127.0.0.1";
+    _max_clients = MAX_CLIENTS;
+    n_events = 1;
+    init_socket();
+    init_poll();
+	main_loop();
+}
+```
+
+Here we check wether the number of arguments is correct, we attribute values to _sock.port and to _password.
+
+Then we init the socket.
+
+```cpp
+void Server::init_socket()
+{
+	// CREATE SOCKET
+	_sock.fd = socket(AF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
+	if (_sock.fd == -1)
+	{
+		std::cerr << "Error: (Create Socket) " << std::strerror(errno) << std::endl;
+		exit(1);
+	}
+
+	// BIND SOCKET
+	struct sockaddr_in _addr;
+	_addr.sin_family = AF_INET;
+	_addr.sin_addr.s_addr = inet_addr(_sock.ip.c_str());
+	_addr.sin_port = htons(_sock.port);
+
+	if (bind(_sock.fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
+	{
+		std::cerr << "Error: (Bind) " << std::strerror(errno) << std::endl;
+		exit(1);
+	}
+
+	// LISTEN SOCKET
+	if (listen(_sock.fd, _max_clients) == -1)
+	{
+		std::cerr << "Error: (Listen) " << std::strerror(errno) << std::endl;
+		exit(1);
+	}
+	std::cout << "Listening on " << _sock.fd << std::endl;
+}
+```
 
 #
 
@@ -122,24 +205,44 @@ Second, separate the the command.
 Third, apply the changes to all members.
 
 ### Invite
+Usage:
+```
+/invite <nick> <#channel>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " INVITE " + invitedNick + " :" + channel_name;  
 ```
 
 ### Join
+Usage:
+```
+/join <#channel>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " JOIN " + channel_name;  
 ```
 
 ### Kick
+Usage:
+```
+/kick <#channel> <nick> [<reason>]
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " KICK " + channel_name + " " + clientToKickNick + " :" + reason;  
 ```
 
 ### Mode
+Usage:
+```
+/mode <#channel> <mode> [<mode params>]
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " MODE " + channel_name + " " + mode;  
@@ -147,42 +250,77 @@ std::string msg = ":" + clientNick + " MODE " + channel_name + " " + mode;
 ```
 
 ### Nick
+Usage:
+```
+/nick <newnick>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + oldNick + " NICK :" + newNick;  
 ```
 
 ### Part
+Usage:
+```
+/part <#channel> [<message>]
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " PART " + channel_name + " :" + reason;  
 ```
 
 ### Pass
+Usage:
+```
+/pass <password>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = "PASS " + password;  
 ```
 
 ### Privmsg
+Usage:
+```
+/privmsg <target> <message>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
 ```
 
 ### Quit
+Usage:
+```
+/quit [<message>]
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " QUIT :" + reason;  
 ```
 
 ### Topic
+Usage:
+```
+/topic <#channel> [<newtopic>]
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = ":" + clientNick + " TOPIC " + channel_name + " :" + topic;  
 ```
 
 ### User
+Usage:
+```
+/user <username> <hostname> <servername> <realname>
+```
+
 Message sent to the client:
 ```cpp
 std::string msg = "USER " + username + " 0 * :" + realname;  
@@ -300,3 +438,7 @@ Error Replies (400-599):
 - 501 ERR_UMODEUNKNOWNFLAG: Unknown MODE flag.
 - 502 ERR_USERSDONTMATCH: Cannot change mode for other users.
 ```
+
+#
+
+jlebre

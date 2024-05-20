@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+Usage:
+/nick <new_nickname>
+
+Message to Client:
+:<old_nickname> NICK :<new_nickname>
+*/
+
 /*******************************************************************/
 /* This function is used to check if a nickname is already in use. */
 /*******************************************************************/

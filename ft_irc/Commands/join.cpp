@@ -1,5 +1,13 @@
 #include "server.hpp"
 
+/*
+Usage:
+/join <#channel>
+
+Message to Client:
+:<nick> JOIN <channel>
+*/
+
 void		Server::join(Client& client)
 {
     std::cout << "JOIN COMMAND\n";
