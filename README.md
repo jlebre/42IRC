@@ -7,6 +7,17 @@ Internet is ruled by solid standards protocols that allow connected computers to
 \
 It’s always a good thing to know.
 
+[Intro](#intro)
+[Setup](#setup)
+[Epoll](#epoll)
+[Classes](#classes)
+[ReplyCodes](#irc-numeric-reply-codes)
+
+## Intro
+
+### What is an IRC
+Internet Relay Chat
+
 ## Setup
 ```
 git clone https://www.github.com/jlebre/42IRC.git
@@ -15,9 +26,6 @@ make a
 ```
 
 "make a" deletes all files, compiles the program, and runs it in port 6667 and using "hello" as password.
-
-## What is an IRC
-Internet Relay Chat
 
 #
 
@@ -30,11 +38,11 @@ Internet Relay Chat
 Similar to poll(), but it is more efficient in handling a large number of fds.
 
 ### Functions
-1. int epoll_create1(int flags)
+1. int epoll_create1(int flags):
 \
 Create an epoll instance and returns the file descriptor referring to that instance.
 
-2. int epoll_ctl(int epfd, int option, int fd, struct epoll_event *event)
+2. int epoll_ctl(int epfd, int option, int fd, struct epoll_event *event):
 \
 Manages the list of file descriptors that the epoll instance should monitor.
     "option" can be EPOLL_CTL_ADD, EPOLL_CTL_MOD, EPOLL_CTL_DEL.
@@ -55,7 +63,7 @@ interest list.  The event argument is ignored and can be
 NULL (but see BUGS below).
 ```
 
-3. int epoll_wait(int epfd, struct epoll_event *events, int max_events, int timeout)
+3. int epoll_wait(int epfd, struct epoll_event *events, int max_events, int timeout):
 \
 Waits for events on the epoll instance.
 
@@ -75,7 +83,7 @@ void	Server::init_poll()
 ```
 ```
 EPOLLIN:
-Available for read operastions.
+Available for read operations.
 
 EPOLLOUT:
 Available for write operations.

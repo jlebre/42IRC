@@ -4,4 +4,6 @@ void		Server::mode(Client& client)
 {
     (void)client;
     std::cout << "MODE COMMAND\n";
+    //
+    //client.getNick()
 }

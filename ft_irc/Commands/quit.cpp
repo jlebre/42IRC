@@ -16,5 +16,5 @@ void		Server::quit(Client& client)
     client.setStatus(false);
     std::cout << "Client " << client.getNick() << " has quit\n";
     reply(client, ":" + client.getNick() + " ERROR : " + reason + "\r\n");
-
+    //client.getNick()
 } 

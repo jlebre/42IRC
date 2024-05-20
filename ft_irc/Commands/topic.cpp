@@ -11,5 +11,5 @@ void		Server::topic(Client& client)
         reply(client, "451 :You are not registered");
         return ;
     }
-    
+    ////client.getNick()
 }

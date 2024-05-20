@@ -13,7 +13,7 @@ void		Server::privmsg(Client& client)
     msg = _message.find(":");
     
         
-    
+    //client.getNick()
     // Get the message
 
     // If it is on channel send message to everyone on channel
