@@ -58,68 +58,68 @@ Third, apply the changes to all members.
 
 ### Invite
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " INVITE " + invitedNick + " :" + channel_name;  
 ```
 
 ### Join
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " JOIN " + channel_name;  
 ```
 
 ### Kick
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " KICK " + channel_name + " " + clientToKickNick + " :" + reason;  
 ```
 
 ### Mode
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " MODE " + channel_name + " " + mode;  
 
 ```
 
 ### Nick
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + oldNick + " NICK :" + newNick;  
 ```
 
 ### Part
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " PART " + channel_name + " :" + reason;  
 ```
 
 ### Pass
 Message sent to the client:
-```
+```cpp
 std::string msg = "PASS " + password;  
 ```
 
 ### Privmsg
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
 ```
 
 ### Quit
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " QUIT :" + reason;  
 ```
 
 ### Topic
 Message sent to the client:
-```
+```cpp
 std::string msg = ":" + clientNick + " TOPIC " + channel_name + " :" + topic;  
 ```
 
 ### User
 Message sent to the client:
-```
+```cpp
 std::string msg = "USER " + username + " 0 * :" + realname;  
 ```
 
