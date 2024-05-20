@@ -26,6 +26,60 @@ Internet Relay Chat
 
 #
 
+## EPOLL
+Similar to poll(), but it is more efficient in handling a large number of fds.
+
+### Functions
+1. int epoll_create1(int flags)
+    Create an epoll instance and returns the file descriptor referring to that instance.
+
+2. int epoll_ctl(int epfd, int option, int fd, struct epoll_event *event)
+    Manages the list of file descriptors that the epoll instance should monitor.
+    "option" can be EPOLL_CTL_ADD, EPOLL_CTL_MOD, EPOLL_CTL_DEL.
+
+```
+EPOLL_CTL_ADD:
+Add an entry to the interest list of the epoll file
+descriptor, epfd.  The entry includes the file descriptor,
+fd, a reference to the corresponding open file description.
+
+EPOLL_CTL_MOD:
+Change the settings associated with fd in the interest
+list to the new settings specified in event.
+
+EPOLL_CTL_DEL:
+Remove (deregister) the target file descriptor fd from the
+interest list.  The event argument is ignored and can be
+NULL (but see BUGS below).
+```
+
+3. int epoll_wait(int epfd, struct epoll_event *events, int max_events, int timeout)
+    Waits for events on the epoll instance.
+
+```cpp
+void	Server::init_poll()
+{
+	_event.events = EPOLLIN | EPOLLOUT;
+	_event.data.fd = _sock.fd;
+	_events[0].data.fd = _sock.fd;
+
+	event_fd = epoll_create1(0);
+
+	epoll_ctl(event_fd, EPOLL_CTL_ADD, _sock.fd, &_event);
+
+	memset(&_events, 0, sizeof(_events));
+}
+```
+```
+EPOLLIN:
+Available for read operastions.
+
+EPOLLOUT:
+Available for write operations.
+```
+
+#
+
 # Classes
 ## Server Class
 
