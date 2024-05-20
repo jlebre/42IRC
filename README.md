@@ -1,10 +1,10 @@
 # 42IRC
 This project is about creating an IRC server.
- 
+\
 Using HexChat (an actual IRC client) to connect to the server and test it.
 
 Internet is ruled by solid standards protocols that allow connected computers to interact with each other.
- 
+\
 It’s always a good thing to know.
 
 ## Setup
@@ -31,11 +31,11 @@ Similar to poll(), but it is more efficient in handling a large number of fds.
 
 ### Functions
 1. int epoll_create1(int flags)
- 
+\
 Create an epoll instance and returns the file descriptor referring to that instance.
 
 2. int epoll_ctl(int epfd, int option, int fd, struct epoll_event *event)
- 
+\
 Manages the list of file descriptors that the epoll instance should monitor.
     "option" can be EPOLL_CTL_ADD, EPOLL_CTL_MOD, EPOLL_CTL_DEL.
 
@@ -56,7 +56,7 @@ NULL (but see BUGS below).
 ```
 
 3. int epoll_wait(int epfd, struct epoll_event *events, int max_events, int timeout)
- 
+\
 Waits for events on the epoll instance.
 
 ```cpp
