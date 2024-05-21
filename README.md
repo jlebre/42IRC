@@ -149,64 +149,6 @@ such as duplicating descriptors or changing their properties.
 poll: This function waits for events on a set of file descriptors,
 allowing a program to multiplex I/O operations.
 
-
-
-1. INVITE:
-   - Purpose: Invites a user to a specific channel.
-   - Server Considerations: Check if the user issuing the command has the necessary privileges to invite others to the channel. Verify if the channel exists and if the invited user is allowed to join.
-   - Server-to-Client Message: `:server_name INVITE invited_user :channel_name`
-
-2. JOIN:
-   - Purpose: Joins a user to a specific channel.
-   - Server Considerations: Check if the channel exists and if the user has the necessary permissions to join. Notify other users in the channel about the new user.
-   - Server-to-Client Message: `:user!user@host JOIN :#channel`
-
-3. KICK:
-   - Purpose: Removes a user from a channel.
-   - Server Considerations: Verify if the user issuing the kick command has the necessary privileges. Notify the kicked user and the channel about the action.
-   - Server-to-Client Message: `:server_name KICK channel_name kicked_user :reason`
-
-4. MODE:
-   - Purpose: Sets modes (e.g., user modes or channel modes).
-   - Server Considerations: Validate the mode changes requested by the user. Update the mode settings accordingly.
-   - Server-to-Client Message: `:server_name MODE target parameters`
-
-5. NICK:
-   - Purpose: Changes a user's nickname.
-   - Server Considerations: Check if the new nickname is valid and not already in use. Notify other users about the nickname change.
-   - Server-to-Client Message: `:old_nick NICK new_nick`
-
-6. PART:
-   - Purpose: Removes a user from a channel.
-   - Server Considerations: Verify if the user is in the specified channel and handle the removal accordingly.
-   - Server-to-Client Message: `:user!user@host PART #channel`
-
-7. PASS:
-   - Purpose: Sets a password for connection.
-   - Server Considerations: Authenticate users based on the provided password.
-   - Server-to-Client Message: Not typically used for server-to-client communication.
-
-8. PRIVMSG:
-   - Purpose: Sends a private message to a user or a message to a channel.
-   - Server Considerations: Deliver the message to the intended recipient(s) based on the target specified.
-   - Server-to-Client Message: `:sender PRIVMSG target :message_text`
-
-9. QUIT:
-   - Purpose: Disconnects a user from the IRC server.
-   - Server Considerations: Handle the disconnection gracefully and notify other users about the quit message.
-   - Server-to-Client Message: `:user!user@host QUIT :Quit message`
-
-10. TOPIC:
-    - Purpose: Sets or retrieves the topic of a channel.
-    - Server Considerations: Validate the topic change and notify users in the channel about the new topic.
-    - Server-to-Client Message: `:server_name TOPIC #channel :new_topic`
-
-11. USER:
-    - Purpose: Registers a new user with the server.
-    - Server Considerations: Authenticate the user and set initial user attributes.
-    - Server-to-Client Message: Not typically used for server-to-client communication.
-
-
 ## Step by step
 
 The main function:
@@ -397,129 +339,71 @@ Second, separate the the command.
 
 Third, apply the changes to all members.
 
-### Invite
-Usage:
-```
-/invite <nick> <#channel>
-```
+1. INVITE:
+   - Purpose: Invites a user to a specific channel.
+   - Server Considerations: Check if the user issuing the command has the necessary privileges to invite others to the channel. Verify if the channel exists and if the invited user is allowed to join.
+   - Usage: `/invite <nick> <#channel>`
+   - Server-to-Client Message: `:server_name INVITE invited_user :channel_name`
 
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " INVITE " + invitedNick + " :" + channel_name;  
-```
+2. JOIN:
+   - Purpose: Joins a user to a specific channel.
+   - Server Considerations: Check if the channel exists and if the user has the necessary permissions to join. Notify other users in the channel about the new user.
+   - Usage:``/join <#channel>``
+   - Server-to-Client Message: `:user!user@host JOIN :#channel`
 
-### Join
-Usage:
-```
-/join <#channel>
-```
+3. KICK:
+   - Purpose: Removes a user from a channel.
+   - Server Considerations: Verify if the user issuing the kick command has the necessary privileges. Notify the kicked user and the channel about the action.
+   - Usage:`/kick <#channel> <nick> [<reason>]`
+   - Server-to-Client Message: `:server_name KICK channel_name kicked_user :reason`
 
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " JOIN " + channel_name;  
-```
+4. MODE:
+   - Purpose: Sets modes (e.g., user modes or channel modes).
+   - Server Considerations: Validate the mode changes requested by the user. Update the mode settings accordingly.
+   - Usage:`/mode <#channel> <mode> [<mode params>]`
+   - Server-to-Client Message: `:server_name MODE target parameters`
 
-### Kick
-Usage:
-```
-/kick <#channel> <nick> [<reason>]
-```
+5. NICK:
+   - Purpose: Changes a user's nickname.
+   - Server Considerations: Check if the new nickname is valid and not already in use. Notify other users about the nickname change. Nickname can have a maximum length of nine characters.
+   - Usage:`/nick <newnick>`
+   - Server-to-Client Message: `:old_nick NICK new_nick`
 
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " KICK " + channel_name + " " + clientToKickNick + " :" + reason;  
-```
+6. PART:
+   - Purpose: Removes a user from a channel.
+   - Server Considerations: Verify if the user is in the specified channel and handle the removal accordingly.
+   - Usage:`/part <#channel> [<message>]`
+   - Server-to-Client Message: `:user!user@host PART #channel`
 
-### Mode
-Usage:
-```
-/mode <#channel> <mode> [<mode params>]
-```
+7. PASS:
+   - Purpose: Sets a password for connection.
+   - Server Considerations: Authenticate users based on the provided password.
+   - Usage:`/pass <password>`
+   - Server-to-Client Message: Not typically used for server-to-client communication.
 
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " MODE " + channel_name + " " + mode;  
+8. PRIVMSG:
+   - Purpose: Sends a private message to a user or a message to a channel.
+   - Server Considerations: Deliver the message to the intended recipient(s) based on the target specified.
+   - Usage:`/privmsg <target> <message>`
+   - Server-to-Client Message: `:sender PRIVMSG target :message_text`
 
-```
+9. QUIT:
+   - Purpose: Disconnects a user from the IRC server.
+   - Server Considerations: Handle the disconnection gracefully and notify other users about the quit message.
+   - Usage:`/quit [<message>]`
+   - Server-to-Client Message: `:user!user@host QUIT :Quit message`
 
-### Nick
-Usage:
-```
-/nick <newnick>
-```
+10. TOPIC:
+   - Purpose: Sets or retrieves the topic of a channel.
+   - Server Considerations: Validate the topic change and notify users in the channel about the new topic.
+   - Usage:`/topic <#channel> [<newtopic>]`
+   - Server-to-Client Message: `:server_name TOPIC #channel :new_topic`
 
-Message sent to the client:
-```cpp
-std::string msg = ":" + oldNick + " NICK :" + newNick;  
-```
-
-Nickname can have a maximum length of nine characters.
-
-### Part
-Usage:
-```
-/part <#channel> [<message>]
-```
-
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " PART " + channel_name + " :" + reason;  
-```
-
-### Pass
-Usage:
-```
-/pass <password>
-```
-
-Message sent to the client:
-```cpp
-std::string msg = "PASS " + password;  
-```
-
-### Privmsg
-Usage:
-```
-/privmsg <target> <message>
-```
-
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
-```
-
-### Quit
-Usage:
-```
-/quit [<message>]
-```
-
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " QUIT :" + reason;  
-```
-
-### Topic
-Usage:
-```
-/topic <#channel> [<newtopic>]
-```
-
-Message sent to the client:
-```cpp
-std::string msg = ":" + clientNick + " TOPIC " + channel_name + " :" + topic;  
-```
-
-### User
-Usage:
-```
-/user <username> <hostname> <servername> <realname>
-```
-
-Message sent to the client:
-```cpp
-std::string msg = "USER " + username + " 0 * :" + realname;  
-```
+11. USER:
+   - Purpose: Registers a new user with the server.
+   - Server Considerations: Authenticate the user and set initial user attributes.
+   - Usage:`/user <username> <hostname> <servername> <realname>`
+   - Server-to-Client Message: Not typically used for server-to-client communication.
 
 ## IRC Numeric Reply Codes
 ```
