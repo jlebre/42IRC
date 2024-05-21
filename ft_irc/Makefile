@@ -1,31 +1,16 @@
-#FILE_NAME = srcs/main.cpp Client/client.cpp \
-		srcs/commands.cpp srcs/utils.cpp \
-		srcs/handle_fd.cpp srcs/main_loop.cpp \
-		srcs/socket.cpp Channel/channel.cpp \
-		Server/server.cpp Socket/socket.cpp 
-
-#TEMPLATES_NAME = templates.tpp
-
-#TEMPLATES_DIR = templates
-
-#SRCS_DIR = srcs
-
-#SRCS = $(addprefix $(SRCS_DIR)/, $(FILE_NAME)) \
-	$(addprefix $(TEMPLATES_DIR)/, $(TEMPLATES_NAME))
-
-SRCS = srcs/main.cpp Client/client.cpp Client/info.cpp \
-		Server/server.cpp Server/main_loop.cpp \
-		Server/connect.cpp Server/reply.cpp \
-		Server/process_input.cpp Server/parser.cpp \
-		Commands/pass.cpp Commands/nick.cpp \
-		Commands/user.cpp Commands/join.cpp \
-		Commands/part.cpp Commands/quit.cpp \
-		Commands/privmsg.cpp Commands/mode.cpp \
-		Commands/topic.cpp Commands/kick.cpp \
-		Commands/invite.cpp \
-		Channel/channel.cpp Channel/info.cpp \
-		Socket/socket.cpp Socket/read.cpp \
-		Socket/poll.cpp 
+SRCS = main.cpp classes/Client/client.cpp classes/Client/info.cpp \
+		classes/Server/server.cpp classes/Server/main_loop.cpp \
+		classes/Server/connect.cpp classes/Server/reply.cpp \
+		classes/Server/process_input.cpp classes/Server/parser.cpp \
+		commands/pass.cpp commands/nick.cpp \
+		commands/user.cpp commands/join.cpp \
+		commands/part.cpp commands/quit.cpp \
+		commands/privmsg.cpp commands/mode.cpp \
+		commands/topic.cpp commands/kick.cpp \
+		commands/invite.cpp \
+		classes/Channel/channel.cpp classes/Channel/info.cpp \
+		classes/Socket/socket.cpp classes/Socket/read.cpp \
+		classes/Socket/poll.cpp 
 
 CXX = c++
 

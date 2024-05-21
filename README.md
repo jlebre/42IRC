@@ -44,6 +44,169 @@ make a
 
 #
 
+## Allowed functions description
+
+socket: This function creates a new socket of a specified type,
+such as a stream socket or a datagram socket, and returns a
+file descriptor for that socket.
+
+
+close: The `close` function is used to close a file descriptor, 
+including those associated with sockets.
+
+
+setsockopt: This function sets options associated with a socket options 
+could include things like timeout values, buffer sizes, or socket behavior.
+
+
+getsockname: This function retrieves the local address of a socket,
+which is assigned to it by the operating system when the socket
+is created or bound.
+
+
+getprotobyname: This function retrieves protocol information
+associated with a given protocol name, such as "tcp" or "udp".
+
+
+gethostbyname: This function retrieves host information corresponding
+to a given hostname, such as IP address.
+
+
+getaddrinfo: This function provides a protocol-independent way to
+get address information, such as IP address and port number,
+for a given hostname and service.
+
+
+freeaddrinfo: This function frees memory allocated by `getaddrinfo`
+when it's no longer needed.
+
+
+bind: The `bind` function associates a socket with a specific address
+(IP address and port number) on the local machine.
+
+
+connect: This function is used by a client to establish a connection
+to a remote server using a specified socket.
+
+
+listen: This function marks a socket as passive, indicating that it 
+will be used to accept incoming connection requests.
+
+
+accept: This function is called on a listening socket to accept
+a new incoming connection, creating a new socket for 
+communication with the client.
+
+
+htons: This function converts a 16-bit unsigned integer from host 
+byte order to network byte order (short).
+
+
+htonl: Similar to `htons`, but for 32-bit unsigned integers (long).
+
+
+ntohs: This function converts a 16-bit unsigned integer from network 
+byte order to host byte order.
+
+
+ntohl: Similar to `ntohs`, but for 32-bit unsigned integers.
+
+
+inet_addr: This function converts a string representing an
+IPv4 address into a binary form (32-bit integer).
+
+
+inet_ntoa: This function converts an IPv4 address in binary form
+to a string representation.
+
+
+send: This function sends data over a connected socket.
+
+
+recv: This function receives data from a connected socket.
+
+
+signal: This function sets a signal handler for a specific signal,
+allowing the program to respond to signals such as interrupts or
+termination requests.
+
+
+sigaction: Similar to `signal`, but provides more control over signal
+handling behavior.
+
+
+lseek: This function changes the current file offset of an open file.
+
+
+fstat: This function retrieves information about an open file,
+such as file size, permissions, and type.
+
+
+fcntl: This function performs various operations on openfile descriptors,
+such as duplicating descriptors or changing their properties.
+
+
+poll: This function waits for events on a set of file descriptors,
+allowing a program to multiplex I/O operations.
+
+
+
+1. INVITE:
+   - Purpose: Invites a user to a specific channel.
+   - Server Considerations: Check if the user issuing the command has the necessary privileges to invite others to the channel. Verify if the channel exists and if the invited user is allowed to join.
+   - Server-to-Client Message: `:server_name INVITE invited_user :channel_name`
+
+2. JOIN:
+   - Purpose: Joins a user to a specific channel.
+   - Server Considerations: Check if the channel exists and if the user has the necessary permissions to join. Notify other users in the channel about the new user.
+   - Server-to-Client Message: `:user!user@host JOIN :#channel`
+
+3. KICK:
+   - Purpose: Removes a user from a channel.
+   - Server Considerations: Verify if the user issuing the kick command has the necessary privileges. Notify the kicked user and the channel about the action.
+   - Server-to-Client Message: `:server_name KICK channel_name kicked_user :reason`
+
+4. MODE:
+   - Purpose: Sets modes (e.g., user modes or channel modes).
+   - Server Considerations: Validate the mode changes requested by the user. Update the mode settings accordingly.
+   - Server-to-Client Message: `:server_name MODE target parameters`
+
+5. NICK:
+   - Purpose: Changes a user's nickname.
+   - Server Considerations: Check if the new nickname is valid and not already in use. Notify other users about the nickname change.
+   - Server-to-Client Message: `:old_nick NICK new_nick`
+
+6. PART:
+   - Purpose: Removes a user from a channel.
+   - Server Considerations: Verify if the user is in the specified channel and handle the removal accordingly.
+   - Server-to-Client Message: `:user!user@host PART #channel`
+
+7. PASS:
+   - Purpose: Sets a password for connection.
+   - Server Considerations: Authenticate users based on the provided password.
+   - Server-to-Client Message: Not typically used for server-to-client communication.
+
+8. PRIVMSG:
+   - Purpose: Sends a private message to a user or a message to a channel.
+   - Server Considerations: Deliver the message to the intended recipient(s) based on the target specified.
+   - Server-to-Client Message: `:sender PRIVMSG target :message_text`
+
+9. QUIT:
+   - Purpose: Disconnects a user from the IRC server.
+   - Server Considerations: Handle the disconnection gracefully and notify other users about the quit message.
+   - Server-to-Client Message: `:user!user@host QUIT :Quit message`
+
+10. TOPIC:
+    - Purpose: Sets or retrieves the topic of a channel.
+    - Server Considerations: Validate the topic change and notify users in the channel about the new topic.
+    - Server-to-Client Message: `:server_name TOPIC #channel :new_topic`
+
+11. USER:
+    - Purpose: Registers a new user with the server.
+    - Server Considerations: Authenticate the user and set initial user attributes.
+    - Server-to-Client Message: Not typically used for server-to-client communication.
+
+
 ## Step by step
 
 The main function:
@@ -81,6 +244,29 @@ void    Server::parse(int argc, char **argv)
 Here we check wether the number of arguments is correct, we attribute values to _sock.port and to _password.
 
 Then we init the socket.
+
+What is a Socket?
+
+A socket is one endpoint of a two way communication link between two programs running on the network. The socket mechanism provides a means of inter-process communication (IPC) by establishing named contact points between which the communication take place. 
+
+
+Function call:
+
+Socket() -> To create a socket.
+
+Bind() -> It is a socket identification like a telephone number to contact.
+
+Listen() -> Ready to recieve a connection.
+
+Connect() -> Ready to act as a sender.
+
+Accept() -> Confirmation, it is like accepting to recieve a call from a sender.
+
+Write() -> To send data.
+
+Read() -> To recieve data.
+
+Close() -> To close a connection.
 
 ```cpp
 void Server::init_socket()
@@ -190,6 +376,13 @@ void   Server::reply(Client &client, std::string msg)
 ## Client Class
 
 ## Channel Class
+A channel is a named group of one or more clients which will all receive messages addressed to that channel.
+The channel is created implicitly when the first client joins it, and the channel ceases to exist when the last client leaves it.
+While channel exists, any client can reference the channel using the name of the channel.
+
+
+Channels names are strings (beginning with a '&' or '#' character) of length up to 200 characters.
+Apart from the the requirement that the first character being either '&' or '#'; the only restriction on a channel name is that it may not contain any spaces (' '), a control G (^G or ASCII 7), or a comma (',' which is used as a list item separator by the protocol).
 
 #
 
@@ -259,6 +452,8 @@ Message sent to the client:
 ```cpp
 std::string msg = ":" + oldNick + " NICK :" + newNick;  
 ```
+
+Nickname can have a maximum length of nine characters.
 
 ### Part
 Usage:
@@ -438,6 +633,16 @@ Error Replies (400-599):
 - 501 ERR_UMODEUNKNOWNFLAG: Unknown MODE flag.
 - 502 ERR_USERSDONTMATCH: Cannot change mode for other users.
 ```
+
+#
+
+### Usefull links and files
+
+[IRC_Chat_Protocol](https://datatracker.ietf.org/doc/html/rfc1459)
+
+[IRC_Client_Protocol](https://datatracker.ietf.org/doc/html/rfc2812)
+
+[IRC_Server_Protocol](https://datatracker.ietf.org/doc/html/rfc2813)
 
 #
 
