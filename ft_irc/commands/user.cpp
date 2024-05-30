@@ -4,11 +4,11 @@ void		Server::user(Client& client)
 {
     std::cout << "USER COMMAND\n";
     if (client.getAuth() == false)
-        reply(client, "464 :Password incorrect");
+        reply(client, ERR_PASSWDMISMATCH);
     else
     {
         if (client.getRegistered() == true)
-            reply(client, "462 :Unauthorized command (already registered)");
+            reply(client, ERR_ALREADYREGISTERED);
         else
         {
             size_t i = _message.find("USER");
@@ -20,7 +20,7 @@ void		Server::user(Client& client)
                 user = user.substr(0, user.find(" "));
                 //user = "~" + user;
                 if (user.empty())
-                    reply(client, "461 :Need more parameters");
+                    reply(client, ERR_NEEDMOREPARAMS);
                 else
                 {
                     size_t j = _message.find(":");

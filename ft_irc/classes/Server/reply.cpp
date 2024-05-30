@@ -15,3 +15,15 @@ void    Server::reply_all(std::string msg)
             send(it->second->get_fd(), msg.c_str(), msg.length(), 0);
     }
 }
+
+void    Server::reply_all_on_channel(std::string msg, std::string channel_name)
+{
+    msg += "\r\n";
+    Channel channel = find_channel(channel_name);
+    std::vector<Client> cli = channel.get_clients();
+    for (size_t i = 0 ; i < cli.size() ; i++)
+    {
+        if (cli[i].getAuth() == true)
+            send(cli[i].get_fd(), msg.c_str(), msg.length(), 0);
+    }
+}

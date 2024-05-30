@@ -19,7 +19,7 @@ void	Server::pass(Client& client)
 {
 	std::cout << "PASS COMMAND\n";
 	if (client.getAuth() == true)
-		reply(client, "462 :Unauthorized command (already registered)");
+		reply(client, ERR_ALREADYREGISTERED);
 	else
 	{
 		size_t i = _message.find("PASS");
@@ -31,10 +31,10 @@ void	Server::pass(Client& client)
 			password = password.substr(i);
 			password = password.substr(0, password.find("\r\n"));
 			if (password.empty())
-				reply(client, "461 :Need more parameters");
+				reply(client, ERR_NEEDMOREPARAMS);
 			client.setAuth(check_pass(password));
 			if (client.getAuth() == false && _message.compare(""))
-				reply(client, "464 :Password incorrect");
+				reply(client, ERR_PASSWDMISMATCH);
 			else
 				reply(client, "381 :You are now logged in");
 		}

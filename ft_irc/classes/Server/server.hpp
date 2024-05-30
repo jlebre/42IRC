@@ -2,8 +2,9 @@
 # define SERVER_HPP
 
 # include "../Client/client.hpp"
-# include "../Commands/commands.hpp"
+# include "../commands/commands.hpp"
 # include "../Channel/channel.hpp"
+# include "../includes/replies.hpp"
 # include "../includes/libs.hpp"
 
 class Client;
@@ -51,15 +52,27 @@ class Server
 		void					reading(Client& cli);
 		void					process_input(Client& cli);
 		int	    				check_command(std::string line);
+
+		// REPLY
 		void    				reply(Client &client, std::string msg);
 		void    				reply_all(std::string msg);
+		void					reply_all_on_channel(std::string msg, std::string channel_name);
 
 		// CHECK
 		bool					check_pass(std::string pass);
 		bool					check_nickname(std::string nickname);
 		bool					check_on_server(std::string nick, std::string channel);
 		bool					check_on_channel(std::string nick);
+		bool					check_client_on_channel(std::string nick, std::string channel_name);
+		
+		// PARSE
+		void					parse_mode(std::string &channel_name, std::string &mode);
+		void					parse_invite(std::string &invited_nick, std::string &channel_name);
+		void        			parse_topic(std::string &channel_name, std::string &new_topic);
 
+		// FIND
+		Channel					&find_channel(std::string channel_name);
+		Client					*find_client(std::string nick);
 
 		// SOCK
 		void					init_socket();

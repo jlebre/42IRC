@@ -13,7 +13,7 @@ void		Server::join(Client& client)
     std::cout << "JOIN COMMAND\n";
     if (client.getRegistered() == false)
     {
-        reply(client, "451 :You are not registered");
+        reply(client, ERR_NOTREGISTERED);
         return ;
     }
     bool channel_exists = false;

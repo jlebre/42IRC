@@ -3,6 +3,7 @@
 
 # include "../Client/client.hpp"
 # include "../Server/server.hpp"
+# include "../includes/replies.hpp"
 # include "../includes/libs.hpp"
 
 class Client;

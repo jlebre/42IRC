@@ -13,7 +13,7 @@ void		Server::privmsg(Client& client)
     std::cout << "PRIVMSG COMMAND\n";
     if (client.getRegistered() == false)
     {
-        reply(client, "451 :You are not registered");
+        reply(client, ERR_NOTREGISTERED);
         return ;
     }
 

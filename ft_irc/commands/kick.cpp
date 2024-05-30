@@ -39,7 +39,7 @@ void		Server::kick(Client& client)
     std::cout << "KICK COMMAND\n";
     if (client.getRegistered() == false)
     {
-        reply(client, "451 :You are not registered");
+        reply(client, ERR_NOTREGISTERED);
         return ;
     }
 
@@ -56,7 +56,7 @@ void		Server::kick(Client& client)
         kick = kick.substr(i);
         kick = kick.substr(0, kick.find("\r\n"));
         if (kick.empty())
-            reply(client, "461 :Need more parameters");
+            reply(client, ERR_NEEDMOREPARAMS);
         else
         {
             size_t j = kick.find(" ");
@@ -72,18 +72,18 @@ void		Server::kick(Client& client)
                 }
             }
             else
-                reply(client, "461 :Need more parameters");
+                reply(client, ERR_NEEDMOREPARAMS);
         }
     }
     if (channel.empty() || nick.empty())
-        reply(client, "461 :Need more parameters");
+        reply(client, ERR_NEEDMOREPARAMS);
     else if (check_on_channel(nick) == false)
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
     else if (check_on_server(nick, channel) == false)
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
     else
     {
-        reply_all(":" + client.getNick() + " KICK " + channel + " " + nick + " :" + reason);
+        reply_all_on_channel(":" + client.getNick() + " KICK " + channel + " " + nick + " :" + reason, channel);
         reply(client, "442 " + nick + " " + channel + " :Kicked by " + client.getNick());
     }
 }

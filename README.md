@@ -46,107 +46,107 @@ make a
 
 ## Allowed functions description
 
-socket: This function creates a new socket of a specified type,
+**socket:** This function creates a new socket of a specified type,
 such as a stream socket or a datagram socket, and returns a
 file descriptor for that socket.
 
 
-close: The `close` function is used to close a file descriptor, 
+**close:** The `close` function is used to close a file descriptor, 
 including those associated with sockets.
 
 
-setsockopt: This function sets options associated with a socket options 
+**setsockopt:** This function sets options associated with a socket options 
 could include things like timeout values, buffer sizes, or socket behavior.
 
 
-getsockname: This function retrieves the local address of a socket,
+**getsockname:** This function retrieves the local address of a socket,
 which is assigned to it by the operating system when the socket
 is created or bound.
 
 
-getprotobyname: This function retrieves protocol information
+**getprotobyname:** This function retrieves protocol information
 associated with a given protocol name, such as "tcp" or "udp".
 
 
-gethostbyname: This function retrieves host information corresponding
+**gethostbyname:** This function retrieves host information corresponding
 to a given hostname, such as IP address.
 
 
-getaddrinfo: This function provides a protocol-independent way to
+**getaddrinfo:** This function provides a protocol-independent way to
 get address information, such as IP address and port number,
 for a given hostname and service.
 
 
-freeaddrinfo: This function frees memory allocated by `getaddrinfo`
+**freeaddrinfo:** This function frees memory allocated by `getaddrinfo`
 when it's no longer needed.
 
 
-bind: The `bind` function associates a socket with a specific address
+**bind:** The `bind` function associates a socket with a specific address
 (IP address and port number) on the local machine.
 
 
-connect: This function is used by a client to establish a connection
+**connect:** This function is used by a client to establish a connection
 to a remote server using a specified socket.
 
 
-listen: This function marks a socket as passive, indicating that it 
+**listen:** This function marks a socket as passive, indicating that it 
 will be used to accept incoming connection requests.
 
 
-accept: This function is called on a listening socket to accept
+**accept:** This function is called on a listening socket to accept
 a new incoming connection, creating a new socket for 
 communication with the client.
 
 
-htons: This function converts a 16-bit unsigned integer from host 
+**htons:** This function converts a 16-bit unsigned integer from host 
 byte order to network byte order (short).
 
 
-htonl: Similar to `htons`, but for 32-bit unsigned integers (long).
+**htonl:** Similar to `htons`, but for 32-bit unsigned integers (long).
 
 
-ntohs: This function converts a 16-bit unsigned integer from network 
+**ntohs:** This function converts a 16-bit unsigned integer from network 
 byte order to host byte order.
 
 
-ntohl: Similar to `ntohs`, but for 32-bit unsigned integers.
+**ntohl:** Similar to `ntohs`, but for 32-bit unsigned integers.
 
 
-inet_addr: This function converts a string representing an
+**inet_addr:** This function converts a string representing an
 IPv4 address into a binary form (32-bit integer).
 
 
-inet_ntoa: This function converts an IPv4 address in binary form
+**inet_ntoa:** This function converts an IPv4 address in binary form
 to a string representation.
 
 
-send: This function sends data over a connected socket.
+**send:** This function sends data over a connected socket.
 
 
-recv: This function receives data from a connected socket.
+**recv:** This function receives data from a connected socket.
 
 
-signal: This function sets a signal handler for a specific signal,
+**signal:** This function sets a signal handler for a specific signal,
 allowing the program to respond to signals such as interrupts or
 termination requests.
 
 
-sigaction: Similar to `signal`, but provides more control over signal
+**sigaction:** Similar to `signal`, but provides more control over signal
 handling behavior.
 
 
-lseek: This function changes the current file offset of an open file.
+**lseek:** This function changes the current file offset of an open file.
 
 
-fstat: This function retrieves information about an open file,
+**fstat:** This function retrieves information about an open file,
 such as file size, permissions, and type.
 
 
-fcntl: This function performs various operations on openfile descriptors,
+**fcntl:** This function performs various operations on openfile descriptors,
 such as duplicating descriptors or changing their properties.
 
 
-poll: This function waits for events on a set of file descriptors,
+**poll:** This function waits for events on a set of file descriptors,
 allowing a program to multiplex I/O operations.
 
 ## Step by step
@@ -194,21 +194,21 @@ A socket is one endpoint of a two way communication link between two programs ru
 
 Function call:
 
-Socket() -> To create a socket.
+**Socket()** -> To create a socket.
 
-Bind() -> It is a socket identification like a telephone number to contact.
+**Bind()** -> It is a socket identification like a telephone number to contact.
 
-Listen() -> Ready to recieve a connection.
+**Listen()** -> Ready to recieve a connection.
 
-Connect() -> Ready to act as a sender.
+**Connect()** -> Ready to act as a sender.
 
-Accept() -> Confirmation, it is like accepting to recieve a call from a sender.
+**Accept()** -> Confirmation, it is like accepting to recieve a call from a sender.
 
-Write() -> To send data.
+**Write()** -> To send data.
 
-Read() -> To recieve data.
+**Read()** -> To recieve data.
 
-Close() -> To close a connection.
+**Close()** -> To close a connection.
 
 ```cpp
 void Server::init_socket()
@@ -259,16 +259,16 @@ Manages the list of file descriptors that the epoll instance should monitor.
     "option" can be EPOLL_CTL_ADD, EPOLL_CTL_MOD, EPOLL_CTL_DEL.
 
 ```
-EPOLL_CTL_ADD:
+**EPOLL_CTL_ADD:**
 Add an entry to the interest list of the epoll file
 descriptor, epfd.  The entry includes the file descriptor,
 fd, a reference to the corresponding open file description.
 
-EPOLL_CTL_MOD:
+**EPOLL_CTL_MOD:**
 Change the settings associated with fd in the interest
 list to the new settings specified in event.
 
-EPOLL_CTL_DEL:
+**EPOLL_CTL_DEL:**
 Remove (deregister) the target file descriptor fd from the
 interest list.  The event argument is ignored and can be
 NULL (but see BUGS below).
@@ -293,10 +293,10 @@ void	Server::init_poll()
 }
 ```
 ```
-EPOLLIN:
+**EPOLLIN:**
 Available for read operations.
 
-EPOLLOUT:
+**EPOLLOUT:**
 Available for write operations.
 ```
 

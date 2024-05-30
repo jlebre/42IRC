@@ -1,6 +1,7 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
+# include "../includes/replies.hpp"
 # include "../includes/libs.hpp"
 # include "../Channel/channel.hpp"
 
@@ -8,7 +9,7 @@ class Channel;
 
 class Client
 {
-	private:
+	private: 
 		struct sockaddr_in  _addr;
 		socklen_t           _addr_size;
 		std::string         _nickname;
@@ -47,6 +48,9 @@ class Client
 		void setAddr(struct sockaddr_in addr);
 		void setAuth(bool auth);
 		void setRegistered(bool registered);
+
+		// CHECK
+		bool is_operator(Channel& channel);
 };
 
 #endif

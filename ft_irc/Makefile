@@ -14,7 +14,7 @@ SRCS = main.cpp classes/Client/client.cpp classes/Client/info.cpp \
 
 CXX = c++
 
-INC = -I includes -I Client -I Server -I Channel
+INC = -I includes -I classes/Client -I classes/Server -I classes/Channel
 
 CXXFLAGS = -Wall -Wextra -Werror $(INC) -std=c++98
 

@@ -13,7 +13,7 @@ void		Server::quit(Client& client)
     std::cout << "QUIT COMMAND\n";
     if (client.getRegistered() == false)
     {
-        reply(client, "451 :You are not registered");
+        reply(client, ERR_NOTREGISTERED);
         return ;
     }
 
