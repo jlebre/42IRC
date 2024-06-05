@@ -42,6 +42,11 @@ std::vector<Client> Channel::get_operators() const
     return _operators;
 }
 
+std::set<Client*> Channel::getMembers() const
+{
+    return _members;
+}
+
 // Setters
 
 void Channel::set_name(std::string name)

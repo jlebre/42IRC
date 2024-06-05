@@ -14,5 +14,8 @@
 # define ERR_NOPRIVILEGES "481 :Permission Denied- You're not an IRC operator"
 # define ERR_CHANOPRIVSNEEDED "482 :You're not channel operator"
 # define ERR_USERONCHANNEL "443 :is already on channel"
+# define ERR_NONICKNAMEGIVEN "431 :No nickname given"
+# define ERR_ERRONEUSNICKNAME "432 :Erroneous nickname"
+# define ERR_NICKNAMEINUSE "433 :Nickname is already in use"
 
 #endif

@@ -83,7 +83,7 @@ void		Server::kick(Client& client)
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
     else
     {
-        reply_all_on_channel(":" + client.getNick() + " KICK " + channel + " " + nick + " :" + reason, channel);
+        //reply_all_on_channel(":" + client.getNick() + " KICK " + channel + " " + nick + " :" + reason, channel);
         reply(client, "442 " + nick + " " + channel + " :Kicked by " + client.getNick());
     }
 }

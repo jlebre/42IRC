@@ -36,6 +36,7 @@ void		Server::join(Client& client)
         channel.add_operator(client);
         channel.set_topic("");
         _channels.push_back(channel);
+        client.addChannel(&channel);
         std::string message = ":" + client.getNick() + " JOIN " + channel_name;
         reply_all(message);
     }

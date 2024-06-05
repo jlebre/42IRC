@@ -1,11 +1,9 @@
 Commands
 Exceptions
+Implementar Try e Catch para não dar Segfault
 
-
-Quando se usa "nc"
-Ao fazer PASS e depois USER (em vez de NICK) o programa quebra
-
+JOIN pode juntar a varios canais de uma vez
+MODE pode ter vários argumentos
 
 Testes:
-
 Mensagens estupidamente grandes

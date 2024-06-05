@@ -58,7 +58,7 @@ class Server
 		// REPLY
 		void    				reply(Client &client, std::string msg);
 		void    				reply_all(std::string msg);
-		void					reply_all_on_channel(std::string msg, std::string channel_name);
+		void    				reply_all_on_channel(const std::string msg, const Client& client);
 
 		// CHECK
 		bool					check_pass(std::string pass);

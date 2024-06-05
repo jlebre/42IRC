@@ -27,6 +27,7 @@ class Channel
         std::string         _topic;
         t_modes             _mode;
         int                 _limit;
+        std::set<Client*> _members;
 
     public:
         Channel();
@@ -49,6 +50,7 @@ class Channel
         std::vector<Client> get_clients() const;
         std::vector<Client> get_invited() const;
         std::vector<Client> get_operators() const;
+        std::set<Client*> getMembers() const;
 
         //Setters
         void set_name(std::string name);

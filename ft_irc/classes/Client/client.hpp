@@ -20,6 +20,7 @@ class Client
 		bool                _status;
 		bool                _auth;
 		bool                _registered;
+		std::vector<Channel*> _channels;
 
 	public:
 		Client(struct sockaddr_in addr, socklen_t addr_size, int fd);
@@ -39,6 +40,7 @@ class Client
 		struct sockaddr_in getAddr();
 		bool getAuth();
 		bool getRegistered();
+		std::vector<Channel*> getChannels() const;
 
 		// SETTERS
 		void setStatus(bool status);
@@ -48,6 +50,8 @@ class Client
 		void setAddr(struct sockaddr_in addr);
 		void setAuth(bool auth);
 		void setRegistered(bool registered);
+		void addChannel(Channel *channel);
+		void removeChannel(Channel *channel);
 
 		// CHECK
 		bool is_operator(Channel& channel);

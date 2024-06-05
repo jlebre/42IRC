@@ -12,46 +12,48 @@ bool    Server::check_nickname(std::string nickname)
 
 void    Server::parse_nick(std::string &nickname)
 {
-    _line = _line.substr(_line.find("NICK") + 5);
-	if (_line.find(" ") != std::string::npos)
-		nickname = _line.substr(0, _line.find(" "));
-	else if (_line.find("\r") != std::string::npos)
-		nickname = _line.substr(0, _line.find("\r"));
-	else if (_line.find("\n") != std::string::npos)
-		nickname = _line.substr(0, _line.find("\n"));
-	else
-		nickname = _line;
-	_line.clear();
+    size_t pos = _line.find("NICK");
+    if (pos != std::string::npos)
+    {
+        pos += 5;
+        size_t end = _line.find_first_of(" \r\n", pos);
+        nickname = _line.substr(pos, end - pos);
+    }
+    else
+        nickname.clear();
 }
 
 void		Server::nick(Client& client)
 {
     std::cout << "NICK COMMAND\n";
     
-    if (client.getAuth() == true)
+    if (client.getAuth())
     {
         std::string nickname;
         parse_nick(nickname);
         if (nickname.empty())
-            reply(client, "431 :No nickname given");
+            reply(client, ERR_NONICKNAMEGIVEN);
         else if (nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
-            reply(client, "432 :Erroneous nickname");
+            reply(client, ERR_ERRONEUSNICKNAME);
         else if (nickname.size() > 9)
-            reply(client, "432 :Erroneous nickname");
+            reply(client, ERR_ERRONEUSNICKNAME);
         else if (check_nickname(nickname))
-            reply(client, "433 :Nickname is already in use");
+            reply(client, ERR_NICKNAMEINUSE);
         else
         {
-            if (client.getRegistered() == false && client.getUser().empty() == false)
+            if (!client.getRegistered() && !client.getUser().empty())
             {
                 client.setRegistered(true);
                 reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client.getUser() + "@" + "127.0.0.1");
             }
-            //else
-            //   reply_all_on_channel(":" + client.getNick() + " NICK " + nickname); // Send message to all clients in the channel
-            client.setNick(nickname);
+            else
+            {
+                std::string old = client.getNick();
+                client.setNick(nickname);
+                reply_all_on_channel(":" + old + " NICK " + nickname, client);
+            }
         }
     }
     else
-        reply(client, "451 :You have not registered");
+        reply(client, ERR_NOTREGISTERED);
 }

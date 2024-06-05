@@ -81,3 +81,8 @@ bool Client::getRegistered()
 {
     return (_registered);
 }
+
+std::vector<Channel*> Client::getChannels() const
+{
+    return _channels;
+}

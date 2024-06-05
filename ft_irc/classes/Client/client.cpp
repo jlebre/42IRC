@@ -51,3 +51,15 @@ bool Client::is_operator(Channel& channel)
     }
     return false;
 }
+
+void Client::addChannel(Channel *channel)
+{
+    _channels.push_back(channel);
+}
+
+void Client::removeChannel(Channel *channel)
+{
+    std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
+    if (it != _channels.end())
+        _channels.erase(it);
+}

@@ -16,14 +16,18 @@ void    Server::reply_all(std::string msg)
     }
 }
 
-void    Server::reply_all_on_channel(std::string msg, std::string channel_name)
+// Sends a message to all clients in the same channels as the given client
+void    Server::reply_all_on_channel(const std::string msg, const Client& client)
 {
-    msg += "\r\n";
-    Channel channel = find_channel(channel_name);
-    std::vector<Client> cli = channel.get_clients();
-    for (size_t i = 0 ; i < cli.size() ; i++)
+    std::vector<Channel*> channels = client.getChannels();
+    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
     {
-        if (cli[i].getAuth() == true)
-            send(cli[i].get_fd(), msg.c_str(), msg.length(), 0);
+        std::set<Client*> members = (*it)->getMembers();
+        for (std::set<Client*>::iterator member = members.begin(); member != members.end(); ++member)
+        {
+            if (*member != &client)
+                if (write((*member)->get_fd(), msg.c_str(), msg.size()) < 0)
+                    std::cerr << "Failed to send message to client\n";
+        }
     }
 }
