@@ -28,20 +28,51 @@ bool    Server::check_nickname(std::string nickname)
 /* and send a welcome message.                                     */
 /*******************************************************************/
 
+void    Server::parse_nick(std::string &nickname)
+{
+    // Find "NICK"
+    _line = _line.substr(_line.find("NICK") + 5);
+
+    // Remove "NICK"
+    _line = _line.substr(_line.find(" ") + 1);
+    
+    // Get "nickname"
+    size_t pos = _line.find("\n");
+    if (pos != std::string::npos)
+    {
+        // Check for spaces
+        if (_line.find(" ") != std::string::npos)
+        {
+            nickname = _line.substr(0, _line.find(" "));
+            _line = _line.substr(_line.find(" ") + 1);
+        }
+        else
+        {
+            nickname = _line.substr(0, pos);
+            _line = _line.substr(pos + 1);
+        }
+    }
+    else
+    {
+        if (_line[_line.size() - 2] == '\r')
+            nickname = _line.substr(0, _line.size() - 2);
+        else
+            nickname = _line.substr(0, _line.size() - 1);
+        _line.clear();
+    }
+}
+
 void		Server::nick(Client& client)
 {
     std::cout << "NICK COMMAND\n";
     
     if (client.getAuth() == true) // If the client is registered
     {
-        size_t i = _message.find("NICK");
+        size_t i = _line.find("NICK");
         if (i != std::string::npos)
         {
             std::string nickname;
-            nickname = _message;
-            nickname.erase(i, 5);
-            nickname = nickname.substr(i);
-            nickname = nickname.substr(0, nickname.find("\r\n"));
+            parse_nick(nickname);
             if (nickname.empty()) // If no nickname is given
                 reply(client, "431 :No nickname given");
             else if (nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
@@ -57,8 +88,8 @@ void		Server::nick(Client& client)
                     client.setRegistered(true);
                     reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client.getUser() + "@" + "127.0.0.1");
                 }
-                else
-                    reply_all(":" + client.getNick() + " NICK " + nickname + "\r\n"); // Send message to all clients in the channel
+                //else
+                //   reply_all_on_channel(":" + client.getNick() + " NICK " + nickname); // Send message to all clients in the channel
                 client.setNick(nickname);
             }
         }

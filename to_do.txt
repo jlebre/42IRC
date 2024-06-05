@@ -1,2 +1,11 @@
 Commands
 Exceptions
+
+
+Quando se usa "nc"
+Ao fazer PASS e depois USER (em vez de NICK) o programa quebra
+
+
+Testes:
+
+Mensagens estupidamente grandes

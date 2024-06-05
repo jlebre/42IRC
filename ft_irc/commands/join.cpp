@@ -8,6 +8,8 @@ Message to Client:
 :<nick> JOIN <channel>
 */
 
+// Pode juntar a mais do que 1 canal de uma vez
+
 void		Server::join(Client& client)
 {
     std::cout << "JOIN COMMAND\n";

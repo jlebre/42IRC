@@ -25,6 +25,8 @@ class Server
 		char					_buf[BUF_SIZE];
 		std::string				_password;
 		std::string				_message;
+		
+		std::string				_line;
 		std::map<int, Client*>	_clients;
 
 		// SOCKET
@@ -69,7 +71,10 @@ class Server
 		void					parse_mode(std::string &channel_name, std::string &mode);
 		void					parse_invite(std::string &invited_nick, std::string &channel_name);
 		void        			parse_topic(std::string &channel_name, std::string &new_topic);
-
+		void					parse_pass(std::string &password);
+		void    				parse_nick(std::string &nickname);
+		void    				parse_user(std::string &user, std::string &real);
+		
 		// FIND
 		Channel					&find_channel(std::string channel_name);
 		Client					*find_client(std::string nick);

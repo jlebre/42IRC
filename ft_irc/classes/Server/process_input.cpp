@@ -24,15 +24,13 @@ int    Server::check_command(std::string line)
 
 void    Server::process_input(Client& cli)
 {
-	//std::cout << "Processing input: " << _message << std::endl;
 	size_t begin = 0;
 	size_t end = _message.find("\n");
 
 	while (end != std::string::npos)
 	{
-		std::string line = _message.substr(begin, end);
-
-		int command = check_command(line);
+		_line = _message.substr(begin, end - begin);
+		int command = check_command(_line);
 		if (command != -1)
 		{
 			void    (Server::*commands[11])(Client &cli) = { \
@@ -51,9 +49,28 @@ void    Server::process_input(Client& cli)
 			(this->*commands[command])(cli);
 		}
 		begin = end + 1;
-		if (begin != std::string::npos)
-			end = _message.find("\n", begin);
-		else
-			end = begin;
+		end = _message.find("\n", begin);
+	}
+	if (begin < _message.size())
+	{
+		_line = _message.substr(begin);
+		int command = check_command(_line);
+		if (command != -1)
+		{
+			void    (Server::*commands[11])(Client &cli) = { \
+			&Server::pass, \
+			&Server::nick, \
+			&Server::user, \
+			&Server::join, \
+			&Server::part, \
+			&Server::quit, \
+			&Server::privmsg, \
+			&Server::mode, \
+			&Server::topic, \
+			&Server::kick, \
+			&Server::invite \
+			};
+			(this->*commands[command])(cli);
+		}
 	}
 }
