@@ -34,9 +34,7 @@ void		Server::mode(Client& client)
 {
     (void)client;
     std::cout << "MODE COMMAND\n";
-    std::string channel_name;
-    std::string mode;
-
+    std::string channel_name, mode;
     parse_mode(channel_name, mode);
 
 }

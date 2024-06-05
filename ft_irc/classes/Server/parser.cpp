@@ -13,7 +13,7 @@ void    Server::parse(int argc, char **argv)
     _password = argv[2];
     _sock.ip = "127.0.0.1";
     _max_clients = MAX_CLIENTS;
-    n_events = 1;
+    n_events = 5;
     init_socket();
     init_poll();
 	main_loop();

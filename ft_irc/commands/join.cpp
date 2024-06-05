@@ -17,7 +17,7 @@ void		Server::join(Client& client)
         return ;
     }
     bool channel_exists = false;
-    std::string channel_name = _message.substr(_message.find("#") + 1);
+    std::string channel_name = _message.substr(_message.find("#"));
     for (size_t i = 0; i < _channels.size(); i++)
     {
         if (_channels[i].get_name() == channel_name)
