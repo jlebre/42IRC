@@ -35,6 +35,7 @@ class Channel
         ~Channel();
         Channel(const Channel &src);
         Channel &operator=(const Channel &src);
+        Channel *newChannel(std::string name);
 
         void add_client(Client& client);
         void add_invited(Client& client);

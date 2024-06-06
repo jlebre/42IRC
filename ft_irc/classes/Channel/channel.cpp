@@ -48,6 +48,11 @@ Channel &Channel::operator=(const Channel &src)
     return *this;
 }
 
+Channel *Channel::newChannel(std::string name)
+{
+    return new Channel(name);
+}
+
 void Channel::add_client(Client& client)
 {
     _members.push_back(&client);
@@ -67,8 +72,8 @@ Channel & Server::find_channel(std::string channel_name)
 {
     for (size_t i = 0; i < _channels.size(); i++)
     {
-        if (!_channels[i].get_name().compare(channel_name.c_str()))
-            return _channels[i];
+        if (!_channels[i]->get_name().compare(channel_name.c_str()))
+            return *_channels[i];
     }
     throw std::exception();
 }

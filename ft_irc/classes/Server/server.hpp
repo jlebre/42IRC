@@ -40,7 +40,7 @@ class Server
 		struct epoll_event		_event;
 
 		// CHANNELS
-		std::vector<Channel>	_channels;
+		std::vector<Channel*>	_channels;
 
 	public:
 		Server();
@@ -59,7 +59,7 @@ class Server
 		// REPLY
 		void    				reply(Client &client, std::string msg);
 		void    				reply_all(std::string msg);
-		void    				reply_on_channel(std::string msg, Channel &channel);
+		void    				reply_on_channel(std::string msg, Channel &channel, Client &client);
 		void    				reply_all_on_channel(std::string msg, Client& client);
 
 		// CHECK
@@ -68,6 +68,7 @@ class Server
 		bool					check_on_server(std::string nick, std::string channel);
 		bool					check_on_channel(std::string nick);
 		bool					check_client_on_channel(std::string nick, std::string channel_name);
+		bool 					check_if_channel_exists(std::string name);
 		
 		// PARSE
 		void					parse_mode(std::string &channel_name, std::string &mode);

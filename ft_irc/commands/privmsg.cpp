@@ -28,13 +28,14 @@ void		Server::privmsg(Client& client)
             reply(client, ERR_NOSUCHCHANNEL);
             return;
         }
+        channel = find_channel(target);
 
         if (!check_client_on_channel(client.getNick(), target))
         {
             reply(client, ERR_NOTONCHANNEL);
             return;
         }
-        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel);
+        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel, client);
     }
     else // If target is a client
     {
