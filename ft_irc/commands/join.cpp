@@ -10,6 +10,15 @@ Message to Client:
 
 // Pode juntar a mais do que 1 canal de uma vez
 
+bool check_if_is_channel(std::string str){
+    const char *tmp;
+    tmp = str.c_str();
+    if (tmp[0] == '#')
+        return true;
+    return false;
+}
+
+
 void		Server::join(Client& client)
 {
     std::cout << "JOIN COMMAND\n";
@@ -19,38 +28,27 @@ void		Server::join(Client& client)
         return ;
     }
     bool channel_exists = false;
-    std::string channel_name = _message.substr(_message.find("#"));
-    for (size_t i = 0; i < _channels.size(); i++)
-    {
-        if (_channels[i].get_name() == channel_name)
-        {
-            channel_exists = true;
-            break ;
-        }
-    }
-    if (channel_exists == false)
-    {
-        Channel channel;
-        channel.set_name(channel_name);
-        channel.add_client(client);
-        channel.add_operator(client);
-        channel.set_topic("");
-        _channels.push_back(channel);
-        client.addChannel(&channel);
-        std::string message = ":" + client.getNick() + " JOIN " + channel_name;
-        reply_all(message);
-    }
-    else
-    {
-        for (size_t i = 0; i < _channels.size(); i++)
-        {
-            if (_channels[i].get_name() == channel_name)
-            {
-                _channels[i].add_client(client);
-                std::string message = ":" + client.getNick() + " JOIN " + channel_name;
+    int size = (int)parsed_message.size();
+    for (int i = 1; i < size; ++i){
+        if (check_if_is_channel(parsed_message[i]) == false)
+            continue;
+        for (size_t x = 0; x < _channels.size(); x++){
+            if(_channels[x].get_name() == parsed_message[i]){
+                channel_exists = true;
+                std::string message = ":" + client.getNick() + " JOIN " + parsed_message[i];
                 reply_all(message);
-                break ;
             }
         }
+        if (channel_exists == false){
+            Channel channel;
+            channel.set_name(parsed_message[i]);
+            channel.add_client(client);
+            channel.add_operator(client);
+            channel.set_topic("");
+            _channels.push_back(channel);
+            std::string message = ":" + client.getNick() + " JOIN " + parsed_message[i];
+            reply_all(message);
+        }
+        
     }
 }

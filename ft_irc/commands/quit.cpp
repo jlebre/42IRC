@@ -23,5 +23,5 @@ void		Server::quit(Client& client)
         reason = _message.substr(i + 1);
     client.setStatus(false);
     std::cout << "Client " << client.getNick() << " has quit\n";
-    reply(client, ":" + client.getNick() + " QUIT : " + reason);
+    reply_all_on_channel(":" + client.getNick() + " QUIT : " + reason, client);
 } 

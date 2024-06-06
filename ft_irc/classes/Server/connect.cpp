@@ -10,7 +10,7 @@ void	Server::connect_client()
 	if (fd != -1)
 	{
 		_clients[fd] = Client::newClient(addr, addr_size, fd);
-		std::cout << "New Client #" << fd << std::endl;
+		std::cout << "New Client #" << fd << " -> ";
 		fcntl(fd, F_SETFL, O_NONBLOCK);
 		struct epoll_event event;
 		event.events = EPOLLIN;

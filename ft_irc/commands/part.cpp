@@ -8,13 +8,22 @@ Message to Client:
 :<nick> PART <channel> [:<reason>]
 */
 
+std::string leave_message(std::vector<std::string> tmp, int it){
+    std::string str;
+    while(it < (int)tmp.size()){
+        str = str.append(tmp[it].c_str());
+        if(it + 1 < (int)tmp.size())
+            str = str.append(" ");
+        it++;
+    }
+    return str;
+}
+
 void		Server::part(Client& client)
 {
     (void)client;
     std::cout << "PART COMMAND\n";
 
-    //client.removeChannel(channel);
-    
-    //client.getNick()
-    //std::string msg = ":" + clientNick + " PART " + channel_name + " :" + reason; 
+    std::string msg = ":" + client.getNick() + " PART " + parsed_message[1] + " :" + leave_message(parsed_message, 2); 
+    reply_all(msg);
 }
