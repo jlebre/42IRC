@@ -16,12 +16,8 @@ void		Server::quit(Client& client)
         reply(client, ERR_NOTREGISTERED);
         return ;
     }
-
-    std::string reason = "";
-    size_t i = _message.find(":");
-    if (i != std::string::npos)
-        reason = _message.substr(i + 1);
     client.setStatus(false);
     std::cout << "Client " << client.getNick() << " has quit\n";
-    reply(client, ":" + client.getNick() + " QUIT : " + reason);
+    std::string msg = (":" + client.getNick() + " QUIT : " + leave_message(parsed_message, 1));
+    reply_all(msg);
 } 

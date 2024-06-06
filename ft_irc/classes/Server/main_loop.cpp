@@ -35,6 +35,24 @@ void	Server::main_loop()
 	}
 }
 
+void Server::ParseCommand() {
+    std::string token;
+    size_t start = 0, end = 0;
+	std::cout << "------->>>>>> " << _message << std::endl;
+    while ((end = _message.find(' ', start)) != std::string::npos) {
+        token = _message.substr(start, end - start);
+        parsed_message.push_back(token);
+        start = end + 1;
+    }
+    token = _message.substr(start);
+  	parsed_message.push_back(token);
+	for (int i = 0; i < (int)parsed_message.size(); ++i){
+		std::cout << "------->>>>>> " << parsed_message[i] << std::endl;
+	}
+}
+
+
+
 void	Server::reading(Client& cli)
 {
 	memset(_buf, 0, BUF_SIZE);
@@ -51,8 +69,11 @@ void	Server::reading(Client& cli)
 		_message.append(_buf);
 		if (_message.find("\n") != std::string::npos)
 		{
+			ParseCommand();
 			process_input(cli);
+			parsed_message.clear();
 			_message.erase();
+
 		}
 	}
 }

@@ -21,13 +21,14 @@ typedef struct socket_s
 class Server
 {
 	private:
-		int						_max_clients;
-		char					_buf[BUF_SIZE];
-		std::string				_password;
-		std::string				_message;
+		int							_max_clients;
+		char						_buf[BUF_SIZE];
+		std::string					_password;
+		std::vector<std::string>	parsed_message;
+		std::string					_message;
 		
-		std::string				_line;
-		std::map<int, Client*>	_clients;
+		std::string					_line;
+		std::map<int, Client*>		_clients;
 
 		// SOCKET
 		socket_t 				_sock;
@@ -74,6 +75,7 @@ class Server
 		void					parse_pass(std::string &password);
 		void    				parse_nick(std::string &nickname);
 		void    				parse_user(std::string &user, std::string &real);
+		void 					ParseCommand();
 		
 		// FIND
 		Channel					&find_channel(std::string channel_name);
@@ -100,5 +102,7 @@ class Server
 		void					kick(Client& client);
 		void					invite(Client& client);
 };
+
+std::string leave_message(std::vector<std::string> tmp, int it);
 
 #endif
