@@ -1,31 +1,49 @@
 #include "server.hpp"
 
-/*
-Usage:
-/privmsg <target> <message>
-
-Message to Client:
-:<nick> PRIVMSG <target> :<message>
-*/
-
 void		Server::privmsg(Client& client)
 {
     std::cout << "PRIVMSG COMMAND\n";
-    if (client.getRegistered() == false)
+    if (!client.getRegistered())
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
     }
 
-    std::string msg;
-    msg = _message.find(":");
-    
-        
-    //client.getNick()
-    //std::string msg = ":" + clientNick + " PRIVMSG " + target + " :" + message;  
-    // Get the message
+    if (parsed_message.size() < 3)
+    {
+        reply(client, ERR_NEEDMOREPARAMS);
+        return;
+    }
 
-    // If it is on channel send message to everyone on channel
+    std::string target = parsed_message[1];
+    std::string message = leave_message(parsed_message, 2);
 
-    // If it is not, send error
+    // If target is a channel
+    if (target[0] == '#')
+    {
+        Channel channel;
+        try {
+            channel = find_channel(target);
+        } catch (std::exception &e) {
+            reply(client, ERR_NOSUCHCHANNEL);
+            return;
+        }
+
+        if (!check_client_on_channel(client.getNick(), target))
+        {
+            reply(client, ERR_NOTONCHANNEL);
+            return;
+        }
+        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel);
+    }
+    else // If target is a client
+    {
+        try {
+            Client targetClient(find_client(target));
+            reply(targetClient, ":" + client.getNick() + " PRIVMSG " + target + " :" + message);
+        } catch (std::exception &e) {
+            reply(client, ERR_NOSUCHNICK);
+            return;
+        }
+    }
 }

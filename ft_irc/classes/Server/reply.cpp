@@ -16,22 +16,28 @@ void    Server::reply_all(std::string msg)
     }
 }
 
-// Sends a message to all clients in the same channels as the given client
-void    Server::reply_all_on_channel(const std::string msg, const Client& client)
+// Sends a message to all clients in the given channel
+void    Server::reply_on_channel(std::string msg, Channel &channel)
 {
-    (void)msg;
-    (void)client;
-    /*
-    std::vector<Channel*> channels = client.getChannels();
-    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+    msg += "\r\n";
+    for (std::vector<Client*>::iterator cli = channel.get_members().begin(); cli != channel.get_members().end(); cli++)
     {
-        std::vector<Client*> members = (it)->get_clients();
-        for (std::vector<Client*>::iterator member = members.begin(); member != members.end(); ++member)
+        if ((*cli)->getAuth())
+            send((*cli)->get_fd(), msg.c_str(), msg.length(), 0);
+    }
+}
+
+// Sends a message to all clients in the same channels as the given client
+void    Server::reply_all_on_channel(std::string msg, Client& client)
+{
+    std::string channel_name;
+    for (std::vector<Channel>::iterator chan_it = _channels.begin(); chan_it != _channels.end(); chan_it++)
+    {
+        if (check_client_on_channel(client.getNick(), chan_it->get_name()))
         {
-            if (*member != &client)
-                if (write((*member)->get_fd(), msg.c_str(), msg.size()) < 0)
-                    std::cerr << "Failed to send message to client\n";
+            channel_name = chan_it->get_name();
+            break;
         }
     }
-    */
+    reply_on_channel(msg, find_channel(channel_name));
 }

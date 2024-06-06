@@ -28,6 +28,7 @@
 # include <sys/time.h>
 # include <sys/types.h>
 # include <queue>
+# include <exception>
 
 # define BUF_SIZE		1024
 # define MAX_CLIENTS	5

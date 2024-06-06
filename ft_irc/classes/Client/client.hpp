@@ -31,16 +31,16 @@ class Client
 		static Client *newClient(sockaddr_in addr, socklen_t addr_size, int fd);
 
 		// GETTERS
-		int get_id();
-		int get_fd();
-		int get_status();
-		std::string getNick();
-		std::string getUser();
-		std::string getReal();
-		struct sockaddr_in getAddr();
-		bool getAuth();
-		bool getRegistered();
-		std::vector<Channel*> getChannels() const;
+		int 					get_id();
+		int 					get_fd();
+		int 					get_status();
+		std::string 			getNick();
+		std::string 			getUser();
+		std::string 			getReal();
+		struct sockaddr_in		getAddr();
+		bool					getAuth();
+		bool					getRegistered();
+		std::vector<Channel*> 	getChannels() const;
 
 		// SETTERS
 		void setStatus(bool status);

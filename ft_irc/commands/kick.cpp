@@ -1,13 +1,5 @@
 #include "server.hpp"
 
-/*
-Usage:
-/kick <#channel> <nick> [<reason>]
-
-Message to Client:
-:<nick> KICK <channel> <nick> [<reason>]
-*/
-
 bool	Server::check_on_channel(std::string nick)
 {
     std::map<int, Client*>::iterator it;

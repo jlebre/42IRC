@@ -59,7 +59,8 @@ class Server
 		// REPLY
 		void    				reply(Client &client, std::string msg);
 		void    				reply_all(std::string msg);
-		void    				reply_all_on_channel(const std::string msg, const Client& client);
+		void    				reply_on_channel(std::string msg, Channel &channel);
+		void    				reply_all_on_channel(std::string msg, Client& client);
 
 		// CHECK
 		bool					check_pass(std::string pass);
@@ -79,7 +80,7 @@ class Server
 		
 		// FIND
 		Channel					&find_channel(std::string channel_name);
-		Client					*find_client(std::string nick);
+		Client					&find_client(std::string nick);
 
 		// SOCK
 		void					init_socket();

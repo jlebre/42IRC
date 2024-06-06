@@ -90,12 +90,13 @@ void		Server::invite(Client& client)
         return ;
     }
 
-    Client *invited = find_client(invitedNick);
-    if (!invited)
-    {
+    try{
+        find_client(invitedNick);
+    } catch (std::exception &e) {
         reply(client, ERR_NOSUCHNICK);
         return ;
     }
+    Client invited(find_client(invitedNick));
 
     if (check_client_on_channel(invitedNick, channel.get_name()))
     {
@@ -106,18 +107,8 @@ void		Server::invite(Client& client)
     for (size_t i = 0; i < _channels.size(); i++)
     {
         if (_channels[i].get_name() == channel_name)
-            _channels[i].add_invited(*invited);
+            _channels[i].add_invited(invited);
     }
 
-    reply(*invited, ":" + client.getNick() + " INVITING " + invited->getNick() + " " + channel_name);
+    reply(invited, ":" + client.getNick() + " INVITING " + invited.getNick() + " " + channel_name);
 }
-
-
-/*
-Check if the client is registered
-
-Parse message
-/invite <nick> <#channel>
-
-
-*/
