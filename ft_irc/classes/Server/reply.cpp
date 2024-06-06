@@ -19,15 +19,19 @@ void    Server::reply_all(std::string msg)
 // Sends a message to all clients in the same channels as the given client
 void    Server::reply_all_on_channel(const std::string msg, const Client& client)
 {
+    (void)msg;
+    (void)client;
+    /*
     std::vector<Channel*> channels = client.getChannels();
     for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
     {
-        std::set<Client*> members = (*it)->getMembers();
-        for (std::set<Client*>::iterator member = members.begin(); member != members.end(); ++member)
+        std::vector<Client*> members = (it)->get_clients();
+        for (std::vector<Client*>::iterator member = members.begin(); member != members.end(); ++member)
         {
             if (*member != &client)
                 if (write((*member)->get_fd(), msg.c_str(), msg.size()) < 0)
                     std::cerr << "Failed to send message to client\n";
         }
     }
+    */
 }

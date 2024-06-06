@@ -19,16 +19,15 @@ typedef struct s_modes
 class Channel
 {
     private:
-        std::vector<Client> _clients;
-        std::vector<Client> _invited;
-        std::vector<Client> _operators;
+        std::vector<Client*> _members;
+        std::vector<Client*> _invited;
+        std::vector<Client*> _operators;
         std::string         _name;
         std::string         _password;
         std::string         _topic;
         t_modes             _mode;
         int                 _limit;
-        std::set<Client*> _members;
-
+        
     public:
         Channel();
         Channel(std::string name);
@@ -47,10 +46,9 @@ class Channel
         std::string get_password() const;
         t_modes get_mode() const;
         int get_limit() const;
-        std::vector<Client> get_clients() const;
-        std::vector<Client> get_invited() const;
-        std::vector<Client> get_operators() const;
-        std::set<Client*> getMembers() const;
+        std::vector<Client*> get_members() const;
+        std::vector<Client*> get_invited() const;
+        std::vector<Client*> get_operators() const;
 
         //Setters
         void set_name(std::string name);

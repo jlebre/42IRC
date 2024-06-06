@@ -43,10 +43,10 @@ Client* Server::find_client(std::string nick)
 
 bool Client::is_operator(Channel& channel)
 {
-    std::vector<Client> operators = channel.get_operators();
+    std::vector<Client*> operators = channel.get_operators();
     for (size_t i = 0 ; i < operators.size() ; i++)
     {
-        if (operators[i].getNick() == _nickname)
+        if (operators[i]->getNick() == _nickname)
             return true;
     }
     return false;

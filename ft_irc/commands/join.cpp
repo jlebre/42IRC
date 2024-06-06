@@ -18,11 +18,10 @@ bool check_if_is_channel(std::string str){
     return false;
 }
 
-
 void		Server::join(Client& client)
 {
     std::cout << "JOIN COMMAND\n";
-    if (client.getRegistered() == false)
+    if (!client.getRegistered())
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
@@ -30,7 +29,7 @@ void		Server::join(Client& client)
     bool channel_exists = false;
     int size = (int)parsed_message.size();
     for (int i = 1; i < size; ++i){
-        if (check_if_is_channel(parsed_message[i]) == false)
+        if (!check_if_is_channel(parsed_message[i]))
             continue;
         for (size_t x = 0; x < _channels.size(); x++){
             if(_channels[x].get_name() == parsed_message[i]){
@@ -39,9 +38,10 @@ void		Server::join(Client& client)
                 reply_all(message);
             }
         }
-        if (channel_exists == false){
+        if (!channel_exists){
             Channel channel;
-            channel.set_name(parsed_message[i]);
+            std::string name = parsed_message[i];
+            channel.set_name(name);
             channel.add_client(client);
             channel.add_operator(client);
             channel.set_topic("");

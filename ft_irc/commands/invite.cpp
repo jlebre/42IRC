@@ -16,12 +16,10 @@ bool Server::check_client_on_channel(std::string nick, std::string channel_name)
     {
         if (it->get_name() == channel_name)
         {
-            std::vector<Client>::iterator it2;
-            for (it2 = it->get_clients().begin(); it2 != it->get_clients().end(); it2++)
-            {
-                if (it2->getNick() == nick)
+            std::vector<Client*> members = it->get_members();
+            for (int i = 0; i < (int)members.size(); i++)
+                if (members[i]->getNick() == nick)
                     return true;
-            }
         }
     }
     return false;

@@ -27,24 +27,19 @@ int Channel::get_limit() const
     return _limit;
 }
 
-std::vector<Client> Channel::get_clients() const
+std::vector<Client*> Channel::get_members() const
 {
-    return _clients;
+    return _members;
 }
 
-std::vector<Client> Channel::get_invited() const
+std::vector<Client*> Channel::get_invited() const
 {
     return _invited;
 }
 
-std::vector<Client> Channel::get_operators() const
+std::vector<Client*> Channel::get_operators() const
 {
     return _operators;
-}
-
-std::set<Client*> Channel::getMembers() const
-{
-    return _members;
 }
 
 // Setters

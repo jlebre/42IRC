@@ -24,9 +24,9 @@ bool	Server::check_on_server(std::string nick, std::string channel)
     {
         if (_channels[i].get_name() == channel)
         {
-            for (size_t j = 0; j < _channels[i].get_clients().size(); j++)
+            for (size_t j = 0; j < _channels[i].get_members().size(); j++)
             {
-                if (_channels[i].get_clients()[j].getNick() == nick)
+                if (_channels[i].get_members()[j]->getNick() == nick)
                     return true;
             }
         }

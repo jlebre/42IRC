@@ -16,6 +16,11 @@ void Server::init_socket()
 	_addr.sin_addr.s_addr = inet_addr(_sock.ip.c_str());
 	_addr.sin_port = htons(_sock.port);
 
+	int en = 1;
+	if (setsockopt(_sock.fd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1)
+		std::cerr << "Error: (setsockopt) " << std::strerror(errno) << std::endl;
+	if (fcntl(_sock.fd, F_SETFL, O_NONBLOCK) == -1)
+		std::cerr << "Error: (fctnl) " << std::strerror(errno) << std::endl;
 	if (bind(_sock.fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
 	{
 		std::cerr << "Error: (Bind) " << std::strerror(errno) << std::endl;

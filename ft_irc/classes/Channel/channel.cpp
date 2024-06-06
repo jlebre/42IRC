@@ -41,7 +41,7 @@ Channel &Channel::operator=(const Channel &src)
     _password = src.get_password();
     _mode = src.get_mode();
     _limit = src.get_limit();
-    _clients = src.get_clients();
+    _members = src.get_members();
     _invited = src.get_invited();
     _operators = src.get_operators();
 
@@ -50,24 +50,24 @@ Channel &Channel::operator=(const Channel &src)
 
 void Channel::add_client(Client& client)
 {
-    _clients.push_back(client);
+    _members.push_back(&client);
 }
 
 void Channel::add_invited(Client& client)
 {
-    _invited.push_back(client);
+    _invited.push_back(&client);
 }
 
 void Channel::add_operator(Client& client)
 {
-    _operators.push_back(client);
+    _operators.push_back(&client);
 }
 
 Channel & Server::find_channel(std::string channel_name)
 {
     for (size_t i = 0; i < _channels.size(); i++)
     {
-        if (_channels[i].get_name() == channel_name)
+        if (!_channels[i].get_name().compare(channel_name.c_str()))
             return _channels[i];
     }
     throw std::exception();

@@ -45,6 +45,8 @@ void Server::ParseCommand() {
         start = end + 1;
     }
     token = _message.substr(start);
+	size_t end1 = token.find_first_of(" \r\n", 0);
+    token = token.substr(0, end1 - 0);
   	parsed_message.push_back(token);
 	for (int i = 0; i < (int)parsed_message.size(); ++i){
 		std::cout << "------->>>>>> " << parsed_message[i] << std::endl;
