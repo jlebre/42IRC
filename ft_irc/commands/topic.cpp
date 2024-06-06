@@ -28,20 +28,7 @@ void		Server::topic(Client& client)
         return;
     }
 
-    std::vector<Client*> members = channel.get_members();
-    
-    std::cout << client.getNick() << std::endl;
-    int lock = 0;
-    for (int i = 0; i < (int)members.size(); i++)
-    {
-        std::cout << members[i]->getNick() << std::endl;
-        if (members[i]->getNick() == client.getNick())
-        {
-            lock = 1;
-            break;
-        }
-    }
-    if (!lock)
+    if (!check_client_on_channel(client.getNick(), channel_name))
     {
         reply(client, ERR_NOTONCHANNEL);
         return;

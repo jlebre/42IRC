@@ -11,12 +11,12 @@ Message to Client:
 // Check if Client is on channel
 bool Server::check_client_on_channel(std::string nick, std::string channel_name)
 {
-    std::vector<Channel>::iterator it;
-    for (it = _channels.begin(); it != _channels.end(); it++)
+    std::vector<Channel>::iterator channel;
+    for (channel = _channels.begin(); channel != _channels.end(); channel++)
     {
-        if (it->get_name() == channel_name)
+        if (channel->get_name() == channel_name)
         {
-            std::vector<Client*> members = it->get_members();
+            std::vector<Client*> members = channel->get_members();
             for (int i = 0; i < (int)members.size(); i++)
                 if (members[i]->getNick() == nick)
                     return true;
