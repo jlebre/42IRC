@@ -72,6 +72,7 @@ void		Server::invite(Client& client)
     Channel channel;
 
     try {
+        std::cout << "find_channel on invite\n";
         channel = find_channel(channel_name);
     } catch (std::exception &e) {
         reply(client, ERR_NOSUCHCHANNEL);
@@ -91,6 +92,7 @@ void		Server::invite(Client& client)
     }
 
     try{
+        std::cout << "find_client on invite\n";
         find_client(invitedNick);
     } catch (std::exception &e) {
         reply(client, ERR_NOSUCHNICK);

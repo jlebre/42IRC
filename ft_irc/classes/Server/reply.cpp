@@ -36,8 +36,14 @@ void    Server::reply_all_on_channel(std::string msg, Client& client)
         if (check_client_on_channel(client.getNick(), chan_it->get_name()))
         {
             channel_name = chan_it->get_name();
+            Channel channel;
+            try {
+                channel = find_channel(channel_name);
+                reply_on_channel(msg, channel);
+            } catch (std::exception &e) {
+                return ;
+            }
             break;
         }
     }
-    reply_on_channel(msg, find_channel(channel_name));
 }
