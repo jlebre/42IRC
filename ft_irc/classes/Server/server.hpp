@@ -55,11 +55,12 @@ class Server
 		void					reading(Client& cli);
 		void					process_input(Client& cli);
 		int	    				check_command(std::string line);
+		void 					remove_channel(std::string str);
 
 		// REPLY
 		void    				reply(Client &client, std::string msg);
 		void    				reply_all(std::string msg);
-		void    				reply_on_channel(std::string msg, Channel &channel, Client &client);
+		void    				reply_on_channel(std::string msg, Channel &channel);
 		void    				reply_all_on_channel(std::string msg, Client& client);
 
 		// CHECK
@@ -69,6 +70,7 @@ class Server
 		bool					check_on_channel(std::string nick);
 		bool					check_client_on_channel(std::string nick, std::string channel_name);
 		bool 					check_if_channel_exists(std::string name);
+		bool 					check_if_is_mods(std::string str);
 		
 		// PARSE
 		void					parse_mode(std::string &channel_name, std::string &mode);

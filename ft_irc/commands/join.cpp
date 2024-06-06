@@ -22,6 +22,7 @@ bool check_if_is_channel(std::string str){
 
 bool Server::check_if_channel_exists(std::string name)
 {
+    std::cout << "how many channels : " << _channels.size() << std::endl;
     for (size_t i = 0; i < _channels.size(); i++)
     {
         if (_channels[i] && (_channels[i]->get_name() == name))
@@ -60,10 +61,10 @@ void		Server::join(Client& client)
             {
                 std::cout << "Exists" << std::endl;
                 for (size_t j = 0; j < _channels.size(); j++){
-                    std::cout << "jadasdsa\n";
-                    if (_channels[i]->get_name() == channel_name)
+                    std::cout << _channels[j]->get_name() << "/////" << channel_name << std::endl;
+                    if (_channels[j]->get_name() == channel_name)
                     {
-                        _channels[i]->add_client(client);
+                        _channels[j]->add_client(client);
                         reply_all(":" + client.getNick() + " JOIN " + channel_name);
                         break;
                     }
