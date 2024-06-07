@@ -44,6 +44,6 @@ void		Server::topic(Client& client)
             return;
         }
         channel.set_topic(new_topic);
-        reply_on_channel(":" + client.getNick() + " TOPIC " + channel_name + " :" + new_topic, channel);
+        reply_on_channel(":" + client.getNick() + " TOPIC " + channel_name + " :" + new_topic, channel, client);
     }
 }

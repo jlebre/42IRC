@@ -17,5 +17,10 @@
 # define ERR_NONICKNAMEGIVEN "431 :No nickname given"
 # define ERR_ERRONEUSNICKNAME "432 :Erroneous nickname"
 # define ERR_NICKNAMEINUSE "433 :Nickname is already in use"
+# define ERR_ERRONEUSUSERNAME "501 :Erroneous username"
+# define ERR_ERRONEUSREALNAME "502 :Erroneous realname"
+# define ERR_ERRONEUSMODES "501 :Unknown MODE flag"
+# define ERR_USERSDONTMATCH "502 :Cannot change mode for other users"
+# define ERR_NOTEXTTOSEND "412 :No text to send"
 
 #endif

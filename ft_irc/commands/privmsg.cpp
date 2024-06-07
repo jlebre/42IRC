@@ -1,5 +1,8 @@
 #include "server.hpp"
 
+// Quando tem " :" funciona no nc
+// Quando não tem " :" funciona no Hexchat
+
 void		Server::privmsg(Client& client)
 {
     std::cout << "PRIVMSG COMMAND\n";
@@ -35,7 +38,13 @@ void		Server::privmsg(Client& client)
             reply(client, ERR_NOTONCHANNEL);
             return;
         }
-        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel);
+        if (message.empty())
+        {
+            reply(client, ERR_NOTEXTTOSEND);
+            return;
+        }
+        std::cout << "Sending message to channel " << message << std::endl;
+        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel, client);
     }
     else // If target is a client
     {

@@ -35,11 +35,13 @@ void	Server::main_loop()
 	}
 }
 
-void Server::ParseCommand() {
+void Server::ParseCommand()
+{
     std::string token;
     size_t start = 0, end = 0;
-	std::cout << "------->>>>>> " << _message << std::endl;
-    while ((end = _message.find(' ', start)) != std::string::npos) {
+	//std::cout << "------->>>>>> " << _message << std::endl;
+    while ((end = _message.find(' ', start)) != std::string::npos)
+	{
         token = _message.substr(start, end - start);
         parsed_message.push_back(token);
         start = end + 1;
@@ -48,12 +50,11 @@ void Server::ParseCommand() {
 	size_t end1 = token.find_first_of(" \r\n", 0);
     token = token.substr(0, end1 - 0);
   	parsed_message.push_back(token);
-	for (int i = 0; i < (int)parsed_message.size(); ++i){
+	/*
+	for (int i = 0; i < (int)parsed_message.size(); ++i)
 		std::cout << "------->>>>>> " << parsed_message[i] << std::endl;
-	}
+	*/
 }
-
-
 
 void	Server::reading(Client& cli)
 {

@@ -56,12 +56,14 @@ class Server
 		void					process_input(Client& cli);
 		int	    				check_command(std::string line);
 		void 					remove_channel(std::string str);
+		void 					delete_client(std::string nick);
+		void 					delete_client(Client &client);
 
 		// REPLY
 		void    				reply(Client &client, std::string msg);
-		void    				reply_all(std::string msg);
-		void    				reply_on_channel(std::string msg, Channel &channel);
-		void    				reply_all_on_channel(std::string msg, Client& client);
+		void    				reply_all(std::string msg, Client &client);
+		void    				reply_on_channel(std::string msg, Channel &channel, Client &client);
+		void    				reply_on_all_channels(std::string msg, Client& client);
 
 		// CHECK
 		bool					check_pass(std::string pass);

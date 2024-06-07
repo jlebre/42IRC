@@ -22,7 +22,6 @@ bool check_if_is_channel(std::string str){
 
 bool Server::check_if_channel_exists(std::string name)
 {
-    std::cout << "how many channels : " << _channels.size() << std::endl;
     for (size_t i = 0; i < _channels.size(); i++)
     {
         if (_channels[i] && (_channels[i]->get_name() == name))
@@ -42,30 +41,25 @@ void		Server::join(Client& client)
     for (size_t i = 1; i < parsed_message.size(); i++)
     {
         std::string channel_name = parsed_message[i];
-        std::cout << "PARSED: " << parsed_message[i] << std::endl;
         if (check_if_is_channel(channel_name))
         {
-            std::cout << "IS CHANNEL" << std::endl;
             if (!check_if_channel_exists(channel_name))
             {
-                std::cout << "Does not exist" << std::endl;
                 Channel *new_channel = new Channel;
                 new_channel->set_name(channel_name);
                 new_channel->add_client(client);
                 new_channel->add_operator(client);
                 new_channel->set_topic("");
                 _channels.push_back(new_channel);
-                reply_all(":" + client.getNick() + " JOIN " + channel_name);
+                reply(client, ":" + client.getNick() + " JOIN " + channel_name);
             }
             else
             {
-                std::cout << "Exists" << std::endl;
                 for (size_t j = 0; j < _channels.size(); j++){
-                    std::cout << _channels[j]->get_name() << "/////" << channel_name << std::endl;
                     if (_channels[j]->get_name() == channel_name)
                     {
                         _channels[j]->add_client(client);
-                        reply_all(":" + client.getNick() + " JOIN " + channel_name);
+                        reply_on_all_channels(":" + client.getNick() + " JOIN " + channel_name, client);
                         break;
                     }
                 }

@@ -51,7 +51,7 @@ void		Server::nick(Client& client)
                 std::string old = client.getNick();
                 client.setNick(nickname);
                 try{
-                    reply_all_on_channel(":" + old + " NICK " + nickname, client);
+                    reply_on_all_channels(":" + old + " NICK " + nickname, client);
                 }
                 catch(std::exception &e){
                 }

@@ -11,13 +11,13 @@ Message to Client:
 void		Server::quit(Client& client)
 {
     std::cout << "QUIT COMMAND\n";
-    if (client.getRegistered() == false)
+    if (!client.getRegistered())
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
     }
     client.setStatus(false);
+    delete_client(client.getNick());
     std::cout << "Client " << client.getNick() << " has quit\n";
-    std::string msg = (":" + client.getNick() + " QUIT : " + leave_message(parsed_message, 1));
-    reply_all(msg);
+    reply_all(":" + client.getNick() + " QUIT : " + leave_message(parsed_message, 1), client);
 } 
