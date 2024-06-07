@@ -84,5 +84,5 @@ bool Client::getRegistered()
 
 std::vector<Channel*> Client::getChannels() const
 {
-    return _channels;
+    return _channels_im_in;
 }

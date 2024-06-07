@@ -50,6 +50,7 @@ void		Server::join(Client *client)
                 new_channel->add_client(client);
                 new_channel->add_operator(client);
                 new_channel->set_topic("");
+                client->addChannel(new_channel);
                 _channels.push_back(new_channel);
                 reply(client, ":" + client->getNick() + " JOIN " + channel_name);
             }
@@ -59,6 +60,7 @@ void		Server::join(Client *client)
                     if (_channels[j]->get_name() == channel_name)
                     {
                         _channels[j]->add_client(client);
+                        client->addChannel(_channels[j]);
                         reply_on_all_channels(":" + client->getNick() + " JOIN " + channel_name, client);
                         break;
                     }

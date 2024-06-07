@@ -32,13 +32,30 @@ void Server::parse_mode(std::string &channel_name, std::string &mode)
 
 void		Server::mode(Client *client)
 {
-    (void)client;
     std::cout << "MODE COMMAND\n";
     std::string channel_name, mode;
     parse_mode(channel_name, mode);
-
+    if (channel_name.empty())
+    {
+        reply(client, ERR_NEEDMOREPARAMS);
+        return ;
+    }
+    try{
+        find_channel(channel_name);
+    }catch(const std::exception &e){
+        //reply(client, ERR_NOSUCHCHANNEL);
+        return ;
+    }
+    Channel channel = find_channel(channel_name);
+    if (!check_client_on_channel(client->getNick(), channel_name))
+    {
+        reply(client, ERR_NOTONCHANNEL);
+        return ;
+    }
+    t_modes modes = channel.get_mode();
+    (void)modes;
 }
-    //std::string msg = ":" + client->getNick() + " MODE " + channel_name + " " + mode; 
+    //std::string msg = ":" + client.getNick() + " MODE " + channel_name + " " + mode; 
 
 
 /*

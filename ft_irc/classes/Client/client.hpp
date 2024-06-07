@@ -20,7 +20,7 @@ class Client
 		bool                _status;
 		bool                _auth;
 		bool                _registered;
-		std::vector<Channel*> _channels;
+		std::vector<Channel*> _channels_im_in;
 
 	public:
 		Client(struct sockaddr_in addr, socklen_t addr_size, int fd);

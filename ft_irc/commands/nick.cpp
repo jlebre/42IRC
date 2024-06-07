@@ -3,10 +3,8 @@
 bool    Server::check_nickname(std::string nickname)
 {
     for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) 
-    {
         if (it->second->getNick() == nickname)
             return true;
-    }
     return false;
 }
 
@@ -23,41 +21,55 @@ void    Server::parse_nick(std::string &nickname)
         nickname.clear();
 }
 
+bool    Server::is_valid_nickname(std::string nickname)
+{
+    if (nickname.empty() || nickname.size() > 9)
+        return false;
+    return nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") == std::string::npos;
+}
+
 void		Server::nick(Client *client)
 {
     std::cout << "NICK COMMAND\n";
     
-    if (client->getAuth())
+    if (!client->getAuth())
     {
-        std::string nickname;
-        parse_nick(nickname);
-        if (nickname.empty())
-            reply(client, ERR_NONICKNAMEGIVEN);
-        else if (nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
-            reply(client, ERR_ERRONEUSNICKNAME);
-        else if (nickname.size() > 9)
-            reply(client, ERR_ERRONEUSNICKNAME);
-        else if (check_nickname(nickname))
-            reply(client, ERR_NICKNAMEINUSE);
-        else
-        {
-            if (!client->getRegistered() && !client->getUser().empty())
-            {
-                client->setRegistered(true);
-                reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client->getUser() + "@" + "127.0.0.1");
-            }
-            else
-            {
-                std::string old = client->getNick();
-                client->setNick(nickname);
-                try{
-                    reply_on_all_channels(":" + old + " NICK " + nickname, client);
-                }
-                catch(std::exception &e){
-                }
-            }
-        }
+        reply(client, ERR_NOTREGISTERED);
+        return ;
+    }
+    
+    std::string nickname;
+    parse_nick(nickname);
+    if (nickname.empty())
+    {
+        reply(client, ERR_NONICKNAMEGIVEN);
+        return ;
+    }
+    if (!is_valid_nickname(nickname))
+    {
+        reply(client, ERR_ERRONEUSNICKNAME);
+        return ;
+    }
+    
+    if (check_nickname(nickname))
+    {
+        reply(client, ERR_NICKNAMEINUSE);
+        return ;
+    }
+
+    if (!client->getRegistered() && !client->getUser().empty())
+    {
+        client->setRegistered(true);
+        reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client->getUser() + "@" + "127.0.0.1");
     }
     else
-        reply(client, ERR_NOTREGISTERED);
+    {
+        std::string old = client->getNick();
+        client->setNick(nickname);
+        try{
+            reply_on_all_channels(":" + old + " NICK " + nickname, client);
+        }
+        catch(std::exception &e){
+        }
+    }
 }

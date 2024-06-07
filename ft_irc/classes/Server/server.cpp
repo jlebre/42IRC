@@ -27,18 +27,3 @@ int Server::get_fd()
 {
 	return (_sock.fd);
 }
-
-void Server::delete_client(std::string nick)
-{
-    std::map<int, Client*>::iterator it;
-    for (it = _clients.begin(); it != _clients.end(); it++)
-    {
-        if (it->second && it->second->getNick() == nick)
-        {
-            delete it->second;
-            _clients.erase(it);
-            break;
-        }
-    }
-}
-

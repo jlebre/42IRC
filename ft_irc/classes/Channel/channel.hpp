@@ -40,6 +40,7 @@ class Channel
         void add_client(Client *client);
         void add_invited(Client *client);
         void add_operator(Client *client);
+        void remove_client(Client *client);
 
         //Getters
         std::string get_name() const;
@@ -56,6 +57,8 @@ class Channel
         void set_topic(std::string topic);
         void set_password(std::string password);
         void set_mode(t_modes mode);
+
+        //Mode
 };
 
 #endif

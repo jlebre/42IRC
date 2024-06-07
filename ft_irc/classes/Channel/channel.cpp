@@ -77,3 +77,10 @@ Channel & Server::find_channel(std::string channel_name)
     }
     throw std::exception();
 }
+
+void Channel::remove_client(Client *client)
+{
+    std::vector<Client*>::iterator it = std::find(_members.begin(), _members.end(), client);
+    if (it != _members.end())
+        _members.erase(it);
+}

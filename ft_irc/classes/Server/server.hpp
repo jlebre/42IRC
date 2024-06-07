@@ -72,11 +72,11 @@ class Server
 		bool					check_client_on_channel(std::string nick, std::string channel_name);
 		bool 					check_if_channel_exists(std::string name);
 		bool 					check_if_is_mods(std::string str);
+		bool    				is_valid_nickname(std::string nickname);
 		
 		// PARSE
 		void					parse_mode(std::string &channel_name, std::string &mode);
 		void					parse_invite(std::string &invited_nick, std::string &channel_name);
-		void        			parse_topic(std::string &channel_name, std::string &new_topic);
 		void					parse_pass(std::string &password);
 		void    				parse_nick(std::string &nickname);
 		void    				parse_user(std::string &user, std::string &real);
