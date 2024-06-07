@@ -20,7 +20,8 @@ void		Server::privmsg(Client& client)
 
     std::string target = parsed_message[1];
     std::string message = leave_message(parsed_message, 2);
-
+    if (message[0] != ':')
+        message = ":" + message;
     // If target is a channel
     if (target[0] == '#')
     {
@@ -43,17 +44,17 @@ void		Server::privmsg(Client& client)
             reply(client, ERR_NOTEXTTOSEND);
             return;
         }
-        std::cout << "Sending message to channel " << message << std::endl;
-        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " :" + message, channel, client);
+        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " " + message, channel, client);
     }
     else // If target is a client
     {
         try {
             Client targetClient(find_client(target));
-            reply(targetClient, ":" + client.getNick() + " PRIVMSG " + target + " :" + message);
+            reply(targetClient, ":" + client.getNick() + " PRIVMSG " + target + " " + message);
         } catch (std::exception &e) {
             reply(client, ERR_NOSUCHNICK);
             return;
         }
+
     }
 }

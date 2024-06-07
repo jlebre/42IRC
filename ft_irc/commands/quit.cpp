@@ -1,13 +1,5 @@
 #include "server.hpp"
 
-/*
-Usage:
-/quit [<message>]
-
-Message to Client:
-:<nick> QUIT :<message>
-*/
-
 void		Server::quit(Client& client)
 {
     std::cout << "QUIT COMMAND\n";
