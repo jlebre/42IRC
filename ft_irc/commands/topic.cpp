@@ -1,9 +1,9 @@
 #include "server.hpp"
 
-void		Server::topic(Client& client)
+void		Server::topic(Client *client)
 {
     std::cout << "TOPIC COMMAND\n";
-    if (client.getRegistered() == false)
+    if (client->getRegistered() == false)
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
@@ -28,22 +28,22 @@ void		Server::topic(Client& client)
         return;
     }
 
-    if (!check_client_on_channel(client.getNick(), channel_name))
+    if (!check_client_on_channel(client->getNick(), channel_name))
     {
         reply(client, ERR_NOTONCHANNEL);
         return;
     }
 
     if (new_topic.empty())
-        reply(client, "332 " + client.getNick() + " " + channel_name + " :" + channel.get_topic());
+        reply(client, "332 " + client->getNick() + " " + channel_name + " :" + channel.get_topic());
     else
     {
-        if (!client.is_operator(channel))
+        if (!client->is_operator(channel))
         {
             reply(client, ERR_CHANOPRIVSNEEDED);
             return;
         }
         channel.set_topic(new_topic);
-        reply_on_channel(":" + client.getNick() + " TOPIC " + channel_name + " :" + new_topic, channel, client);
+        reply_on_channel(":" + client->getNick() + " TOPIC " + channel_name + " :" + new_topic, channel, client);
     }
 }

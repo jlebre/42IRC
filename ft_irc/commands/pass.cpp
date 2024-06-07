@@ -21,10 +21,10 @@ void	Server::parse_pass(std::string &password)
 	_line.clear();
 }
 
-void	Server::pass(Client& client)
+void	Server::pass(Client *client)
 {
 	std::cout << "PASS COMMAND\n";
-	if (client.getAuth() == true)
+	if (client->getAuth() == true)
 		reply(client, ERR_ALREADYREGISTERED);
 	else
 	{
@@ -32,8 +32,8 @@ void	Server::pass(Client& client)
 		parse_pass(password);
 		if (password.empty())
 			reply(client, ERR_NEEDMOREPARAMS);
-		client.setAuth(check_pass(password));
-		if (client.getAuth() == false)
+		client->setAuth(check_pass(password));
+		if (client->getAuth() == false)
 			reply(client, ERR_PASSWDMISMATCH);
 		else
 			reply(client, "381 :You are now logged in");

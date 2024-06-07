@@ -30,12 +30,12 @@ Client *Client::newClient(struct sockaddr_in addr, socklen_t addr_size, int fd)
     return new Client(addr, addr_size, fd);
 }
 
-Client &Server::find_client(std::string nick)
+Client *Server::find_client(std::string nick)
 {
     for (std::map<int, Client*>::iterator cli = _clients.begin(); cli != _clients.end(); cli++)
     {
         if (cli->second->getNick() == nick)
-            return *cli->second;
+            return cli->second;
     }
     throw std::exception();
 }

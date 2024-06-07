@@ -26,10 +26,10 @@ bool	Server::check_on_server(std::string nick, std::string channel)
     return false;
 }
 
-void		Server::kick(Client& client)
+void		Server::kick(Client *client)
 {
     std::cout << "KICK COMMAND\n";
-    if (client.getRegistered() == false)
+    if (client->getRegistered() == false)
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
@@ -75,7 +75,7 @@ void		Server::kick(Client& client)
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
     else
     {
-        //reply_on_all_channels(":" + client.getNick() + " KICK " + channel + " " + nick + " :" + reason, channel);
-        reply(client, "442 " + nick + " " + channel + " :Kicked by " + client.getNick());
+        //reply_on_all_channels(":" + client->getNick() + " KICK " + channel + " " + nick + " :" + reason, channel);
+        reply(client, "442 " + nick + " " + channel + " :Kicked by " + client->getNick());
     }
 }

@@ -30,10 +30,10 @@ bool Server::check_if_channel_exists(std::string name)
     return false;
 }
 
-void		Server::join(Client& client)
+void		Server::join(Client *client)
 {
     std::cout << "JOIN COMMAND\n";
-    if (!client.getRegistered())
+    if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
@@ -51,7 +51,7 @@ void		Server::join(Client& client)
                 new_channel->add_operator(client);
                 new_channel->set_topic("");
                 _channels.push_back(new_channel);
-                reply(client, ":" + client.getNick() + " JOIN " + channel_name);
+                reply(client, ":" + client->getNick() + " JOIN " + channel_name);
             }
             else
             {
@@ -59,7 +59,7 @@ void		Server::join(Client& client)
                     if (_channels[j]->get_name() == channel_name)
                     {
                         _channels[j]->add_client(client);
-                        reply_on_all_channels(":" + client.getNick() + " JOIN " + channel_name, client);
+                        reply_on_all_channels(":" + client->getNick() + " JOIN " + channel_name, client);
                         break;
                     }
                 }

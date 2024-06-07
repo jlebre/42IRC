@@ -22,7 +22,7 @@ int    Server::check_command(std::string line)
 	return -1;
 }
 
-void    Server::process_input(Client& cli)
+void    Server::process_input(Client *cli)
 {
 	size_t begin = 0;
 	size_t end = _message.find("\n");
@@ -33,7 +33,7 @@ void    Server::process_input(Client& cli)
 		int command = check_command(_line);
 		if (command != -1)
 		{
-			void    (Server::*commands[11])(Client &cli) = { \
+			void    (Server::*commands[11])(Client *cli) = { \
 			&Server::pass, \
 			&Server::nick, \
 			&Server::user, \
@@ -57,7 +57,7 @@ void    Server::process_input(Client& cli)
 		int command = check_command(_line);
 		if (command != -1)
 		{
-			void    (Server::*commands[11])(Client &cli) = { \
+			void    (Server::*commands[11])(Client *cli) = { \
 			&Server::pass, \
 			&Server::nick, \
 			&Server::user, \

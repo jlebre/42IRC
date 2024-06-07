@@ -27,14 +27,14 @@ void    Server::parse_user(std::string &user, std::string &real)
     real = real.substr(0, real.find_last_not_of(" \t\n\r") + 1);
 }
 
-void		Server::user(Client& client)
+void		Server::user(Client *client)
 {
     std::cout << "USER COMMAND\n";
-    if (!client.getAuth())
+    if (!client->getAuth())
         reply(client, ERR_PASSWDMISMATCH);
     else
     {
-        if (client.getRegistered())
+        if (client->getRegistered())
             reply(client, ERR_ALREADYREGISTERED);
         else
         {
@@ -45,12 +45,12 @@ void		Server::user(Client& client)
             else
             {
                 user = "~" + user;
-                client.setReal(real);
-                client.setUser(user);
-                if (!client.getNick().empty())
+                client->setReal(real);
+                client->setUser(user);
+                if (!client->getNick().empty())
                 {
-                    client.setRegistered(true);
-                    reply(client, "001 :Welcome to the Internet Relay Network " + client.getNick() + "!\n" + user + "@" + "127.0.0.1");
+                    client->setRegistered(true);
+                    reply(client, "001 :Welcome to the Internet Relay Network " + client->getNick() + "!\n" + user + "@" + "127.0.0.1");
                 }
             }
         }

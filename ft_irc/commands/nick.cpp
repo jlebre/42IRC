@@ -23,11 +23,11 @@ void    Server::parse_nick(std::string &nickname)
         nickname.clear();
 }
 
-void		Server::nick(Client& client)
+void		Server::nick(Client *client)
 {
     std::cout << "NICK COMMAND\n";
     
-    if (client.getAuth())
+    if (client->getAuth())
     {
         std::string nickname;
         parse_nick(nickname);
@@ -41,15 +41,15 @@ void		Server::nick(Client& client)
             reply(client, ERR_NICKNAMEINUSE);
         else
         {
-            if (!client.getRegistered() && !client.getUser().empty())
+            if (!client->getRegistered() && !client->getUser().empty())
             {
-                client.setRegistered(true);
-                reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client.getUser() + "@" + "127.0.0.1");
+                client->setRegistered(true);
+                reply(client, "001 :Welcome to the Internet Relay Network " + nickname + "!" + client->getUser() + "@" + "127.0.0.1");
             }
             else
             {
-                std::string old = client.getNick();
-                client.setNick(nickname);
+                std::string old = client->getNick();
+                client->setNick(nickname);
                 try{
                     reply_on_all_channels(":" + old + " NICK " + nickname, client);
                 }

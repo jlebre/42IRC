@@ -42,18 +42,3 @@ void Server::delete_client(std::string nick)
     }
 }
 
-/*
-void Server::delete_channel(std::string name)
-{
-    for (size_t i = 0; i < _channels.size(); i++)
-    {
-        if (_channels[i]->get_name() == name)
-        {
-            delete _channels[i];
-            _channels.erase(_channels.begin() + i);
-            break;
-        }
-    }
-}
-*/
-

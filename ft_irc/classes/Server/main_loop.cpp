@@ -20,9 +20,9 @@ void	Server::main_loop()
 				std::map<int, Client*>::iterator it = _clients.find(fd);
 				if (it->second && it != _clients.end())
 				{
-					(*it->second).setStatus(1);
-					reading(*it->second);
-					if ((*it->second).get_status() == false)
+					it->second->setStatus(1);
+					reading(it->second);
+					if (it->second->get_status() == false)
 					{
 						close(fd);
 						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_event);
@@ -56,14 +56,14 @@ void Server::ParseCommand()
 	*/
 }
 
-void	Server::reading(Client& cli)
+void	Server::reading(Client *cli)
 {
 	memset(_buf, 0, BUF_SIZE);
 
-	int r = recv(cli.get_fd(), _buf, BUF_SIZE, 0);
+	int r = recv(cli->get_fd(), _buf, BUF_SIZE, 0);
 	if (!r)
 	{
-		cli.setStatus(0);
+		cli->setStatus(0);
 		_message = "QUIT\r\n";
 		quit(cli);
 	}

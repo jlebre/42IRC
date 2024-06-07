@@ -30,7 +30,7 @@ void Server::parse_mode(std::string &channel_name, std::string &mode)
 }
 
 
-void		Server::mode(Client& client)
+void		Server::mode(Client *client)
 {
     (void)client;
     std::cout << "MODE COMMAND\n";
@@ -38,7 +38,7 @@ void		Server::mode(Client& client)
     parse_mode(channel_name, mode);
 
 }
-    //std::string msg = ":" + client.getNick() + " MODE " + channel_name + " " + mode; 
+    //std::string msg = ":" + client->getNick() + " MODE " + channel_name + " " + mode; 
 
 
 /*

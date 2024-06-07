@@ -53,19 +53,19 @@ Channel *Channel::newChannel(std::string name)
     return new Channel(name);
 }
 
-void Channel::add_client(Client& client)
+void Channel::add_client(Client *client)
 {
-    _members.push_back(&client);
+    _members.push_back(client);
 }
 
-void Channel::add_invited(Client& client)
+void Channel::add_invited(Client *client)
 {
-    _invited.push_back(&client);
+    _invited.push_back(client);
 }
 
-void Channel::add_operator(Client& client)
+void Channel::add_operator(Client *client)
 {
-    _operators.push_back(&client);
+    _operators.push_back(client);
 }
 
 Channel & Server::find_channel(std::string channel_name)

@@ -308,10 +308,10 @@ Available for write operations.
 To send a message to the client we use the function reply, that takes as parameters the address of the client and the message to be sent.
 
 ```cpp
-void   Server::reply(Client &client, std::string msg)
+void   Server::reply(Client *client, std::string msg)
 {
     msg += "\r\n";
-    send(client.get_fd(), msg.c_str(), msg.length(), 0);
+    send(client->get_fd(), msg.c_str(), msg.length(), 0);
 }
 ```
 

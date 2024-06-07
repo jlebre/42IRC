@@ -3,10 +3,10 @@
 // Quando tem " :" funciona no nc
 // Quando não tem " :" funciona no Hexchat
 
-void		Server::privmsg(Client& client)
+void		Server::privmsg(Client *client)
 {
     std::cout << "PRIVMSG COMMAND\n";
-    if (!client.getRegistered())
+    if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED);
         return ;
@@ -34,7 +34,7 @@ void		Server::privmsg(Client& client)
         }
         channel = find_channel(target);
 
-        if (!check_client_on_channel(client.getNick(), target))
+        if (!check_client_on_channel(client->getNick(), target))
         {
             reply(client, ERR_NOTONCHANNEL);
             return;
@@ -44,13 +44,13 @@ void		Server::privmsg(Client& client)
             reply(client, ERR_NOTEXTTOSEND);
             return;
         }
-        reply_on_channel(":" + client.getNick() + " PRIVMSG " + target + " " + message, channel, client);
+        reply_on_channel(":" + client->getNick() + " PRIVMSG " + target + " " + message, channel, client);
     }
     else // If target is a client
     {
         try {
-            Client targetClient(find_client(target));
-            reply(targetClient, ":" + client.getNick() + " PRIVMSG " + target + " " + message);
+            Client *targetClient(find_client(target));
+            reply(targetClient, ":" + client->getNick() + " PRIVMSG " + target + " " + message);
         } catch (std::exception &e) {
             reply(client, ERR_NOSUCHNICK);
             return;

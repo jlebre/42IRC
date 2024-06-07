@@ -52,18 +52,17 @@ class Server
 		void					parse(int argc, char **argv);
 		void					main_loop();
 		void					connect_client();
-		void					reading(Client& cli);
-		void					process_input(Client& cli);
+		void					reading(Client *cli);
+		void					process_input(Client *cli);
 		int	    				check_command(std::string line);
 		void 					remove_channel(std::string str);
 		void 					delete_client(std::string nick);
-		void 					delete_client(Client &client);
 
 		// REPLY
-		void    				reply(Client &client, std::string msg);
-		void    				reply_all(std::string msg, Client &client);
-		void    				reply_on_channel(std::string msg, Channel &channel, Client &client);
-		void    				reply_on_all_channels(std::string msg, Client& client);
+		void    				reply(Client *client, std::string msg);
+		void    				reply_all(std::string msg, Client *client);
+		void    				reply_on_channel(std::string msg, Channel &channel, Client *client);
+		void    				reply_on_all_channels(std::string msg, Client *client);
 
 		// CHECK
 		bool					check_pass(std::string pass);
@@ -85,7 +84,7 @@ class Server
 		
 		// FIND
 		Channel					&find_channel(std::string channel_name);
-		Client					&find_client(std::string nick);
+		Client					*find_client(std::string nick);
 
 		// SOCK
 		void					init_socket();
@@ -96,17 +95,17 @@ class Server
 		void					init_poll();
 
 		// COMMANDS
-		void					pass(Client& client);
-		void					nick(Client& client);
-		void					user(Client& client);
-		void					join(Client& client);
-		void					part(Client& client);
-		void					quit(Client& client);
-		void					privmsg(Client& client);
-		void					mode(Client& client);
-		void					topic(Client& client);
-		void					kick(Client& client);
-		void					invite(Client& client);
+		void					pass(Client *client);
+		void					nick(Client *client);
+		void					user(Client *client);
+		void					join(Client *client);
+		void					part(Client *client);
+		void					quit(Client *client);
+		void					privmsg(Client *client);
+		void					mode(Client *client);
+		void					topic(Client *client);
+		void					kick(Client *client);
+		void					invite(Client *client);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);
