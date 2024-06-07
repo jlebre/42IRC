@@ -2,6 +2,7 @@ SRCS = main.cpp classes/Client/client.cpp classes/Client/info.cpp \
 		classes/Server/server.cpp classes/Server/main_loop.cpp \
 		classes/Server/connect.cpp classes/Server/reply.cpp \
 		classes/Server/process_input.cpp classes/Server/parser.cpp \
+		classes/Server/delete_all.cpp \
 		commands/pass.cpp commands/nick.cpp \
 		commands/user.cpp commands/join.cpp \
 		commands/part.cpp commands/quit.cpp \

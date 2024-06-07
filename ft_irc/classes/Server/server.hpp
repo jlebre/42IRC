@@ -57,6 +57,7 @@ class Server
 		int	    				check_command(std::string line);
 		void 					remove_channel(std::string str);
 		void 					delete_client(std::string nick);
+		void					delete_all();
 
 		// REPLY
 		void    				reply(Client *client, std::string msg);
