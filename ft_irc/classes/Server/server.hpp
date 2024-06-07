@@ -11,6 +11,15 @@ class Client;
 class Channel;
 class Command;
 
+//mzarichn
+struct mode_struct
+{
+	std::string channel;
+	std::string type;
+	std::string param;
+};
+//
+
 typedef struct socket_s
 {
     int fd;
@@ -101,6 +110,9 @@ class Server
 		void					topic(Client& client);
 		void					kick(Client& client);
 		void					invite(Client& client);
+
+		//Mode mzarichn
+		void ChannelMode(Client &c, mode_struct modes);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);
