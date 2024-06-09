@@ -10,15 +10,29 @@ Message to Client:
 
 //# define ERR_NOTREGISTERED(client, server) (":" + server + " 451 " + client + " :You have not registered" + "\r\n")
 
-
+//std::string msg = ":" + client.getNick() + " MODE " + channel_name + " " + mode; 
 
 void Server::ChannelMode(Client &c, mode_struct modes){
 	// if (!c.getRegistered()) {
 	//	reply(c, ERR_NOTREGISTERED);
 	// 	return ;
 	// }
-	if (modes.type[0] == "+" || modes.type[0] == "-")
-		changeMode(c, modes);
+	(void)c;
+	if (modes.type.find('+') || modes.type.find('-')) {
+		if (modes.type.find('b'))
+		{
+			std::cout << "BAN" << std::endl;
+			if (modes.param == "")
+			{
+				std::cout << "No parameters" << std::endl;
+				return ;
+			}
+			else
+			{
+				std::cout << "ADD BAN" << std::endl;
+			}
+		}
+	}
 }
 
 void Server::mode(Client &client)
@@ -40,8 +54,10 @@ void Server::mode(Client &client)
 		modes.channel = parsed_message[1];
 		break;
 	}
-	if (modes.channel[0] == '#')
-		ChannelMode(client, modes);
+	if (modes.param == "")
+		reply(client, ERR_NEEDMOREPARAMS);
+	// if (modes.channel[0] == '#')
+	// 	ChannelMode(client, modes);
 	//std::cout << "Channel->" << modes.channel << " Type->" << modes.type << " Param->" << modes.param << std::endl;
 	std::string message = ":" + client.getNick() + " MODE " + client.getNick() + " :" + modes.type + "\r\n";
     reply_all(message);
