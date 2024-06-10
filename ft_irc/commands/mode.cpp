@@ -8,25 +8,47 @@ Message to Client:
 :<nick> MODE <channel> <mode> [<mode params>]
 */
 
+
 void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 	(void)c;
 	(void)ch;
+	t_modes channel_mode = {false, false, false, false};
 	if (modes->type[1] == 'i')
+	{
 		std::cout << "MODE INVITE" << std::endl;
+		channel_mode._invite = true;
+		ch->set_mode(channel_mode);
+		return ;
+	}
 	else if (modes->type[1] == 't')
 		std::cout << "MODE TOPIC" << std::endl;
 	else if (modes->type[1] == 'k')
+	{
 		std::cout << "MODE KEY" << std::endl;
+		channel_mode._key = true;
+		ch->set_mode(channel_mode);
+		return ;
+	}
 	else if (modes->type[1] == 'o')
 		std::cout << "MODE OPERATOR" << std::endl;
 	else if (modes->type[1] == 'l')
+	{
 		std::cout << "MODE LIMIT" << std::endl;
+		channel_mode._limit = true;
+		ch->set_mode(channel_mode);
+		return ;
+	}
 	else if (modes->type[1] == 'b')
 		std::cout << "MODE BAN" << std::endl;
 	else if (modes->type[1] == 'v')
 		std::cout << "MODE VOICE" << std::endl;
 	else if (modes->type[1] == 'm')
+	{
 		std::cout << "MODE MODERATED" << std::endl;
+		channel_mode._moderated = true;
+		ch->set_mode(channel_mode);
+		return ;
+	}
 	else
 		std::cout << "MODE UNKNOWN" << std::endl;
 }
