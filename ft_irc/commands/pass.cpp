@@ -26,7 +26,7 @@ void	Server::pass(Client *client)
 	std::cout << "PASS COMMAND\n";
 	if (client->getAuth())
 	{
-		reply(client, ERR_ALREADYREGISTERED);
+		reply(client, ERR_ALREADYREGISTERED(this->_sock.ip));
 		return;
 	}
 
@@ -34,12 +34,12 @@ void	Server::pass(Client *client)
 	parse_pass(password);
 	if (password.empty())
 	{
-		reply(client, ERR_NEEDMOREPARAMS);
+		reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "PASS"));
 		return;
 	}
 	if (!check_pass(password))
 	{
-		reply(client, ERR_PASSWDMISMATCH);
+		reply(client, ERR_PASSWDMISMATCH(this->_sock.ip));
 		return;
 	}
 	client->setAuth(true);

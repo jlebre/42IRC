@@ -31,7 +31,7 @@ void		Server::kick(Client *client)
     std::cout << "KICK COMMAND\n";
     if (client->getRegistered() == false)
     {
-        reply(client, ERR_NOTREGISTERED);
+        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "KICK"));
         return ;
     }
 
@@ -48,7 +48,7 @@ void		Server::kick(Client *client)
         kick = kick.substr(i);
         kick = kick.substr(0, kick.find("\r\n"));
         if (kick.empty())
-            reply(client, ERR_NEEDMOREPARAMS);
+            reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
         else
         {
             size_t j = kick.find(" ");
@@ -64,11 +64,11 @@ void		Server::kick(Client *client)
                 }
             }
             else
-                reply(client, ERR_NEEDMOREPARAMS);
+                reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
         }
     }
     if (channel.empty() || nick.empty())
-        reply(client, ERR_NEEDMOREPARAMS);
+        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
     else if (check_on_channel(nick) == false)
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
     else if (check_on_server(nick, channel) == false)

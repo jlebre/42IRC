@@ -31,17 +31,17 @@ void		Server::user(Client *client)
 {
     std::cout << "USER COMMAND\n";
     if (!client->getAuth())
-        reply(client, ERR_PASSWDMISMATCH);
+        reply(client, ERR_PASSWDMISMATCH(this->_sock.ip));
     else
     {
         if (client->getRegistered())
-            reply(client, ERR_ALREADYREGISTERED);
+            reply(client, ERR_ALREADYREGISTERED(this->_sock.ip));
         else
         {
             std::string user, real;
             parse_user(user, real);
             if (user.empty())
-                reply(client, ERR_NEEDMOREPARAMS);
+                reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "USER"));
             else
             {
                 user = "~" + user;

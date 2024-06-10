@@ -8,13 +8,13 @@ void		Server::privmsg(Client *client)
     std::cout << "PRIVMSG COMMAND\n";
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED);
+        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "PRIVMSG"));
         return ;
     }
 
     if (parsed_message.size() < 3)
     {
-        reply(client, ERR_NEEDMOREPARAMS);
+        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "PRIVMSG"));
         return;
     }
 
@@ -29,19 +29,19 @@ void		Server::privmsg(Client *client)
         try {
             channel = find_channel(target);
         } catch (std::exception &e) {
-            reply(client, ERR_NOSUCHCHANNEL);
+            reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
             return;
         }
         channel = find_channel(target);
 
         if (!check_client_on_channel(client->getNick(), target))
         {
-            reply(client, ERR_NOTONCHANNEL);
+            reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
             return;
         }
         if (message.empty())
         {
-            reply(client, ERR_NOTEXTTOSEND);
+            reply(client, ERR_NOTEXTTOSEND(this->_sock.ip));
             return;
         }
         reply_on_channel(":" + client->getNick() + " PRIVMSG " + target + " " + message, channel, client);
@@ -52,7 +52,7 @@ void		Server::privmsg(Client *client)
             Client *targetClient(find_client(target));
             reply(targetClient, ":" + client->getNick() + " PRIVMSG " + target + " " + message);
         } catch (std::exception &e) {
-            reply(client, ERR_NOSUCHNICK);
+            reply(client, ERR_NOSUCHNICK(this->_sock.ip, target));
             return;
         }
 

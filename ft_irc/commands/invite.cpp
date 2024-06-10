@@ -48,7 +48,7 @@ void		Server::invite(Client *client)
     std::cout << "INVITE COMMAND\n";
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED);
+        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "INVITE"));
         return ;
     }
     std::string invitedNick, channel_name;
@@ -56,7 +56,7 @@ void		Server::invite(Client *client)
     
     if (invitedNick.empty() || channel_name.empty())
     {
-        reply(client, ERR_NEEDMOREPARAMS);
+        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "INVITE"));
         return ;
     }
 
@@ -66,19 +66,19 @@ void		Server::invite(Client *client)
         std::cout << "find_channel on invite\n";
         channel = find_channel(channel_name);
     } catch (std::exception &e) {
-        reply(client, ERR_NOSUCHCHANNEL);
+        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
         return ;
     }
 
     if (!check_client_on_channel(client->getNick(), channel.get_name()))
     {
-        reply(client, ERR_NOTONCHANNEL);
+        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
         return ;
     }
 
     if (!client->is_operator(channel))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED);
+        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
         return ;
     }
 
@@ -86,14 +86,14 @@ void		Server::invite(Client *client)
         std::cout << "find_client on invite\n";
         find_client(invitedNick);
     } catch (std::exception &e) {
-        reply(client, ERR_NOSUCHNICK);
+        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
         return ;
     }
     Client *invited(find_client(invitedNick));
 
     if (check_client_on_channel(invitedNick, channel.get_name()))
     {
-        reply(client, ERR_USERONCHANNEL);
+        reply(client, ERR_USERONCHANNEL(this->_sock.ip, invitedNick, channel.get_name()));
         return ;
     }
 

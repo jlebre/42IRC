@@ -40,6 +40,7 @@ re:
 	@make -s fclean && make
 
 a:
+	clear
 	@make -s re && ./$(NAME) 6667 hello
 
 .PHONY: all clean fclean re a

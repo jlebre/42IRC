@@ -35,7 +35,7 @@ void		Server::join(Client *client)
     std::cout << "JOIN COMMAND\n";
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED);
+        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "JOIN"));
         return ;
     }
     for (size_t i = 1; i < parsed_message.size(); i++)

@@ -18,6 +18,13 @@ typedef struct socket_s
     std::string ip;
 } socket_t;
 
+struct mode_struct
+{
+	std::string channel;
+	std::string type;
+	std::string param;
+};
+
 class Server
 {
 	private:
@@ -76,7 +83,6 @@ class Server
 		bool    				is_valid_nickname(std::string nickname);
 		
 		// PARSE
-		void					parse_mode(std::string &channel_name, std::string &mode);
 		void					parse_invite(std::string &invited_nick, std::string &channel_name);
 		void					parse_pass(std::string &password);
 		void    				parse_nick(std::string &nickname);
@@ -107,6 +113,11 @@ class Server
 		void					topic(Client *client);
 		void					kick(Client *client);
 		void					invite(Client *client);
+
+		// mzarichn
+		void ChannelMode(Client *c, Channel *ch, mode_struct *modes);
+		//void checkType(std::string type);
+		bool checkPermission(Channel &ch);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);

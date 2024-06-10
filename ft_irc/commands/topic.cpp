@@ -5,7 +5,7 @@ void		Server::topic(Client *client)
     std::cout << "TOPIC COMMAND\n";
     if (client->getRegistered() == false)
     {
-        reply(client, ERR_NOTREGISTERED);
+        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "TOPIC"));
         return ;
     }
 
@@ -15,7 +15,7 @@ void		Server::topic(Client *client)
     std::string new_topic = leave_message(parsed_message, 2);
     if (channel_name.empty())
     {
-        reply(client, ERR_NEEDMOREPARAMS);
+        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "TOPIC"));
         return;
     }
     
@@ -24,13 +24,13 @@ void		Server::topic(Client *client)
     try {
         channel = find_channel(channel_name);
     } catch (std::exception &e) {
-        reply(client, ERR_NOSUCHCHANNEL);
+        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
         return;
     }
 
     if (!check_client_on_channel(client->getNick(), channel_name))
     {
-        reply(client, ERR_NOTONCHANNEL);
+        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
         return;
     }
 
@@ -40,7 +40,7 @@ void		Server::topic(Client *client)
     {
         if (!client->is_operator(channel))
         {
-            reply(client, ERR_CHANOPRIVSNEEDED);
+            reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
             return;
         }
         channel.set_topic(new_topic);
