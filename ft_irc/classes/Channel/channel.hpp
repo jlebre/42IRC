@@ -13,7 +13,7 @@ typedef struct s_modes
     bool _invite;
     bool _key;
     bool _limit;
-    bool _moderated;
+    bool _topic;
 } t_modes;
 
 class Channel

@@ -1,9 +1,19 @@
 #include "server.hpp"
 
-void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
+
+void Server::modeOperator(Client *c, Channel *ch, mode_struct *modes) {
 	(void)c;
 	(void)ch;
-	t_modes channel_mode = {false, false, false, false};
+	if (modes->param.empty())
+	{
+		reply(c, ERR_NEEDMOREPARAMS(this->_sock.ip, "OPERATOR"));
+		return;
+	}
+}
+
+void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
+	(void)c;
+	t_modes channel_mode = ch->get_mode();
 	if (modes->type[1] == 'i')
 	{
 		std::cout << "MODE INVITE" << std::endl;
@@ -12,7 +22,12 @@ void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 		return ;
 	}
 	else if (modes->type[1] == 't')
+	{
 		std::cout << "MODE TOPIC" << std::endl;
+		channel_mode._topic = true;
+		ch->set_mode(channel_mode);
+		
+	}
 	else if (modes->type[1] == 'k')
 	{
 		std::cout << "MODE KEY" << std::endl;
@@ -21,7 +36,10 @@ void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 		return ;
 	}
 	else if (modes->type[1] == 'o')
+	{
 		std::cout << "MODE OPERATOR" << std::endl;
+		modeOperator(c, ch, modes);
+	}
 	else if (modes->type[1] == 'l')
 	{
 		std::cout << "MODE LIMIT" << std::endl;
@@ -58,11 +76,6 @@ bool checkType(std::string type) {
 		return false;
 	if (type[0] != '+' && type[0] != '-')
 		return false;
-	return true;
-}
-
-bool Server::checkPermission(Channel &ch) {
-	(void)ch;
 	return true;
 }
 

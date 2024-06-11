@@ -119,9 +119,7 @@ class Server
 
 		// mzarichn
 		void ChannelMode(Client *c, Channel *ch, mode_struct *modes);
-		//void checkType(std::string type);
-		bool checkPermission(Channel &ch);
-		void modeOperator()
+		void modeOperator(Client *c, Channel *ch, mode_struct *modes);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);

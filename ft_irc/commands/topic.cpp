@@ -1,5 +1,10 @@
 #include "server.hpp"
 
+bool is_mode_t(Channel *channel)
+{
+    return (channel->get_mode()._topic);
+}
+
 void		Server::topic(Client *client)
 {
     std::cout << "TOPIC COMMAND\n";
@@ -28,7 +33,7 @@ void		Server::topic(Client *client)
         return;
     }
 
-    if (!is_operator(client, channel_name))
+    if (is_mode_t(&channel) && !is_operator(client, channel_name))
     {
         reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
         return;

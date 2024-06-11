@@ -6,23 +6,23 @@ Channel::Channel()
     _password = "";
     _mode._invite = false;
     _mode._key = false;
-    _mode._moderated = false;
     _mode._limit = false;
+    _mode._topic = false;
 }
 
 Channel::Channel(std::string name) : _name(name) {
     _password = "";
     _mode._invite = false;
     _mode._key = false;
-    _mode._moderated = false;
     _mode._limit = false;
+    _mode._topic = false;
 }
 
 Channel::Channel(std::string name, std::string password) : _name(name), _password(password) {
     _mode._invite = false;
     _mode._key = false;
-    _mode._moderated = false;
     _mode._limit = false;
+    _mode._topic = false;
 }
 
 Channel::~Channel()
