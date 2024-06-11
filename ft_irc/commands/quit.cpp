@@ -6,23 +6,53 @@ void Server::delete_client(std::string nick)
     std::vector<Channel*> channels = client->getChannels();
     for (size_t i = 0; i < channels.size(); i++)
     {
-        Channel channel = find_channel(channels[i]->get_name());
-        channel.remove_client(client);
-        client->removeChannel(&channel);
+        Channel *channel = get_channel(channels[i]->get_name());
+        channel->remove_client(client);
+        client->removeChannel(channel);
     }
 }
 
-void		Server::quit(Client *client)
+void Server::quit(Client *client)
 {
     std::cout << "QUIT COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "QUIT"));
-        return ;
+        return;
+    }
+    std::string nick = client->getNick();
+    std::vector<Channel*> channels = client->getChannels();
+    bool wasOperator = false;
+    for (size_t i = 0; i < channels.size(); i++)
+    {
+        if (is_operator(client, channels[i]->get_name()))
+        {
+            wasOperator = true;
+            break;
+        }
     }
     client->setStatus(false);
-    delete_client(client->getNick());
-    std::cout << "Client " << client->getNick() << " has quit\n";
-    reply_all(":" + client->getNick() + " QUIT : " + leave_message(parsed_message, 1), client);
-    delete client;
-} 
+    delete_client(nick);
+
+    std::cout << "Client " << nick << " has quit\n";
+    reply_all(":" + nick + " QUIT :" + leave_message(parsed_message, 1), client);
+    if (wasOperator)
+    {
+        for (size_t i = 0; i < channels.size(); i++)
+        {
+            if (is_operator(client, channels[i]->get_name()))
+            {
+                std::vector<Client*> clients = channels[i]->get_members();
+                for (size_t j = 0; j < clients.size(); j++)
+                {
+                    if (clients[j]->getNick() != nick)
+                    {
+                        channels[i]->add_operator(clients[j]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+

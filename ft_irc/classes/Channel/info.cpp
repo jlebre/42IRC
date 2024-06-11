@@ -22,11 +22,6 @@ t_modes Channel::get_mode() const
     return _mode;
 }
 
-int Channel::get_limit() const
-{
-    return _limit;
-}
-
 std::vector<Client*> Channel::get_members() const
 {
     return _members;

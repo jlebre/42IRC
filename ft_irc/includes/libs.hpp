@@ -29,6 +29,7 @@
 # include <sys/types.h>
 # include <queue>
 # include <exception>
+# include <cstdlib>
 
 # define BUF_SIZE		1024
 # define MAX_CLIENTS	5

@@ -7,6 +7,7 @@ Channel::Channel()
     _mode._invite = false;
     _mode._key = false;
     _mode._limit = false;
+    _mode._nb = 0;
     _mode._topic = false;
 }
 
@@ -14,14 +15,18 @@ Channel::Channel(std::string name) : _name(name) {
     _password = "";
     _mode._invite = false;
     _mode._key = false;
+    _mode._key_password = "";
     _mode._limit = false;
+    _mode._nb = 0;
     _mode._topic = false;
 }
 
 Channel::Channel(std::string name, std::string password) : _name(name), _password(password) {
     _mode._invite = false;
     _mode._key = false;
+    _mode._key_password = "";
     _mode._limit = false;
+    _mode._nb = 0;
     _mode._topic = false;
 }
 
@@ -40,7 +45,6 @@ Channel &Channel::operator=(const Channel &src)
     _topic = src.get_topic();
     _password = src.get_password();
     _mode = src.get_mode();
-    _limit = src.get_limit();
     _members = src.get_members();
     _invited = src.get_invited();
     _operators = src.get_operators();
@@ -83,4 +87,11 @@ void Channel::remove_client(Client *client)
     std::vector<Client*>::iterator it = std::find(_members.begin(), _members.end(), client);
     if (it != _members.end())
         _members.erase(it);
+}
+
+void Channel::remove_operator(Client *client)
+{
+    std::vector<Client*>::iterator it = std::find(_operators.begin(), _operators.end(), client);
+    if (it != _operators.end())
+        _operators.erase(it);
 }

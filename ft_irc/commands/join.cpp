@@ -55,14 +55,16 @@ bool    is_invited(Channel *channel, Client *client)
     return false;
 }
 
-void		Server::join(Client *client)
+
+void Server::join(Client *client)
 {
     std::cout << "JOIN COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "JOIN"));
-        return ;
+        return;
     }
+
     for (size_t i = 1; i < parsed_message.size(); i++)
     {
         std::string channel_name = parsed_message[i];
@@ -81,24 +83,52 @@ void		Server::join(Client *client)
             }
             else
             {
-                for (size_t j = 0; j < _channels.size(); j++){
+                for (size_t j = 0; j < _channels.size(); j++)
+                {
                     if (_channels[j]->get_name() == channel_name)
                     {
-                        if (is_invite_only(_channels[j]))
+                        Channel *channel = _channels[j];
+                        if (is_invite_only(channel))
                         {
-                            if (!is_invited(_channels[j], client))
+                            if (!is_invited(channel, client))
                             {
-                                reply(client, ERR_INVITEONLYCHAN(this->_sock.ip, _channels[j]->get_name()));
-                                return ;
+                                reply(client, ERR_INVITEONLYCHAN(this->_sock.ip, channel->get_name()));
+                                return;
                             }
                             else
-                                do_join(_channels[j], client);
+                                do_join(channel, client);
+                        }
+                        else if (channel->get_mode()._key)
+                        {
+                            if (parsed_message.size() > i + 1 && parsed_message[i + 1] == channel->get_mode()._key_password)
+                            {
+                                i++; // Skip the password parameter
+                                do_join(channel, client);
+                            }
+                            else
+                            {
+                                reply(client, ERR_BADCHANNELKEY(this->_sock.ip, channel_name));
+                                return;
+                            }
+                        }
+                        else if (channel->get_mode()._limit)
+                        {
+                            if (channel->get_members().size() < channel->get_mode()._nb)
+                                do_join(channel, client);
+                            else
+                            {
+                                reply(client, ERR_CHANNELISFULL(this->_sock.ip, channel_name));
+                                return;
+                            }
                         }
                         else
-                            do_join(_channels[j], client);
+                            do_join(channel, client);
                     }
                 }
             }
         }
+        else
+            reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
+
     }
-}   
+}

@@ -12,7 +12,9 @@ typedef struct s_modes
 {
     bool _invite;
     bool _key;
+    std::string _key_password;
     bool _limit;
+    size_t _nb;
     bool _topic;
 } t_modes;
 
@@ -26,7 +28,6 @@ class Channel
         std::string         _password;
         std::string         _topic;
         t_modes             _mode;
-        int                 _limit;
         
     public:
         Channel();
@@ -40,6 +41,7 @@ class Channel
         void add_client(Client *client);
         void add_invited(Client *client);
         void add_operator(Client *client);
+        void remove_operator(Client *client);
         void remove_client(Client *client);
 
         //Getters
@@ -47,7 +49,6 @@ class Channel
         std::string get_topic() const;
         std::string get_password() const;
         t_modes get_mode() const;
-        int get_limit() const;
         std::vector<Client*> get_members() const;
         std::vector<Client*> get_invited() const;
         std::vector<Client*> get_operators() const;

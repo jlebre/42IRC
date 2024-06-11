@@ -36,59 +36,88 @@ bool    Server::is_operator(Client *client, std::string channel)
     return false;
 }
 
-void		Server::kick(Client *client)
+void Server::parse_kick(std::string &channel, std::string &nick, std::string &reason)
 {
-    std::cout << "KICK COMMAND\n";
-    if (client->getRegistered() == false)
+    size_t pos = _line.find("KICK") + 5;
+    if (pos != std::string::npos)
     {
+        _line = _line.substr(pos);
+        pos = _line.find_first_of(" \r\n");
+        if (pos != std::string::npos)
+        {
+            channel = _line.substr(0, pos);
+            _line = _line.substr(pos + 1);
+            pos = _line.find_first_of(" \r\n");
+            if (pos != std::string::npos)
+            {
+                nick = _line.substr(0, pos);
+                _line = _line.substr(pos + 1);
+                pos = _line.find_first_of("\r\n");
+                if (pos != std::string::npos)
+                    reason = _line.substr(0, pos);
+                else
+                    reason = _line;
+            }
+        }
+    }
+    else
+    {
+        channel.clear();
+        nick.clear();
+        reason.clear();
+    }
+}
+
+void Server::kick(Client *client) {
+    std::cout << "KICK COMMAND\n";
+
+    if (!client->getRegistered()) {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "KICK"));
-        return ;
+        return;
     }
 
     std::string reason = "";
     std::string channel;
     std::string nick;
 
-    size_t i = _message.find("KICK");
-    if (i != std::string::npos)
-    {
-        std::string kick;
-        kick = _message;
-        kick.erase(i, 5);
-        kick = kick.substr(i);
-        kick = kick.substr(0, kick.find("\r\n"));
-        if (kick.empty())
-            reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
-        else
-        {
-            size_t j = kick.find(" ");
-            if (j != std::string::npos)
-            {
-                channel = kick.substr(0, j);
-                nick = kick.substr(j + 1);
-                size_t k = nick.find(" ");
-                if (k != std::string::npos)
-                {
-                    reason = nick.substr(k + 1);
-                    nick = nick.substr(0, k);
-                }
-            }
-            else
-                reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
-        }
+    parse_kick(channel, nick, reason);
+
+    if (channel.empty() || nick.empty()) {
+        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
+        return;
     }
 
-    if (!is_operator(client, channel))
-    {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel));
-        return ;
+    Channel *channel_obj;
+    if (check_if_channel_exists(channel)) {
+        channel_obj = get_channel(channel);
+    } else {
+        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel));
+        return;
     }
-    if (channel.empty() || nick.empty())
-        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
-    else if (!check_on_channel(nick))
+
+    if (!is_operator(client, channel)) {
+        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel));
+        return;
+    }
+
+    if (!check_client_on_channel(nick, channel)) {
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
-    else if (!check_on_server(nick, channel))
+        return;
+    }
+
+    Client *target_client = find_client(nick);
+    if (target_client == NULL) {
         reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
-    else
-        reply(client, "442 " + nick + " " + channel + " :Kicked by " + client->getNick());
+        return;
+    }
+
+    channel_obj->remove_client(target_client);
+    target_client->removeChannel(channel_obj);
+
+    std::string kickMessage = "442 " + nick + " " + channel + " :Kicked by " + client->getNick();
+    if (!reason.empty())
+        kickMessage += " (" + reason + ")";
+
+    reply(client, kickMessage);
+    reply(target_client, "You have been kicked from " + channel + " by " + client->getNick() + (reason.empty() ? "" : (" (" + reason + ")")));
 }

@@ -87,9 +87,7 @@ void		Server::invite(Client *client)
 
     Client *invited;
     if (check_if_client_exists(invitedNick))
-    {
         invited = find_client(invitedNick);
-    }
     else
     {
         reply(client, ERR_NOSUCHNICK(this->_sock.ip, invitedNick));
