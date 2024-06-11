@@ -59,7 +59,6 @@ class Channel
         void set_topic(std::string topic);
         void set_password(std::string password);
         void set_mode(t_modes mode);
-		
 
         //Mode
 		//mzarichn

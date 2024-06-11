@@ -86,8 +86,6 @@ bool Server::checkPermission(Channel &ch) {
 	return true;
 }
 
-
-
 void		Server::mode(Client *client)
 {
 	std::cout << std::endl << "MODE" << std::endl << "---" << std::endl;

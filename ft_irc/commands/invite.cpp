@@ -63,7 +63,6 @@ void		Server::invite(Client *client)
     Channel channel;
 
     try {
-        std::cout << "find_channel on invite\n";
         channel = find_channel(channel_name);
     } catch (std::exception &e) {
         reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
@@ -83,10 +82,9 @@ void		Server::invite(Client *client)
     }
 
     try{
-        std::cout << "find_client on invite\n";
         find_client(invitedNick);
     } catch (std::exception &e) {
-        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
+        reply(client, ERR_NOSUCHNICK(this->_sock.ip, invitedNick));
         return ;
     }
     Client *invited(find_client(invitedNick));
@@ -102,6 +100,5 @@ void		Server::invite(Client *client)
         if (_channels[i]->get_name() == channel_name)
             _channels[i]->add_invited(invited);
     }
-
-    reply(invited, ":" + client->getNick() + " INVITING " + invited->getNick() + " " + channel_name);
+    reply(invited, ":" + client->getNick() + " INVITE " + invitedNick + " " + channel_name);
 }

@@ -28,6 +28,12 @@ void		Server::topic(Client *client)
         return;
     }
 
+    if (!is_operator(client, channel_name))
+    {
+        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
+        return;
+    }
+
     if (!check_client_on_channel(client->getNick(), channel_name))
     {
         reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));

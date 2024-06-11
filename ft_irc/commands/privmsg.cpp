@@ -1,8 +1,5 @@
 #include "server.hpp"
 
-// Quando tem " :" funciona no nc
-// Quando não tem " :" funciona no Hexchat
-
 void		Server::privmsg(Client *client)
 {
     std::cout << "PRIVMSG COMMAND\n";
