@@ -22,18 +22,19 @@ void		Server::privmsg(Client *client)
     // If target is a channel
     if (target[0] == '#')
     {
-        Channel channel;
-        try {
-            channel = find_channel(target);
-        } catch (std::exception &e) {
-            reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
-            return;
+        Channel *channel;
+        
+        if (check_if_channel_exists(target))
+		channel = get_channel(target);
+        else
+        {
+            reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, target));
+            return ;
         }
-        channel = find_channel(target);
 
         if (!check_client_on_channel(client->getNick(), target))
         {
-            reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
+            reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel->get_name()));
             return;
         }
         if (message.empty())

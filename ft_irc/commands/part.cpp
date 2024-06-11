@@ -16,7 +16,7 @@ bool Server::check_if_is_mods(std::string str){
         if (str == _channels[i]->get_name()){
             std::vector<Client*> members = _channels[i]->get_members();
             for (int j = 0; j < (int)members.size(); j++){
-                if (members[j]->is_operator(*_channels[i]) == true)
+                if (members[j]->is_operator(_channels[i]))
                     return (true);    
             }
         }
@@ -47,10 +47,10 @@ void		Server::part(Client *client)
         remove_channel(parsed_message[1]);
     }
     //////se a pessoa que bazar for a unica com mods dar a outra pessoa;
-    else if(check_if_is_mods(parsed_message[1]) == false){
+    else if(!check_if_is_mods(parsed_message[1]))
         find_channel(parsed_message[1]).add_operator(client);
-    }
-    ///ver se a mais casos coninhas
-
     
+    ///ver se ha mais casos coninhas
+    find_channel(parsed_message[1]).remove_client(client);
+    client->removeChannel(&find_channel(parsed_message[1]));
 }

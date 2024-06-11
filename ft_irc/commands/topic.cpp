@@ -24,37 +24,38 @@ void		Server::topic(Client *client)
         return;
     }
     
-    Channel channel;
+    Channel *channel;
     
-    try {
-        channel = find_channel(channel_name);
-    } catch (std::exception &e) {
-        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel.get_name()));
+    if (check_if_channel_exists(channel_name))
+        channel = get_channel(channel_name);
+    else
+    {
+        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
         return;
     }
 
-    if (is_mode_t(&channel) && !is_operator(client, channel_name))
+    if (is_mode_t(channel) && !is_operator(client, channel_name))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
+        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel->get_name()));
         return;
     }
 
     if (!check_client_on_channel(client->getNick(), channel_name))
     {
-        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
+        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel->get_name()));
         return;
     }
 
     if (new_topic.empty())
-        reply(client, "332 " + client->getNick() + " " + channel_name + " :" + channel.get_topic());
+        reply(client, "332 " + client->getNick() + " " + channel_name + " :" + channel->get_topic());
     else
     {
         if (!client->is_operator(channel))
         {
-            reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
+            reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel->get_name()));
             return;
         }
-        channel.set_topic(new_topic);
+        channel->set_topic(new_topic);
         reply_on_channel(":" + client->getNick() + " TOPIC " + channel_name + " :" + new_topic, channel, client);
     }
 }

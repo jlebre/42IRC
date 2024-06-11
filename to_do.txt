@@ -1,6 +1,5 @@
-Commands
-Exceptions
-Implementar Try e Catch para não dar Segfault
+PRIVMSG a funcionar depois de fazer PART
+PART não está a funcionar bem
 
 JOIN pode juntar a varios canais de uma vez
 MODE pode ter vários argumentos

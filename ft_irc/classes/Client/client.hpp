@@ -54,7 +54,7 @@ class Client
 		void removeChannel(Channel *channel);
 
 		// CHECK
-		bool is_operator(Channel& channel);
+		bool is_operator(Channel *channel);
 };
 
 #endif
