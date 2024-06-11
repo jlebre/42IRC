@@ -42,11 +42,6 @@ std::vector<Client*> Channel::get_operators() const
     return _operators;
 }
 
-std::vector<Client*> Channel::get_banned() const
-{
-    return _banned;
-}
-
 // Setters
 
 void Channel::set_name(std::string name)

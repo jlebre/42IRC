@@ -1,14 +1,5 @@
 #include "server.hpp"
 
-/*
-Usage:
-/mode <#channel> <mode> [<mode params>]
-
-Message to Client:
-:<nick> MODE <channel> <mode> [<mode params>]
-*/
-
-
 void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 	(void)c;
 	(void)ch;
@@ -35,19 +26,6 @@ void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 	{
 		std::cout << "MODE LIMIT" << std::endl;
 		channel_mode._limit = true;
-		ch->set_mode(channel_mode);
-		return ;
-	}
-	else if (modes->type[1] == 'b')
-	{
-		std::cout << "MODE BAN" << std::endl;
-	}
-	else if (modes->type[1] == 'v')
-		std::cout << "MODE VOICE" << std::endl;
-	else if (modes->type[1] == 'm')
-	{
-		std::cout << "MODE MODERATED" << std::endl;
-		channel_mode._moderated = true;
 		ch->set_mode(channel_mode);
 		return ;
 	}
@@ -122,9 +100,10 @@ void		Server::mode(Client *client)
 		reply(client, ERR_UMODEUNKNOWNFLAG(this->_sock.ip));
 		return ;
 	}
-	if (!checkPermission(channel))
+	if (!is_operator(client, channel.get_name()))
 	{
-		std::cout << "FALTA FAZER" << std::endl;
+		reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
+		return ;
 	}
 	if (modes.channel[0] == '#')
 		ChannelMode(client, &channel, &modes);

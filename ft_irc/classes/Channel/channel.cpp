@@ -68,11 +68,6 @@ void Channel::add_operator(Client *client)
     _operators.push_back(client);
 }
 
-void Channel::add_banned(Client *client)
-{
-    _banned.push_back(client);
-}
-
 Channel & Server::find_channel(std::string channel_name)
 {
     for (size_t i = 0; i < _channels.size(); i++)

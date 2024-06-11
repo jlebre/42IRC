@@ -27,17 +27,6 @@ bool is_invite_only(Channel *channel)
     return channel->get_mode()._invite;
 }
 
-bool is_banned(Channel *channel, Client *client)
-{
-    std::vector<Client*> banned = channel->get_banned();
-    for (size_t i = 0; i < banned.size(); i++)
-    {
-        if (banned[i] == client)
-            return true;
-    }
-    return false;
-}
-
 void    Server::do_join(Channel *channel, Client *client)
 {
     channel->add_client(client);
@@ -85,11 +74,6 @@ void		Server::join(Client *client)
                 for (size_t j = 0; j < _channels.size(); j++){
                     if (_channels[j]->get_name() == channel_name)
                     {
-                        if (is_banned(_channels[j], client))
-                        {
-                            reply(client, ERR_BANNEDFROMCHAN(this->_sock.ip, _channels[j]->get_name()));
-                            return ;
-                        }
                         if (is_invite_only(_channels[j]))
                         {
                             if (!is_invited(_channels[j], client))
@@ -100,7 +84,7 @@ void		Server::join(Client *client)
                             else
                                 do_join(_channels[j], client);
                         }
-                        if (!is_invite_only(_channels[j]) && !is_banned(_channels[j], client))
+                        else
                             do_join(_channels[j], client);
                     }
                 }

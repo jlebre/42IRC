@@ -21,7 +21,6 @@ class Channel
     private:
         std::vector<Client*> _members;
         std::vector<Client*> _invited;
-        std::vector<Client*> _banned;
         std::vector<Client*> _operators;
         std::string         _name;
         std::string         _password;
@@ -41,7 +40,6 @@ class Channel
         void add_client(Client *client);
         void add_invited(Client *client);
         void add_operator(Client *client);
-        void add_banned(Client *client);
         void remove_client(Client *client);
 
         //Getters
@@ -53,7 +51,6 @@ class Channel
         std::vector<Client*> get_members() const;
         std::vector<Client*> get_invited() const;
         std::vector<Client*> get_operators() const;
-        std::vector<Client*> get_banned() const;
 
         //Setters
         void set_name(std::string name);
