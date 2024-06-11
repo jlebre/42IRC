@@ -41,6 +41,7 @@ class Channel
         void add_client(Client *client);
         void add_invited(Client *client);
         void add_operator(Client *client);
+        void add_banned(Client *client);
         void remove_client(Client *client);
 
         //Getters

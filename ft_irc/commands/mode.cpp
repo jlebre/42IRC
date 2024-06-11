@@ -39,7 +39,9 @@ void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
 		return ;
 	}
 	else if (modes->type[1] == 'b')
+	{
 		std::cout << "MODE BAN" << std::endl;
+	}
 	else if (modes->type[1] == 'v')
 		std::cout << "MODE VOICE" << std::endl;
 	else if (modes->type[1] == 'm')
