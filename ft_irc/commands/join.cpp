@@ -22,6 +22,16 @@ bool Server::check_if_channel_exists(std::string name)
     return false;
 }
 
+bool    Server::check_if_client_exists(std::string nick)
+{
+    for (size_t i = 0; i < _clients.size(); i++)
+    {
+        if (_clients[i] && (_clients[i]->getNick() == nick))
+            return true;
+    }
+    return false;
+}
+
 bool is_invite_only(Channel *channel)
 {
     return channel->get_mode()._invite;

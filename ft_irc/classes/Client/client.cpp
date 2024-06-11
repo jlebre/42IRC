@@ -17,8 +17,21 @@ Client::Client(const Client &src)
 
 Client &Client::operator=(const Client &src)
 {
-    (void)src;
-    return (*this);
+    if (this == &src)
+        return (*this);
+    _addr = src._addr;
+    _addr_size = src._addr_size;
+    _nickname = src._nickname;
+    _username = src._username;
+    _realname = src._realname;
+    _fd = src._fd;
+    _id = src._id;
+    _status = src._status;
+    _auth = src._auth;
+    _registered = src._registered;
+    _channels_im_in = src._channels_im_in;
+
+    return *this;
 }
 
 Client::~Client()
@@ -32,12 +45,12 @@ Client *Client::newClient(struct sockaddr_in addr, socklen_t addr_size, int fd)
 
 Client *Server::find_client(std::string nick)
 {
-    for (std::map<int, Client*>::iterator cli = _clients.begin(); cli != _clients.end(); cli++)
+    for (size_t i = 0; i < _clients.size(); i++)
     {
-        if (cli->second->getNick() == nick)
-            return cli->second;
+        if (_clients[i] && (_clients[i]->getNick() == nick))
+            return _clients[i];
     }
-    throw std::exception();
+    return NULL;
 }
 
 bool Client::is_operator(Channel *channel)

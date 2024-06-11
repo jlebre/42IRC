@@ -16,30 +16,33 @@ bool Server::check_client_on_channel(std::string nick, std::string channel_name)
     return false;
 }
 
-void        Server::parse_invite(std::string &invitedNick, std::string &channel_name)
+void Server::parse_invite(std::string &invitedNick, std::string &channel_name)
 {
-    // Remove "INVITE"
-    _message = _message.substr(_message.find(" ") + 1);
-    
-    // Get "invitedNick"
-    size_t pos = _message.find(" ");
+    size_t pos = _message.find("INVITE") + 7;  // Move past "INVITE "
     if (pos != std::string::npos)
     {
-        invitedNick = _message.substr(0, pos);
-        _message = _message.substr(pos + 1);
-    }
-
-    // Get "channel_name"
-    pos = _message.find(" ");
-    if (pos != std::string::npos)
-    {
-        channel_name = _message.substr(0, pos);
-        _message = _message.substr(pos + 1);
+        _message = _message.substr(pos);
+        pos = _message.find_first_of(" \r\n");
+        if (pos != std::string::npos)
+        {
+            invitedNick = _message.substr(0, pos);
+            _message = _message.substr(pos + 1);
+            pos = _message.find_first_of(" \r\n");
+            if (pos != std::string::npos)
+                channel_name = _message.substr(0, pos);
+            else
+                channel_name = _message;
+        }
+        else
+        {
+            invitedNick.clear();
+            channel_name.clear();
+        }
     }
     else
     {
-        channel_name = _message;
-        _message.clear();
+        invitedNick.clear();
+        channel_name.clear();
     }
 }
 
@@ -82,26 +85,23 @@ void		Server::invite(Client *client)
         return ;
     }
 
-    try{
-        find_client(invitedNick);
-    } catch (std::exception &e) {
+    Client *invited;
+    if (check_if_client_exists(invitedNick))
+    {
+        invited = find_client(invitedNick);
+    }
+    else
+    {
         reply(client, ERR_NOSUCHNICK(this->_sock.ip, invitedNick));
         return ;
     }
-    Client *invited(find_client(invitedNick));
 
     if (check_client_on_channel(invitedNick, channel->get_name()))
     {
         reply(client, ERR_USERONCHANNEL(this->_sock.ip, invitedNick, channel->get_name()));
         return ;
     }
-
-    for (size_t i = 0; i < _channels.size(); i++)
-    {
-        if (_channels[i]->get_name() == channel_name)
-            _channels[i]->add_invited(invited);
-    }
-    //confirmar
-    //reply(invited, RPL_INVITING(this->_sock.ip, invitedNick, channel_name));
-    reply(invited, ":" + client->getNick() + " INVITE " + invitedNick + " " + channel_name);
+    channel->add_invited(invited);
+    reply(invited, ":" + client->getNick() + " INVITE " + invitedNick + " :" + channel_name);
+    reply(client, "341 " + client->getNick() + " " + invitedNick + " :" + channel_name);
 }

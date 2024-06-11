@@ -72,6 +72,7 @@ class Server
 		bool					check_on_channel(std::string nick);
 		bool					check_client_on_channel(std::string nick, std::string channel_name);
 		bool 					check_if_channel_exists(std::string name);
+		bool    				check_if_client_exists(std::string nick);
 		bool 					check_if_is_mods(std::string str);
 		bool    				is_valid_nickname(std::string nickname);
 		bool					is_operator(Client *client, std::string channel);
