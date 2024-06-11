@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-
+/*
 void Server::modeOperator(Client *c, Channel *ch, mode_struct *modes) {
 	(void)c;
 	(void)ch;
@@ -9,66 +9,49 @@ void Server::modeOperator(Client *c, Channel *ch, mode_struct *modes) {
 		reply(c, ERR_NEEDMOREPARAMS(this->_sock.ip, "OPERATOR"));
 		return;
 	}
-}
 
-void	Server::ChannelMode(Client *c, Channel *ch, mode_struct *modes) {
-	(void)c;
-	t_modes channel_mode = ch->get_mode();
-	if (modes->type[1] == 'i')
+}
+*/
+
+void	Channel::ChannelMode(t_modes mode, std::string new_mode)
+{
+	bool ver;
+	if (new_mode[0] == '+')
+		ver = true;
+	else
+		ver = false;
+	
+	if (new_mode[1] == 'i')
 	{
 		std::cout << "MODE INVITE" << std::endl;
-		channel_mode._invite = true;
-		ch->set_mode(channel_mode);
-		return ;
+		mode._invite = ver;
 	}
-	else if (modes->type[1] == 't')
+	else if (new_mode[1] == 't')
 	{
 		std::cout << "MODE TOPIC" << std::endl;
-		channel_mode._topic = true;
-		ch->set_mode(channel_mode);
+		mode._topic = ver;
 		
 	}
-	else if (modes->type[1] == 'k')
+	else if (new_mode[1] == 'k')
 	{
 		std::cout << "MODE KEY" << std::endl;
-		channel_mode._key = true;
-		ch->set_mode(channel_mode);
+		mode._key = ver;
 		return ;
 	}
-	else if (modes->type[1] == 'o')
-	{
-		std::cout << "MODE OPERATOR" << std::endl;
-		modeOperator(c, ch, modes);
-	}
-	else if (modes->type[1] == 'l')
+	else if (new_mode[1] == 'l')
 	{
 		std::cout << "MODE LIMIT" << std::endl;
-		channel_mode._limit = true;
-		ch->set_mode(channel_mode);
+		mode._limit = ver;
 		return ;
+	}
+	else if (new_mode[1] == 'o')
+	{
+		std::cout << "MODE OPERATOR" << std::endl;
+		//modeOperator(c, ch, modes);
 	}
 	else
 		std::cout << "MODE UNKNOWN" << std::endl;
-}
-
-mode_struct parse_mode(std::vector<std::string> message) {
-	mode_struct modes = {"", "", ""};
-	size_t pos = message.size() - 1;
-	if (pos > 3)
-		pos = 3;
-	switch (pos)
-	{
-	case 3:
-		modes.param = message[3];
-		// Intentional fall-through
-	case 2:
-		modes.type = message[2];
-		// Intentional fall-through
-	case 1:
-		modes.channel = message[1];
-		break;
-	}
-	return modes;
+	set_mode(mode);
 }
 
 bool checkType(std::string type) {
@@ -81,44 +64,50 @@ bool checkType(std::string type) {
 
 void		Server::mode(Client *client)
 {
-	std::cout << std::endl << "MODE" << std::endl << "---" << std::endl;
-	mode_struct modes = parse_mode(parsed_message);
-	std::cout << "channel: " << modes.channel << std::endl;
-	std::cout << "type: " << modes.type << std::endl;
-	std::cout << "param: " << modes.param << std::endl;
-    if (modes.channel.empty())
+	std::cout << std::endl << "MODE" << std::endl;
+
+	if (!client->getRegistered())
+	{
+		reply(client, ERR_NOTREGISTERED(this->_sock.ip, "MODE"));
+		return ;
+	}
+	if (parsed_message.size() < 2)
 	{
 		reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "MODE"));
 		return ;
 	}
+	std::string channel_name = parsed_message[1];
+	Channel channel;
     try{
-        find_channel(modes.channel);
+        channel = find_channel(channel_name);
     }catch(const std::exception &e){
-		reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, modes.channel));
+		reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
         return ;
     }
-    Channel &channel = find_channel(modes.channel);
-    if (!check_client_on_channel(client->getNick(), modes.channel))
-    {
-        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel.get_name()));
-        return ;
-    }
-	if (modes.type.empty())
-	{
-		reply(client, RPL_CHANNELMODEIS(this->_sock.ip, channel.get_name(), modes.type));
-		return ;
-	}
-	if (!checkType(modes.type))
-	{
-		reply(client, ERR_UMODEUNKNOWNFLAG(this->_sock.ip));
-		return ;
-	}
-	if (!is_operator(client, channel.get_name()))
-	{
-		reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel.get_name()));
-		return ;
-	}
-	if (modes.channel[0] == '#')
-		ChannelMode(client, &channel, &modes);
 
+    if (!check_client_on_channel(client->getNick(), channel_name))
+    {
+        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel_name));
+        return ;
+    }
+
+	t_modes mode = channel.get_mode();
+
+	if (!is_operator(client, channel_name))
+	{
+		reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel_name));
+		return ;
+	}
+
+	for (size_t i = 2; i < parsed_message.size(); i++)
+	{
+
+		std::string new_mode = parsed_message[i];
+		if (!checkType(new_mode))
+		{
+			reply(client, ERR_UNKNOWNMODE(this->_sock.ip, new_mode));
+			return ;
+		}
+		channel.ChannelMode(mode, new_mode);
+	}
 }

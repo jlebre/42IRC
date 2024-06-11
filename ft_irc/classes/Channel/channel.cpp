@@ -68,7 +68,7 @@ void Channel::add_operator(Client *client)
     _operators.push_back(client);
 }
 
-Channel & Server::find_channel(std::string channel_name)
+Channel &Server::find_channel(std::string channel_name)
 {
     for (size_t i = 0; i < _channels.size(); i++)
     {
@@ -84,4 +84,3 @@ void Channel::remove_client(Client *client)
     if (it != _members.end())
         _members.erase(it);
 }
-

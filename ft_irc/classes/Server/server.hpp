@@ -18,13 +18,6 @@ typedef struct socket_s
     std::string ip;
 } socket_t;
 
-struct mode_struct
-{
-	std::string channel;
-	std::string type;
-	std::string param;
-};
-
 class Server
 {
 	private:
@@ -118,8 +111,7 @@ class Server
 		void    				do_join(Channel *channel, Client *client);
 
 		// mzarichn
-		void ChannelMode(Client *c, Channel *ch, mode_struct *modes);
-		void modeOperator(Client *c, Channel *ch, mode_struct *modes);
+		//void modeOperator(Client *c, Channel *ch, mode_struct *modes);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);
