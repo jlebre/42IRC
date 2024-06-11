@@ -84,3 +84,4 @@ void Channel::remove_client(Client *client)
     if (it != _members.end())
         _members.erase(it);
 }
+

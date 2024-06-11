@@ -1,13 +1,5 @@
 #include "server.hpp"
 
-/*
-Usage:
-/join <#channel>
-
-Message to Client:
-:<nick> JOIN <channel>
-*/
-
 // Pode juntar a mais do que 1 canal de uma vez
 
 // Adicionar mais checks
@@ -25,6 +17,40 @@ bool Server::check_if_channel_exists(std::string name)
     for (size_t i = 0; i < _channels.size(); i++)
     {
         if (_channels[i] && (_channels[i]->get_name() == name))
+            return true;
+    }
+    return false;
+}
+
+bool is_invite_only(Channel *channel)
+{
+    return channel->get_mode()._invite;
+}
+
+bool is_banned(Channel *channel, Client *client)
+{
+    std::vector<Client*> banned = channel->get_banned();
+    for (size_t i = 0; i < banned.size(); i++)
+    {
+        if (banned[i] == client)
+            return true;
+    }
+    return false;
+}
+
+void    Server::do_join(Channel *channel, Client *client)
+{
+    channel->add_client(client);
+    client->addChannel(channel);
+    reply_on_all_channels(":" + client->getNick() + " JOIN " + channel->get_name(), client);
+}
+
+bool    is_invited(Channel *channel, Client *client)
+{
+    std::vector<Client*> invited = channel->get_invited();
+    for (size_t i = 0; i < invited.size(); i++)
+    {
+        if (invited[i] == client)
             return true;
     }
     return false;
@@ -59,10 +85,23 @@ void		Server::join(Client *client)
                 for (size_t j = 0; j < _channels.size(); j++){
                     if (_channels[j]->get_name() == channel_name)
                     {
-                        _channels[j]->add_client(client);
-                        client->addChannel(_channels[j]);
-                        reply_on_all_channels(":" + client->getNick() + " JOIN " + channel_name, client);
-                        break;
+                        if (is_banned(_channels[j], client))
+                        {
+                            reply(client, ERR_BANNEDFROMCHAN(this->_sock.ip, _channels[j]->get_name()));
+                            return ;
+                        }
+                        if (is_invite_only(_channels[j]))
+                        {
+                            if (!is_invited(_channels[j], client))
+                            {
+                                reply(client, ERR_INVITEONLYCHAN(this->_sock.ip, _channels[j]->get_name()));
+                                return ;
+                            }
+                            else
+                                do_join(_channels[j], client);
+                        }
+                        if (!is_invite_only(_channels[j]) && !is_banned(_channels[j], client))
+                            do_join(_channels[j], client);
                     }
                 }
             }

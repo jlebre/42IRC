@@ -114,6 +114,8 @@ class Server
 		void					kick(Client *client);
 		void					invite(Client *client);
 
+		void    				do_join(Channel *channel, Client *client);
+
 		// mzarichn
 		void ChannelMode(Client *c, Channel *ch, mode_struct *modes);
 		//void checkType(std::string type);
