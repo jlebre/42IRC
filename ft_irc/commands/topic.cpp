@@ -4,7 +4,7 @@ void		Server::topic(Client *client)
 {
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "TOPIC"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return ;
     }
 
@@ -13,7 +13,7 @@ void		Server::topic(Client *client)
         channel_name = parsed_message[1];
     if (channel_name.empty())
     {
-        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "TOPIC"));
+        reply(client, ERR_NEEDMOREPARAMS(client->getNick(), channel_name, "TOPIC"));
         return;
     }
     std::string new_topic = leave_message(parsed_message, 2);
@@ -24,24 +24,24 @@ void		Server::topic(Client *client)
         channel = get_channel(channel_name);
     else
     {
-        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
         return;
     }
 
     if (channel->get_mode()._topic && !is_operator(client, channel_name))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel->get_name()));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return;
     }
 
     if (!check_client_on_channel(client->getNick(), channel_name))
     {
-        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel->get_name()));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
         return;
     }
 
     if (new_topic.empty())
-        reply(client, "332 " + client->getNick() + " " + channel_name + " " + channel->get_topic());
+        reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
     else
     {
         channel->set_topic(new_topic);
@@ -50,8 +50,14 @@ void		Server::topic(Client *client)
         size_t pos = new_topic.find_first_of("\r\n");
 		if (pos != std::string::npos)
 			new_topic = new_topic.substr(0, pos);
-        reply(client, ":" + client->getNick() + " TOPIC " + channel_name + " " + new_topic);
-        reply_on_channel(":" + client->getNick() + " TOPIC " + channel_name + " " + new_topic, channel, client);
-    std::cout << "TOPIC COMMAND\n";
+        reply(client, RPL_TOPIC(client->getNick(), channel_name, new_topic));
+        for (size_t i = 0; i < channel->get_members().size(); i++)
+        {
+            if (new_topic.empty())
+                reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
+            else
+            reply(client, RPL_TOPIC(client->getNick(), channel_name, new_topic));
+        }
+        std::cout << "TOPIC COMMAND\n";
     }
 }

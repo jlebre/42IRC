@@ -39,10 +39,29 @@ bool is_invite_only(Channel *channel)
 
 void    Server::do_join(Channel *channel, Client *client)
 {
+    std::string	client_list = "";
+    for (unsigned long j = 0; j < channel->get_members().size(); j++)
+    {
+        if (j != 0)
+            client_list += " ";
+        if (channel->get_members().at(j)->is_operator(channel))
+        {
+            client_list += "@" + channel->get_members().at(j)->getNick();
+        }	else	{
+            client_list += channel->get_members().at(j)->getNick();
+        }
+
+    }
     channel->add_client(client);
     client->addChannel(channel);
     for (size_t i = 0; i < channel->get_members().size(); i++)
-            reply(channel->get_members()[i], ":" + client->getNick() + " JOIN " + channel->get_name());
+            reply(channel->get_members()[i], JOIN_REPLY(client->getNick(), channel->get_name()));
+    if (!channel->get_topic().empty())
+        reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
+    else
+        reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
+    reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), client_list));
+    reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
 }
 
 bool    is_invited(Channel *channel, Client *client)
@@ -61,7 +80,7 @@ void Server::join(Client *client)
 {
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "JOIN"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
 
@@ -79,7 +98,7 @@ void Server::join(Client *client)
                 new_channel->set_topic("");
                 client->addChannel(new_channel);
                 _channels.push_back(new_channel);
-                reply(client, ":" + client->getNick() + " JOIN " + channel_name);
+                reply(client, JOIN_REPLY(client->getNick(), new_channel->get_name()));
             }
             else
             {

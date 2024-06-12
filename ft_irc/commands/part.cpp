@@ -37,6 +37,58 @@ void Server::remove_channel(std::string str){
 
 void		Server::part(Client *client)
 {
+    if (!client->getRegistered()) {
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
+        return;
+    }
+
+    std::string reason = "";
+    std::string channel;
+    std::string nick;
+
+    parse_kick(channel, nick, reason);
+
+    if (channel.empty() || nick.empty()) {
+        reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "KICK"));
+        return;
+    }
+
+    Channel *channel_obj;
+    if (check_if_channel_exists(channel)) {
+        channel_obj = get_channel(channel);
+    } else {
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel));
+        return;
+    }
+
+    if (!is_operator(client, channel)) {
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
+        return;
+    }
+
+    if (!check_client_on_channel(nick, channel)) {
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
+        return;
+    }
+
+    Client *target_client = find_client(nick);
+    if (target_client == NULL) {
+        reply(client, NOUSER);
+        return;
+    }
+
+    channel_obj->remove_client(target_client);
+    target_client->removeChannel(channel_obj);
+
+    std::string kickMessage = ":" + nick + " KICK " + channel + " " + target_client->getNick();
+    if (!reason.empty())
+        kickMessage += " " + reason;
+
+    for (size_t i = 0; i < channel_obj->get_members().size(); i++)
+        reply(channel_obj->get_members()[i], kickMessage);
+
+    ///
+    
     std::string msg = ":" + client->getNick() + " PART " + parsed_message[1] + " :" + leave_message(parsed_message, 2);
     reply_on_all_channels(msg, client);
     if (find_channel(parsed_message[1]).get_members().size() == 0)

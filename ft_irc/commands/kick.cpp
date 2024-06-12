@@ -72,7 +72,7 @@ void Server::kick(Client *client)
 {
 
     if (!client->getRegistered()) {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "KICK"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
 
@@ -83,7 +83,7 @@ void Server::kick(Client *client)
     parse_kick(channel, nick, reason);
 
     if (channel.empty() || nick.empty()) {
-        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "KICK"));
+        reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "KICK"));
         return;
     }
 
@@ -91,34 +91,34 @@ void Server::kick(Client *client)
     if (check_if_channel_exists(channel)) {
         channel_obj = get_channel(channel);
     } else {
-        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel));
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel));
         return;
     }
 
     if (!is_operator(client, channel)) {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
         return;
     }
 
     if (!check_client_on_channel(nick, channel)) {
-        reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
         return;
     }
 
     Client *target_client = find_client(nick);
     if (target_client == NULL) {
-        reply(client, "441 " + nick + " " + channel + " :They aren't on that channel");
+        reply(client, NOUSER);
         return;
     }
 
     channel_obj->remove_client(target_client);
     target_client->removeChannel(channel_obj);
 
-    std::string kickMessage = "442 " + nick + " " + channel + " :Kicked by " + client->getNick();
+    std::string kickMessage = ":" + nick + " KICK " + channel + " " + target_client->getNick();
     if (!reason.empty())
-        kickMessage += " (" + reason + ")";
+        kickMessage += " " + reason;
 
-    reply(client, kickMessage);
-    reply(target_client, "You have been kicked from " + channel + " by " + client->getNick() + (reason.empty() ? "" : (" (" + reason + ")")));
+    for (size_t i = 0; i < channel_obj->get_members().size(); i++)
+        reply(channel_obj->get_members()[i], kickMessage);
     std::cout << "KICK COMMAND\n";
 }

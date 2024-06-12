@@ -50,7 +50,7 @@ void		Server::invite(Client *client)
 {
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "INVITE"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return ;
     }
     std::string invitedNick, channel_name;
@@ -58,7 +58,7 @@ void		Server::invite(Client *client)
     
     if (invitedNick.empty() || channel_name.empty())
     {
-        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "INVITE"));
+        reply(client, ERR_NEEDMOREPARAMS(channel_name, client->getNick(), "INVITE"));
         return ;
     }
 
@@ -68,19 +68,19 @@ void		Server::invite(Client *client)
 		channel = get_channel(channel_name);
 	else
 	{
-		reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
+		reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
 		return ;
 	}
 
     if (!check_client_on_channel(client->getNick(), channel->get_name()))
     {
-        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel->get_name()));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
         return ;
     }
 
     if (!client->is_operator(channel))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel->get_name()));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return ;
     }
 
@@ -89,16 +89,16 @@ void		Server::invite(Client *client)
         invited = find_client(invitedNick);
     else
     {
-        reply(client, ERR_NOSUCHNICK(this->_sock.ip, invitedNick));
+        reply(client, NOUSER);
         return ;
     }
 
     if (check_client_on_channel(invitedNick, channel->get_name()))
     {
-        reply(client, ERR_USERONCHANNEL(this->_sock.ip, invitedNick, channel->get_name()));
+        reply(client, ERR_USERONCHANNEL(client->getNick(), invitedNick, channel_name));
         return ;
     }
     channel->add_invited(invited);
-    reply(invited, RPL_INVITE(this->_sock.ip, invited->getNick(), channel->get_name()));
+    reply(invited, RPL_INVITING(client->getNick(), invited->getNick(), channel_name));
     std::cout << "INVITE COMMAND\n";
 }

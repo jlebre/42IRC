@@ -22,28 +22,29 @@ void Server::mode(Client *client)
 {
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "MODE"));
-        return;
-    }
-    if (parsed_message.size() < 2)
-    {
-        reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "MODE"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
     std::string channel_name = parsed_message[1];
     Channel *channel;
+
+    if (parsed_message.size() < 2)
+    {
+        reply(client, ERR_NEEDMOREPARAMS(channel_name, client->getNick(), "MODE"));
+        return;
+    }
     
     if (check_if_channel_exists(channel_name))
         channel = get_channel(channel_name);
     else
     {
-        reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
         return;
     }
 
     if (!check_client_on_channel(client->getNick(), channel_name))
     {
-        reply(client, ERR_NOTONCHANNEL(this->_sock.ip, channel_name));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
         return;
     }
 
@@ -51,7 +52,7 @@ void Server::mode(Client *client)
 
     if (!is_operator(client, channel_name))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(this->_sock.ip, channel_name));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel_name));
         return;
     }
 
@@ -60,7 +61,7 @@ void Server::mode(Client *client)
         std::string new_mode = parsed_message[i];
         if (!checkType(new_mode))
         {
-            reply(client, ERR_UNKNOWNMODE(this->_sock.ip, new_mode));
+            reply(client, ERR_UMODEUNKNOWNFLAG(client->getNick()));
             return;
         }
 
@@ -133,15 +134,18 @@ void Server::mode(Client *client)
             }
             else
             {
-                reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "MODE"));
+                reply(client, ERR_NEEDMOREPARAMS(channel_name, client->getNick(), "MODE"));
                 return;
             }
         }
         else
+        {
             std::cout << "MODE UNKNOWN" << std::endl;
+            reply(client, ERR_UMODEUNKNOWNFLAG(client->getNick()));
+        }
         channel->set_mode(mode);
         for (size_t i = 0; i < channel->get_members().size(); i++)
-            reply(channel->get_members()[i], MODE_CHANNELMSG(channel_name, new_mode));
+            reply(channel->get_members()[i], RPL_CHANNELMODEIS(client->getNick(), channel_name, new_mode));
     }
     std::cout << std::endl << "MODE" << std::endl;
 }

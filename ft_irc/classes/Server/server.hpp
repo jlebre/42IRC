@@ -63,7 +63,7 @@ class Server
 		// REPLY
 		void    				reply(Client *client, std::string msg);
 		void    				reply_all(std::string msg, Client *client);
-		void    				reply_on_channel(std::string msg, Channel *channel, Client *client);
+		void    				reply_on_channel(std::string msg, Channel *channel);
 		void    				reply_on_all_channels(std::string msg, Client *client);
 
 		// CHECK

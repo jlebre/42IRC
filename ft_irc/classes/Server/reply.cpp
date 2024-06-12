@@ -18,11 +18,11 @@ void    Server::reply_all(std::string msg, Client *client)
 }
 
 // Sends a message to all clients in the given channel
-void    Server::reply_on_channel(std::string msg, Channel *channel, Client *client)
+void    Server::reply_on_channel(std::string msg, Channel *channel)
 {
     std::vector<Client*> members = channel->get_members();
     for (size_t i = 0; i < members.size(); i++)
-        if (members[i]->getAuth() && members[i]->getNick() != client->getNick())
+        if (members[i]->getAuth())
             reply(members[i], msg);
 }
 
@@ -35,7 +35,7 @@ void    Server::reply_on_all_channels(std::string msg, Client *client)
         if (check_client_on_channel(client->getNick(), _channels[i]->get_name()))
         {
             Channel *channel = get_channel(_channels[i]->get_name());
-            reply_on_channel(msg, channel, client);
+            reply_on_channel(msg, channel);
         }
     }
 }

@@ -30,17 +30,17 @@ void    Server::parse_user(std::string &user, std::string &real)
 void		Server::user(Client *client)
 {
     if (!client->getAuth())
-        reply(client, ERR_PASSWDMISMATCH(this->_sock.ip));
+        reply(client, ERR_PASSWDMISMATCH(client->getNick()));
     else
     {
         if (client->getRegistered())
-            reply(client, ERR_ALREADYREGISTERED(this->_sock.ip));
+            reply(client, ERR_ALREADYREGISTERED(client->getUser()));
         else
         {
             std::string user, real;
             parse_user(user, real);
             if (user.empty())
-                reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "USER"));
+                reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "USER"));
             else
             {
                 user = "~" + user;
@@ -49,7 +49,10 @@ void		Server::user(Client *client)
                 if (!client->getNick().empty())
                 {
                     client->setRegistered(true);
-                    reply(client, "001 :Welcome to the Internet Relay Network " + client->getNick() + "!\n" + user + "@" + "127.0.0.1");
+                    reply(client, RPL_WELCOME(client->getNick()));
+                    reply(client, RPL_YOURHOST(client->getNick()));
+                    reply(client, RPL_CREATED(client->getNick()));
+                    reply(client, RPL_MYINFO(client->getNick()));
                 }
             }
         }

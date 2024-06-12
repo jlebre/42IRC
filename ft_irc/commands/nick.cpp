@@ -33,7 +33,7 @@ void		Server::nick(Client *client)
     
     if (!client->getAuth())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "NICK"));
+        reply(client, ERR_PASSWDMISMATCH(client->getNick()));
         return ;
     }
     
@@ -41,18 +41,18 @@ void		Server::nick(Client *client)
     parse_nick(nickname);
     if (nickname.empty())
     {
-        reply(client, ERR_NONICKNAMEGIVEN(this->_sock.ip));
+        reply(client, ERR_NONICKNAMEGIVEN(client->getUser()));
         return ;
     }
     if (!is_valid_nickname(nickname))
     {
-        reply(client, ERR_ERRONEUSNICKNAME(this->_sock.ip, nickname));
+        reply(client, ERR_ERRONEUSNICKNAME(client->getUser(), nickname));
         return ;
     }
     
     if (check_nickname(nickname))
     {
-        reply(client, ERR_NICKNAMEINUSE(this->_sock.ip, nickname));
+        reply(client, ERR_NICKNAMEINUSE(client->getUser(), nickname));
         return ;
     }
 

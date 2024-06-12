@@ -16,7 +16,7 @@ void Server::quit(Client *client)
 {
     if (!client->getRegistered())
     {
-        reply(client, ERR_NOTREGISTERED(this->_sock.ip, "QUIT"));
+        reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
     std::string nick = client->getNick();
@@ -37,7 +37,7 @@ void Server::quit(Client *client)
         channel->remove_client(client);
         client->removeChannel(channel);
         for (size_t j = 0; j < channel->get_members().size(); j++)
-            reply(channel->get_members()[j], ":" + nick + " QUIT :" + leave_message(parsed_message, 1));
+            reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + leave_message(parsed_message, 1));
     }
     client->setStatus(false);
     if (wasOperator)

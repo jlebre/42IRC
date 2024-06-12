@@ -25,7 +25,7 @@ void	Server::pass(Client *client)
 {
 	if (client->getAuth())
 	{
-		reply(client, ERR_ALREADYREGISTERED(this->_sock.ip));
+		reply(client, ERR_ALREADYREGISTERED(client->getUser()));
 		return;
 	}
 
@@ -33,12 +33,12 @@ void	Server::pass(Client *client)
 	parse_pass(password);
 	if (password.empty())
 	{
-		reply(client, ERR_NEEDMOREPARAMS(this->_sock.ip, "PASS"));
+		reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "PASS"));
 		return;
 	}
 	if (!check_pass(password))
 	{
-		reply(client, ERR_PASSWDMISMATCH(this->_sock.ip));
+		reply(client, ERR_PASSWDMISMATCH(client->getUser()));
 		return;
 	}
 	client->setAuth(true);
