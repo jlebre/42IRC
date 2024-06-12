@@ -47,7 +47,9 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "bircd.h": "c",
-        "map": "cpp"
+        "map": "cpp",
+        "csignal": "cpp",
+        "set": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.dimInactiveRegions": false
