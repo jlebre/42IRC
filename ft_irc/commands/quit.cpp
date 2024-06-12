@@ -32,7 +32,14 @@ void Server::quit(Client *client)
         }
     }
     std::cout << "Client " << nick << " has quit\n";
-    reply_all(":" + nick + " QUIT :" + leave_message(parsed_message, 1), client);
+    for (size_t i = 0; i < channels.size(); i++)
+    {
+        Channel *channel = get_channel(channels[i]->get_name());
+        channel->remove_client(client);
+        client->removeChannel(channel);
+        for (size_t j = 0; j < channel->get_members().size(); j++)
+            reply(channel->get_members()[j], ":" + nick + " QUIT :" + leave_message(parsed_message, 1));
+    }
     client->setStatus(false);
     if (wasOperator)
     {
@@ -52,6 +59,5 @@ void Server::quit(Client *client)
             }
         }
     }
-    delete_client(nick);
 }
 

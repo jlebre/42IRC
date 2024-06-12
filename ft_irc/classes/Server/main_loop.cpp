@@ -28,7 +28,9 @@ void	Server::main_loop()
 					{
 						close(fd);
 						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_event);
+						_clients.erase(it);
 						n_events--;
+						std::cout << "Client #" << fd << " has been disconnected\n";
 						continue;
 					}
 				}
