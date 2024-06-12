@@ -41,7 +41,8 @@ void    Server::do_join(Channel *channel, Client *client)
 {
     channel->add_client(client);
     client->addChannel(channel);
-    reply_on_all_channels(":" + client->getNick() + " JOIN " + channel->get_name(), client);
+    for (size_t i = 0; i < channel->get_members().size(); i++)
+            reply(channel->get_members()[i], ":" + client->getNick() + " JOIN " + channel->get_name());
 }
 
 bool    is_invited(Channel *channel, Client *client)
