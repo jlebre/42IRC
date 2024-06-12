@@ -43,4 +43,8 @@ a:
 	clear
 	@make -s re && ./$(NAME) 6667 hello
 
+v:
+	clear
+	@make -s re && valgrind -s --track-fds=yes --leak-check=full --show-kind=all ./$(NAME) 6667 hello
+
 .PHONY: all clean fclean re a
