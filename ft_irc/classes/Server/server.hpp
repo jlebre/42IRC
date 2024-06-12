@@ -28,7 +28,6 @@ class Server
 		std::string					_password;
 		std::vector<std::string>	parsed_message;
 		std::string					_message;
-		
 		std::string					_line;
 		std::map<int, Client*>		_clients;
 

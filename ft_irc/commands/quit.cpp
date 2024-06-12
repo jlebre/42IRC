@@ -10,6 +10,17 @@ void Server::delete_client(std::string nick)
         channel->remove_client(client);
         client->removeChannel(channel);
     }
+    int fd = client->get_fd();
+    if (_clients.find(fd) == _clients.end())
+    {
+        std::cerr << "Error: Client not found\n";
+        return;
+    }
+    if (epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, NULL) == -1)
+        std::cerr << "Error(EPOLL_CTL_DEL)\n";
+    close(fd);
+    _clients.erase(fd);
+    std::cout << "Client #" << fd << " disconnected and removed from epoll\n";
 }
 
 void Server::quit(Client *client)
@@ -21,7 +32,6 @@ void Server::quit(Client *client)
         return;
     }
     std::string nick = client->getNick();
-    int fd = client->get_fd();
     std::vector<Channel*> channels = client->getChannels();
     bool wasOperator = false;
     for (size_t i = 0; i < channels.size(); i++)
@@ -36,8 +46,6 @@ void Server::quit(Client *client)
     reply_all(":" + nick + " QUIT :" + leave_message(parsed_message, 1), client);
     client->setStatus(false);
     delete_client(nick);
-    disconnect_client(fd);
-
     if (wasOperator)
     {
         for (size_t i = 0; i < channels.size(); i++)
