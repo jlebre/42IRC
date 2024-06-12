@@ -2,7 +2,6 @@
 
 void		Server::privmsg(Client *client)
 {
-    std::cout << "PRIVMSG COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "PRIVMSG"));
@@ -25,7 +24,7 @@ void		Server::privmsg(Client *client)
         Channel *channel;
         
         if (check_if_channel_exists(target))
-		channel = get_channel(target);
+		    channel = get_channel(target);
         else
         {
             reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, target));
@@ -46,13 +45,13 @@ void		Server::privmsg(Client *client)
     }
     else // If target is a client
     {
-        try {
-            Client *targetClient(find_client(target));
+        if (check_if_client_exists(target))
+        {
+            Client *targetClient = find_client(target);
             reply(targetClient, ":" + client->getNick() + " PRIVMSG " + target + " " + message);
-        } catch (std::exception &e) {
-            reply(client, ERR_NOSUCHNICK(this->_sock.ip, target));
-            return;
         }
-
+        else
+            reply(client, ERR_NOSUCHNICK(this->_sock.ip, target));
+        std::cout << "PRIVMSG COMMAND\n";
     }
 }

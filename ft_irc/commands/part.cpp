@@ -37,20 +37,13 @@ void Server::remove_channel(std::string str){
 
 void		Server::part(Client *client)
 {
-    std::cout << "PART COMMAND\n";
-    //std::vector<Client*> members = find_channel(parsed_message[1]);
-
     std::string msg = ":" + client->getNick() + " PART " + parsed_message[1] + " :" + leave_message(parsed_message, 2);
     reply_on_all_channels(msg, client);
-    ////// se nao existir mais gente fechar o channel
-    if (find_channel(parsed_message[1]).get_members().size() == 0){
+    if (find_channel(parsed_message[1]).get_members().size() == 0)
         remove_channel(parsed_message[1]);
-    }
-    //////se a pessoa que bazar for a unica com mods dar a outra pessoa;
     else if(!check_if_is_mods(parsed_message[1]))
         find_channel(parsed_message[1]).add_operator(client);
-    
-    ///ver se ha mais casos coninhas
     find_channel(parsed_message[1]).remove_client(client);
     client->removeChannel(&find_channel(parsed_message[1]));
+    std::cout << "PART COMMAND\n";
 }

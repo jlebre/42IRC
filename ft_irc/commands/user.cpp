@@ -29,7 +29,6 @@ void    Server::parse_user(std::string &user, std::string &real)
 
 void		Server::user(Client *client)
 {
-    std::cout << "USER COMMAND\n";
     if (!client->getAuth())
         reply(client, ERR_PASSWDMISMATCH(this->_sock.ip));
     else
@@ -55,4 +54,5 @@ void		Server::user(Client *client)
             }
         }
     }
+    std::cout << "USER COMMAND\n";
 }

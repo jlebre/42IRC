@@ -29,6 +29,7 @@ void	Server::main_loop()
 						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
 						close(fd);
 						_clients.erase(it);
+						delete it->second;
 						n_events--;
 						std::cout << "Client #" << fd << " has been disconnected\n";
 						continue;
@@ -75,7 +76,7 @@ void	Server::reading(Client *cli)
 			ParseCommand();
 			process_input(cli);
 			parsed_message.clear();
-			_message.erase();
+			_message.clear();
 		}
 	}
 }

@@ -1,22 +1,17 @@
 #include "server.hpp"
 
-// Function to delete every client and channel
-void    Server::delete_all()
+void Server::delete_all()
 {
-    for (size_t i = 0; i < _clients.size(); i++)
-        delete _clients[i];
-    _clients.clear();
-    for (size_t i = 0; i < _channels.size(); i++)
-        delete &_channels[i];
-    _channels.clear();
-    for (int i = 0; i < n_events; i++)
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
-        epoll_ctl(event_fd, EPOLL_CTL_DEL, _events[i].data.fd, &_events[i]);
-        close(_events[i].data.fd);
+        close(it->first);
+        delete it->second;
     }
-    epoll_ctl(event_fd, EPOLL_CTL_DEL, _sock.fd, &_event);
-    close(_sock.fd);
+    _clients.clear();
+
+    for (size_t i = 0; i < _channels.size(); i++)
+        delete _channels[i];
+    _channels.clear();
     close(event_fd);
-    std::cout << "Server has been closed\n";
-    exit(0);
+   std::cout << "Server has been closed\n";
 }

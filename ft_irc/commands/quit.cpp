@@ -14,7 +14,6 @@ void Server::delete_client(std::string nick)
 
 void Server::quit(Client *client)
 {
-    std::cout << "QUIT COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "QUIT"));
@@ -59,5 +58,6 @@ void Server::quit(Client *client)
             }
         }
     }
+    std::cout << "QUIT COMMAND\n";
 }
 

@@ -30,7 +30,6 @@ bool    Server::is_valid_nickname(std::string nickname)
 
 void		Server::nick(Client *client)
 {
-    std::cout << "NICK COMMAND\n";
     
     if (!client->getAuth())
     {
@@ -69,4 +68,5 @@ void		Server::nick(Client *client)
         for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) 
             reply(it->second, ":" + old + " NICK " + nickname);
     }
+    std::cout << "NICK COMMAND\n";
 }

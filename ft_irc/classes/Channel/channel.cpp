@@ -32,6 +32,9 @@ Channel::Channel(std::string name, std::string password) : _name(name), _passwor
 
 Channel::~Channel()
 {
+    _members.clear();
+    _invited.clear();
+    _operators.clear();
 }
 
 Channel::Channel(const Channel &src)
@@ -50,11 +53,6 @@ Channel &Channel::operator=(const Channel &src)
     _operators = src.get_operators();
 
     return *this;
-}
-
-Channel *Channel::newChannel(std::string name)
-{
-    return new Channel(name);
 }
 
 void Channel::add_client(Client *client)

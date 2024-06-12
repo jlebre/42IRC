@@ -48,7 +48,6 @@ void Server::parse_invite(std::string &invitedNick, std::string &channel_name)
 
 void		Server::invite(Client *client)
 {
-    std::cout << "INVITE COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "INVITE"));
@@ -102,4 +101,5 @@ void		Server::invite(Client *client)
     channel->add_invited(invited);
     reply(invited, RPL_INVITING(this->_sock.ip, client->getNick(), invitedNick, channel->get_name()));
     //reply(client, "341 " + client->getNick() + " " + invitedNick + " :" + channel_name);
+    std::cout << "INVITE COMMAND\n";
 }

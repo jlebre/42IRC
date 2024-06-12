@@ -68,8 +68,8 @@ void Server::parse_kick(std::string &channel, std::string &nick, std::string &re
     }
 }
 
-void Server::kick(Client *client) {
-    std::cout << "KICK COMMAND\n";
+void Server::kick(Client *client)
+{
 
     if (!client->getRegistered()) {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "KICK"));
@@ -120,4 +120,5 @@ void Server::kick(Client *client) {
 
     reply(client, kickMessage);
     reply(target_client, "You have been kicked from " + channel + " by " + client->getNick() + (reason.empty() ? "" : (" (" + reason + ")")));
+    std::cout << "KICK COMMAND\n";
 }

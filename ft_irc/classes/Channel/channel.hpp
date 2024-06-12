@@ -36,7 +36,6 @@ class Channel
         ~Channel();
         Channel(const Channel &src);
         Channel &operator=(const Channel &src);
-        Channel *newChannel(std::string name);
 
         void add_client(Client *client);
         void add_invited(Client *client);
@@ -58,10 +57,6 @@ class Channel
         void set_topic(std::string topic);
         void set_password(std::string password);
         void set_mode(t_modes mode);
-		void ChannelMode(t_modes mode, std::string new_mode);
-
-        //Mode
-		//mzarichn
 };
 
 #endif

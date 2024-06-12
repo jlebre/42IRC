@@ -20,8 +20,6 @@ Channel	*Server::get_channel(std::string channel_name)
 
 void Server::mode(Client *client)
 {
-    std::cout << std::endl << "MODE" << std::endl;
-
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "MODE"));
@@ -145,5 +143,5 @@ void Server::mode(Client *client)
         for (size_t i = 0; i < channel->get_members().size(); i++)
             reply(channel->get_members()[i], MODE_CHANNELMSG(channel_name, new_mode));
     }
+    std::cout << std::endl << "MODE" << std::endl;
 }
-

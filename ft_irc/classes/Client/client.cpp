@@ -36,6 +36,7 @@ Client &Client::operator=(const Client &src)
 
 Client::~Client()
 {
+    _channels_im_in.clear();
 }
 
 Client *Client::newClient(struct sockaddr_in addr, socklen_t addr_size, int fd)

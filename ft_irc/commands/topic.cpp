@@ -2,8 +2,7 @@
 
 void		Server::topic(Client *client)
 {
-    std::cout << "TOPIC COMMAND\n";
-    if (client->getRegistered() == false)
+    if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "TOPIC"));
         return ;
@@ -53,5 +52,6 @@ void		Server::topic(Client *client)
 			new_topic = new_topic.substr(0, pos);
         reply(client, ":" + client->getNick() + " TOPIC " + channel_name + " " + new_topic);
         reply_on_channel(":" + client->getNick() + " TOPIC " + channel_name + " " + new_topic, channel, client);
+    std::cout << "TOPIC COMMAND\n";
     }
 }

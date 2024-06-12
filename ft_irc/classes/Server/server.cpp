@@ -15,12 +15,14 @@ Server &Server::operator=(const Server &src)
 
 Server::~Server()
 {
+    if (_sock.fd != -1)
+        close(_sock.fd);
+
     std::map<int, Client*>::iterator it;
     for (it = _clients.begin(); it != _clients.end(); it++)
         if (it->second)
             delete it->second;
     _clients.clear();
-    close(_sock.fd);
 }
 
 int Server::get_fd()

@@ -59,7 +59,6 @@ bool    is_invited(Channel *channel, Client *client)
 
 void Server::join(Client *client)
 {
-    std::cout << "JOIN COMMAND\n";
     if (!client->getRegistered())
     {
         reply(client, ERR_NOTREGISTERED(this->_sock.ip, "JOIN"));
@@ -132,4 +131,5 @@ void Server::join(Client *client)
             reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
 
     }
+    std::cout << "JOIN COMMAND\n";
 }
