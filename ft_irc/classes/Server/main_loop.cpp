@@ -24,9 +24,9 @@ void	Server::main_loop()
 				{
 					it->second->setStatus(1);
 					reading(it->second);
-					if (it->second->get_status() == false)
+					if (!it->second->get_status())
 					{
-						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_event);
+						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
 						close(fd);
 						_clients.erase(it);
 						n_events--;
