@@ -99,6 +99,7 @@ class Server
 
 		// POLL
 		void					init_poll();
+		void					remove_from_epoll(int fd);
 
 		// COMMANDS
 		void					pass(Client *client);

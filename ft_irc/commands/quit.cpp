@@ -12,6 +12,16 @@ void Server::delete_client(std::string nick)
     }
 }
 
+void Server::remove_from_epoll(int fd)
+{
+    if (epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_event) == -1)
+        std::cerr << "Error(EPOLL_CTL_DEL)\n";
+    close(fd);
+    n_events--;
+    _clients.erase(fd);
+    std::cout << "Client #" << fd << " removed from epoll\n";
+}
+
 void Server::quit(Client *client)
 {
     std::cout << "QUIT COMMAND\n";
@@ -54,5 +64,6 @@ void Server::quit(Client *client)
             }
         }
     }
+    remove_from_epoll(client->get_fd());
 }
 
