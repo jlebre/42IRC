@@ -30,6 +30,7 @@
 # include <queue>
 # include <exception>
 # include <cstdlib>
+# include <csignal>
 
 # define BUF_SIZE		1024
 # define MAX_CLIENTS	5

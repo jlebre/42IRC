@@ -2,11 +2,13 @@
 
 void	Server::main_loop()
 {
-	while (true)
+	while (run)
 	{
 		int n = epoll_wait(event_fd, _events, 200, -1);
 		if (n == -1)
 		{
+			if (errno == EINTR)
+				continue;
 			std::cerr << "Error(EPOLL)\n";
 			break;
 		}
@@ -33,6 +35,7 @@ void	Server::main_loop()
 			}
 		}
 	}
+	delete_all();
 }
 
 void Server::ParseCommand()

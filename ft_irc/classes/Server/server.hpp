@@ -11,6 +11,8 @@ class Client;
 class Channel;
 class Command;
 
+extern bool run;
+
 typedef struct socket_s
 {
     int fd;

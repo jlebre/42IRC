@@ -6,3 +6,4 @@ MODE pode ter vários argumentos
 
 Testes:
 Mensagens estupidamente grandes
+Reconect Reconect Reconect
