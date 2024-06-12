@@ -11,6 +11,8 @@ void    Server::delete_all()
         if (_channels[i]->get_name() != "")
             delete &_channels[i];
     close(_sock.fd);
+    for (size_t i = 0; i < n_events; i++)
+        close(_events[i].data.fd);
     std::cout << "Server has been closed\n";
     exit(0);
 }
