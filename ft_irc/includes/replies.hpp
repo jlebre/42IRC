@@ -38,7 +38,7 @@
 // MODE
 /* user mode */
 # define ERR_UNKNOWNMODE(client, mode) (":localhost 472 " + client + " " + mode + " :is unknown mode char to me")
-# define MODE_USERMSG(client, mode) (":" + client + " MODE " + client + " :" + mode)
+# define MODE_USERMSG(client, mode) (":" + client + " MODE " + client + " " + mode)
 # define ERR_UMODEUNKNOWNFLAG(client) (":localhost 501 " + client + " :Unknown MODE flag")
 # define ERR_USERSDONTMATCH(client) ("502 " + client + " :Cant change mode for other users")
 # define RPL_UMODEIS(client, mode) (":localhost 221 " + client + " " + mode)

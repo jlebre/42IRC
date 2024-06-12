@@ -66,10 +66,7 @@ void		Server::nick(Client *client)
     {
         std::string old = client->getNick();
         client->setNick(nickname);
-        try{
-            reply_on_all_channels(":" + old + " NICK " + nickname, client);
-        }
-        catch(std::exception &e){
-        }
+        for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) 
+            reply(it->second, ":" + old + " NICK " + nickname);
     }
 }

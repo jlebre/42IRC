@@ -142,7 +142,8 @@ void Server::mode(Client *client)
         else
             std::cout << "MODE UNKNOWN" << std::endl;
         channel->set_mode(mode);
-        reply(client, MODE_CHANNELMSG(channel_name, new_mode));
+        for (size_t i = 0; i < channel->get_members().size(); i++)
+            reply(channel->get_members()[i], MODE_CHANNELMSG(channel_name, new_mode));
     }
 }
 
