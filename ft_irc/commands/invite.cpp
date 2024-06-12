@@ -99,7 +99,6 @@ void		Server::invite(Client *client)
         return ;
     }
     channel->add_invited(invited);
-    reply(invited, RPL_INVITING(this->_sock.ip, client->getNick(), invitedNick, channel->get_name()));
-    //reply(client, "341 " + client->getNick() + " " + invitedNick + " :" + channel_name);
+    reply(invited, RPL_INVITE(this->_sock.ip, invited->getNick(), channel->get_name()));
     std::cout << "INVITE COMMAND\n";
 }
