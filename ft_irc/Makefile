@@ -45,6 +45,6 @@ a:
 
 v:
 	clear
-	@make -s re && valgrind -s --track-fds=yes --leak-check=full --show-kind=all ./$(NAME) 6667 hello
+	@make -s re && valgrind --track-fds=yes --leak-check=full --show-leak-kinds=all ./$(NAME) 6667 hello
 
 .PHONY: all clean fclean re a

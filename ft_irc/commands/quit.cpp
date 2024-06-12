@@ -32,11 +32,12 @@ void Server::quit(Client *client)
             break;
         }
     }
-    client->setStatus(false);
-    delete_client(nick);
-
     std::cout << "Client " << nick << " has quit\n";
     reply_all(":" + nick + " QUIT :" + leave_message(parsed_message, 1), client);
+    client->setStatus(false);
+    delete_client(nick);
+    disconnect_client(fd);
+
     if (wasOperator)
     {
         for (size_t i = 0; i < channels.size(); i++)
@@ -55,6 +56,5 @@ void Server::quit(Client *client)
             }
         }
     }
-    disconnect_client(fd);
 }
 
