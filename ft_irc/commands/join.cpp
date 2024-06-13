@@ -1,22 +1,34 @@
 #include "server.hpp"
 
-// Pode juntar a mais do que 1 canal de uma vez
-
-// Adicionar mais checks
-// Se tem # no meio e caracteres proibidos
-bool check_if_is_channel(std::string str){
+bool check_if_is_channel(std::string str)
+{
     const char *tmp;
     tmp = str.c_str();
-    if (tmp[0] == '#')
-        return true;
-    return false;
+    if (str.size() < 2 || str.size() > 50)
+        return false;
+    if (tmp[0] != '#' && tmp[0] != '&' && tmp[0] != '!' && tmp[0] != '+')
+        return false;
+    return true;
+}
+
+bool Server::compare_channel_name(const std::string& name1, const std::string& name2)
+{
+    if (name1.size() != name2.size())
+        return false;
+
+    for (size_t i = 0; i < name1.size(); ++i) {
+        if (tolower(name1[i]) != tolower(name2[i]))
+            return false;
+    }
+    return true;
 }
 
 bool Server::check_if_channel_exists(std::string name)
 {
-    for (size_t i = 0; i < _channels.size(); i++)
-    {
-        if (_channels[i] && (_channels[i]->get_name() == name))
+    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+
+    for (size_t i = 0; i < _channels.size(); i++) {
+        if (_channels[i] && compare_channel_name(_channels[i]->get_name(), name))
             return true;
     }
     return false;
@@ -75,7 +87,6 @@ bool    is_invited(Channel *channel, Client *client)
     return false;
 }
 
-
 void Server::join(Client *client)
 {
     if (!client->getRegistered())
@@ -102,7 +113,7 @@ void Server::join(Client *client)
             {
                 for (size_t j = 0; j < _channels.size(); j++)
                 {
-                    if (_channels[j]->get_name() == channel_name)
+                    if (compare_channel_name(_channels[j]->get_name(),channel_name))
                     {
                         Channel *channel = _channels[j];
                         if (is_invite_only(channel))

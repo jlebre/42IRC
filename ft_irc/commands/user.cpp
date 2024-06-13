@@ -27,6 +27,13 @@ void    Server::parse_user(std::string &user, std::string &real)
     real = real.substr(0, real.find_last_not_of(" \t\n\r") + 1);
 }
 
+bool    Server::is_valid_user(std::string user)
+{
+    if (user.empty() || user.size() > MAX_USER_LENGTH)
+        return false;
+    return user.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") == std::string::npos;
+}
+
 void		Server::user(Client *client)
 {
     if (!client->getAuth())
@@ -39,7 +46,7 @@ void		Server::user(Client *client)
         {
             std::string user, real;
             parse_user(user, real);
-            if (user.empty())
+            if (user.empty() || user.size() > 10)
                 reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "USER"));
             else
             {

@@ -14,7 +14,7 @@ bool	Server::check_on_server(std::string nick, std::string channel)
 {
     for (size_t i = 0; i < _channels.size(); i++)
     {
-        if (_channels[i]->get_name() == channel)
+        if (compare_channel_name(_channels[i]->get_name(),channel))
         {
             for (size_t j = 0; j < _channels[i]->get_members().size(); j++)
             {
@@ -29,7 +29,7 @@ bool	Server::check_on_server(std::string nick, std::string channel)
 bool    Server::is_operator(Client *client, std::string channel)
 {
     for (size_t i = 0; i < client->getChannels().size(); i++)
-        if (client->getChannels()[i]->get_name() == channel)
+        if (compare_channel_name(client->getChannels()[i]->get_name(), channel))
             for (size_t j = 0; j < client->getChannels()[i]->get_operators().size(); j++)
                 if (client->getChannels()[i]->get_operators()[j]->getNick() == client->getNick())
                     return true;

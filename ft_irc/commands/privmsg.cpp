@@ -19,7 +19,7 @@ void		Server::privmsg(Client *client)
     if (message[0] != ':')
         message = ":" + message;
     // If target is a channel
-    if (target[0] == '#')
+    if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
     {
         Channel *channel;
         

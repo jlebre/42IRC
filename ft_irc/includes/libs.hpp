@@ -34,5 +34,11 @@
 
 # define BUF_SIZE		1024
 # define MAX_CLIENTS	5
+# define MAX_NICK_LENGTH 9
+# define MAX_USER_LENGTH 10
+# define MAX_REALNAME_LENGTH 50
+# define MAX_CHANNEL_NAME_LENGTH 50
+# define MAX_TOPIC_LENGTH 390
+# define MAX_MESSAGE_LENGTH 512
 
 #endif

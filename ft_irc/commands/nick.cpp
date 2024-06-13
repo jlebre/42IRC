@@ -14,7 +14,6 @@ bool Server::check_nickname(std::string nickname)
     return false;
 }
 
-
 void    Server::parse_nick(std::string &nickname)
 {
     size_t pos = _line.find("NICK");
@@ -43,14 +42,8 @@ void		Server::nick(Client *client)
         return ;
     }
     
-    if (_line.find("NICK") == std::string::npos)
-	{
-		reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "NICK"));
-		return;
-	}
-
-    std::string nickname = parsed_message[1];
-    //parse_nick(nickname);
+    std::string nickname;
+    parse_nick(nickname);
     if (nickname.empty())
     {
         reply(client, ERR_NONICKNAMEGIVEN(nickname));

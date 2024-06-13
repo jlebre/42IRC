@@ -5,7 +5,7 @@ bool Server::check_client_on_channel(std::string nick, std::string channel_name)
 {
     for (size_t i = 0; i < _channels.size(); i++)
     {
-        if (_channels[i]->get_name() == channel_name)
+        if (compare_channel_name(_channels[i]->get_name(), channel_name))
         {
             std::vector<Client*> members = _channels[i]->get_members();
             for (size_t i = 0; i < members.size(); i++)

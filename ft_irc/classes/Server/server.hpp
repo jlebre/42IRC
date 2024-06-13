@@ -75,7 +75,9 @@ class Server
 		bool 					check_if_channel_exists(std::string name);
 		bool    				check_if_client_exists(std::string nick);
 		bool 					check_if_is_mods(std::string str);
+		bool					compare_channel_name(const std::string& name1, const std::string& name2);
 		bool    				is_valid_nickname(std::string nickname);
+		bool    				is_valid_user(std::string user);
 		bool					is_operator(Client *client, std::string channel);
 		
 		// PARSE
