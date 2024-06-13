@@ -40,7 +40,7 @@ void		Server::topic(Client *client)
         return;
     }
 
-    if (new_topic.empty())
+    if (new_topic.empty() || new_topic.size() > 390)
         reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
     else
     {
