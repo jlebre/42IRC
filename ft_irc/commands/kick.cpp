@@ -7,7 +7,6 @@ bool	Server::check_on_channel(std::string nick)
         if (it->second && it->second->getNick() == nick)
             return true;
     return false;
-   
 }
 
 bool	Server::check_on_server(std::string nick, std::string channel)
@@ -36,38 +35,6 @@ bool    Server::is_operator(Client *client, std::string channel)
     return false;
 }
 
-void Server::parse_kick(std::string &channel, std::string &nick, std::string &reason)
-{
-    size_t pos = _line.find("KICK") + 5;
-    if (pos != std::string::npos)
-    {
-        _line = _line.substr(pos);
-        pos = _line.find_first_of(" \r\n");
-        if (pos != std::string::npos)
-        {
-            channel = _line.substr(0, pos);
-            _line = _line.substr(pos + 1);
-            pos = _line.find_first_of(" \r\n");
-            if (pos != std::string::npos)
-            {
-                nick = _line.substr(0, pos);
-                _line = _line.substr(pos + 1);
-                pos = _line.find_first_of("\r\n");
-                if (pos != std::string::npos)
-                    reason = _line.substr(0, pos);
-                else
-                    reason = _line;
-            }
-        }
-    }
-    else
-    {
-        channel.clear();
-        nick.clear();
-        reason.clear();
-    }
-}
-
 void Server::kick(Client *client)
 {
 
@@ -76,38 +43,51 @@ void Server::kick(Client *client)
         return;
     }
 
-    std::string reason = "";
-    std::string channel;
-    std::string nick;
+    std::string reason = "", channel = "", nick = "";
+    if (parsed_message.size() > 2)
+    {
+        channel = parsed_message[1];
+        nick = parsed_message[2];
+        if (parsed_message.size() > 3)
+            reason = parsed_message[3];
+    }
 
-    parse_kick(channel, nick, reason);
-
-    if (channel.empty() || nick.empty()) {
+    if (channel.empty() || nick.empty())
+    {
         reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "KICK"));
         return;
     }
 
     Channel *channel_obj;
-    if (check_if_channel_exists(channel)) {
+    if (check_if_channel_exists(channel))
+    {
         channel_obj = get_channel(channel);
     } else {
         reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel));
         return;
     }
 
-    if (!is_operator(client, channel)) {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
+    if (!check_client_on_channel(nick, channel))
+    {
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
         return;
     }
 
-    if (!check_client_on_channel(nick, channel)) {
-        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
+    if (!is_operator(client, channel))
+    {
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
         return;
     }
 
     Client *target_client = find_client(nick);
     if (target_client == NULL) {
         reply(client, NOUSER);
+        return;
+    }
+
+    if (!check_client_on_channel(nick, channel))
+    {
+        reply(client, ERR_USERNOTINCHANNEL(client->getNick(), nick, channel));
         return;
     }
 

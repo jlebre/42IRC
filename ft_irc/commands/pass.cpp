@@ -5,22 +5,6 @@ bool	Server::check_pass(std::string pass)
 	return pass == _password;
 }
 
-void	Server::parse_pass(std::string &password)
-{
-	size_t pos = _line.find("PASS") + 5;
-	if (pos != std::string::npos)
-	{
-		_line = _line.substr(pos);
-		pos = _line.find_first_of(" \r\n");
-		if (pos != std::string::npos)
-			password = _line.substr(0, pos);
-		else
-			password = _line;
-	}
-	else
-		password.clear();
-}
-
 void	Server::pass(Client *client)
 {
 	if (client->getAuth())
@@ -28,9 +12,9 @@ void	Server::pass(Client *client)
 		reply(client, ERR_ALREADYREGISTERED(client->getUser()));
 		return;
 	}
-
-	std::string password;
-	parse_pass(password);
+	std::string password = "";
+	if (parsed_message.size() > 1)
+		password = parsed_message[1];
 	if (password.empty())
 	{
 		reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "PASS"));
@@ -42,6 +26,5 @@ void	Server::pass(Client *client)
 		return;
 	}
 	client->setAuth(true);
-	//reply(client, "381 :You are now logged in");
 	std::cout << "PASS COMMAND\n";
 }
