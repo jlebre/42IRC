@@ -1,12 +1,15 @@
 #include "server.hpp"
 
-bool check_if_is_channel(std::string str)
+bool check_if_is_channel(const std::string& str)
 {
-    const char *tmp;
-    tmp = str.c_str();
-    if (str.size() < 2 || str.size() > 50)
+    if (str.empty() || str.size() > 50)
         return false;
-    if (tmp[0] != '#' && tmp[0] != '&' && tmp[0] != '!' && tmp[0] != '+')
+
+    char firstChar = str[0];
+    if (firstChar != '#' && firstChar != '&' && firstChar != '!' && firstChar != '+')
+        return false;
+
+    if (str.find_first_of(" \a\b\f\n\r\t\v,:") != std::string::npos)
         return false;
     return true;
 }
