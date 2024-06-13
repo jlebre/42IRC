@@ -111,7 +111,7 @@ void Server::join(Client *client)
                         {
                             if (!is_invited(channel, client))
                             {
-                                reply(client, ERR_INVITEONLYCHAN(this->_sock.ip, channel->get_name()));
+                                reply(client, ERR_INVITEONLYCHAN(client->getNick(), channel->get_name()));
                                 return;
                             }
                             else
@@ -126,7 +126,7 @@ void Server::join(Client *client)
                             }
                             else
                             {
-                                reply(client, ERR_BADCHANNELKEY(this->_sock.ip, channel_name));
+                                reply(client, ERR_BADCHANNELKEY(client->getNick(), channel_name));
                                 return;
                             }
                         }
@@ -136,7 +136,7 @@ void Server::join(Client *client)
                                 do_join(channel, client);
                             else
                             {
-                                reply(client, ERR_CHANNELISFULL(this->_sock.ip, channel_name));
+                                reply(client, ERR_CHANNELISFULL(client->getNick(), channel_name));
                                 return;
                             }
                         }
@@ -147,7 +147,7 @@ void Server::join(Client *client)
             }
         }
         else
-            reply(client, ERR_NOSUCHCHANNEL(this->_sock.ip, channel_name));
+            reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
 
     }
     std::cout << "JOIN COMMAND\n";

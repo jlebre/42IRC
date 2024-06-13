@@ -93,3 +93,10 @@ void Channel::remove_operator(Client *client)
     if (it != _operators.end())
         _operators.erase(it);
 }
+
+void Channel::remove_invited(Client *client)
+{
+    std::vector<Client*>::iterator it = std::find(_invited.begin(), _invited.end(), client);
+    if (it != _invited.end())
+        _invited.erase(it);
+}

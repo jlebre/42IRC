@@ -41,6 +41,7 @@ class Channel
         void add_invited(Client *client);
         void add_operator(Client *client);
         void remove_operator(Client *client);
+        void remove_invited(Client *client);
         void remove_client(Client *client);
 
         //Getters

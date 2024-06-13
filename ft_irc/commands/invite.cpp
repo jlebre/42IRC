@@ -71,16 +71,16 @@ void		Server::invite(Client *client)
 		reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
 		return ;
 	}
+    
+    if (!client->is_operator(channel))
+    {
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
+        return ;
+    }
 
     if (!check_client_on_channel(client->getNick(), channel->get_name()))
     {
         reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
-        return ;
-    }
-
-    if (!client->is_operator(channel))
-    {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return ;
     }
 

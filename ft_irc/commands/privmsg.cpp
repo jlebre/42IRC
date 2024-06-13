@@ -41,7 +41,11 @@ void		Server::privmsg(Client *client)
             //reply(client, ERR_NOTEXTTOSEND(client->getNick()));
             return;
         }
-        reply_on_channel(":" + client->getNick() + " PRIVMSG " + target + " " + message, channel);
+        for (size_t i = 0; i < channel->get_members().size(); i++)
+        {
+            if (channel->get_members()[i]->getNick() != client->getNick())
+                reply(channel->get_members()[i], ":" + client->getNick() + " PRIVMSG " + target + " " + message);
+        }
     }
     else // If target is a client
     {

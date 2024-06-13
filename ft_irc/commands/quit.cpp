@@ -36,6 +36,8 @@ void Server::quit(Client *client)
         Channel *channel = get_channel(channels[i]->get_name());
         channel->remove_client(client);
         client->removeChannel(channel);
+        channel->remove_operator(client);
+        channel->remove_invited(client);
         for (size_t j = 0; j < channel->get_members().size(); j++)
             reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + leave_message(parsed_message, 1));
     }
