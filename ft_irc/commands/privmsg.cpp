@@ -55,7 +55,7 @@ void		Server::privmsg(Client *client)
             reply(targetClient, ":" + client->getNick() + " PRIVMSG " + target + " " + message);
         }
         else
-            reply(client, ERR_NOSUCHNICK(this->_sock.ip, target));
+            reply(client, ERR_NOSUCHNICK(client->getNick(), target));
         std::cout << "PRIVMSG COMMAND\n";
     }
 }

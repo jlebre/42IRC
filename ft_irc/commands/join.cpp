@@ -93,12 +93,10 @@ void Server::join(Client *client)
             {
                 Channel *new_channel = new Channel;
                 new_channel->set_name(channel_name);
-                new_channel->add_client(client);
                 new_channel->add_operator(client);
                 new_channel->set_topic("");
-                client->addChannel(new_channel);
                 _channels.push_back(new_channel);
-                reply(client, JOIN_REPLY(client->getNick(), new_channel->get_name()));
+                do_join(new_channel, client);
             }
             else
             {
@@ -121,7 +119,7 @@ void Server::join(Client *client)
                         {
                             if (parsed_message.size() > i + 1 && parsed_message[i + 1] == channel->get_mode()._key_password)
                             {
-                                i++; // Skip the password parameter
+                                i++;
                                 do_join(channel, client);
                             }
                             else
@@ -148,7 +146,6 @@ void Server::join(Client *client)
         }
         else
             reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
-
     }
     std::cout << "JOIN COMMAND\n";
 }

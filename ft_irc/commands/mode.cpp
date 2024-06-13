@@ -118,7 +118,7 @@ void Server::mode(Client *client)
 					new_operator = find_client(target_nick);
 				else
 				{
-					reply(client, ERR_NOSUCHNICK(this->_sock.ip, target_nick));
+					reply(client, ERR_NOSUCHNICK(client->getNick(), target_nick));
 					return ;
 				}
                 if (ver)
