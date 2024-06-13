@@ -57,12 +57,9 @@ void    Server::do_join(Channel *channel, Client *client)
         if (j != 0)
             client_list += " ";
         if (channel->get_members().at(j)->is_operator(channel))
-        {
             client_list += "@" + channel->get_members().at(j)->getNick();
-        }	else	{
+        else
             client_list += channel->get_members().at(j)->getNick();
-        }
-
     }
     channel->add_client(client);
     client->addChannel(channel);
