@@ -40,26 +40,20 @@ void Server::quit(Client *client)
         channel->remove_invited(client);
         for (size_t j = 0; j < channel->get_members().size(); j++)
             reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + leave_message(parsed_message, 1));
-    }
-    client->setStatus(false);
-    if (wasOperator)
-    {
-        for (size_t i = 0; i < channels.size(); i++)
+        if (wasOperator && channel->get_operators().empty())
         {
-            if (is_operator(client, channels[i]->get_name()))
+            std::vector<Client*> clients = channel->get_members();
+            for (size_t j = 0; j < clients.size(); j++)
             {
-                std::vector<Client*> clients = channels[i]->get_members();
-                for (size_t j = 0; j < clients.size(); j++)
+                if (clients[j]->getNick() != nick)
                 {
-                    if (clients[j]->getNick() != nick)
-                    {
-                        channels[i]->add_operator(clients[j]);
-                        break;
-                    }
+                    channel->add_operator(clients[j]);
+                    break;
                 }
             }
         }
     }
+    client->setStatus(false);
     std::cout << "QUIT COMMAND\n";
 }
 

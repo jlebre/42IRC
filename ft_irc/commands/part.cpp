@@ -35,67 +35,91 @@ void Server::remove_channel(std::string str){
     }
 }
 
-void		Server::part(Client *client)
+void Server::part(Client *client)
 {
-    if (!client->getRegistered()) {
+    if (!client->getRegistered())
+    {
         reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
 
+    std::string channel_name;
     std::string reason = "";
-    std::string channel;
-    std::string nick;
 
-    parse_kick(channel, nick, reason);
+    size_t end = _line.find("\n");
+    if (end != std::string::npos && _line.at(end - 1) == '\r') 
+        end = end - 1;
 
-    if (channel.empty() || nick.empty()) {
-        reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "KICK"));
+    std::string cut = _line.substr(5, end - 5);
+
+    size_t space_pos = cut.find(" ");
+    if (space_pos != std::string::npos) 
+    {
+        channel_name = cut.substr(0, space_pos);
+        reason = cut.substr(space_pos + 1);
+    } 
+    else 
+    {
+        channel_name = cut;
+    }
+
+    if (channel_name.empty())
+    {
+        reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "PART"));
         return;
     }
 
-    Channel *channel_obj;
-    if (check_if_channel_exists(channel)) {
-        channel_obj = get_channel(channel);
-    } else {
-        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel));
+    Channel *channel;
+    if (check_if_channel_exists(channel_name)) 
+    {
+        channel = get_channel(channel_name);
+    } 
+    else 
+    {
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
         return;
     }
 
-    if (!is_operator(client, channel)) {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
+    if (!check_client_on_channel(client->getNick(), channel_name)) 
+    {
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
         return;
     }
 
-    if (!check_client_on_channel(nick, channel)) {
-        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
-        return;
-    }
-
-    Client *target_client = find_client(nick);
-    if (target_client == NULL) {
-        reply(client, NOUSER);
-        return;
-    }
-
-    channel_obj->remove_client(target_client);
-    target_client->removeChannel(channel_obj);
-
-    std::string kickMessage = ":" + nick + " KICK " + channel + " " + target_client->getNick();
+    std::string message = ":" + client->getNick() + " PART " + channel_name;
     if (!reason.empty())
-        kickMessage += " " + reason;
+        message += " :" + reason;
 
-    for (size_t i = 0; i < channel_obj->get_members().size(); i++)
-        reply(channel_obj->get_members()[i], kickMessage);
+    bool wasOperator = false;
+    if (is_operator(client, channel_name))
+        wasOperator = true;
 
-    ///
-    
-    std::string msg = ":" + client->getNick() + " PART " + parsed_message[1] + " :" + leave_message(parsed_message, 2);
-    reply_on_all_channels(msg, client);
-    if (find_channel(parsed_message[1]).get_members().size() == 0)
-        remove_channel(parsed_message[1]);
-    else if(!check_if_is_mods(parsed_message[1]))
-        find_channel(parsed_message[1]).add_operator(client);
-    find_channel(parsed_message[1]).remove_client(client);
-    client->removeChannel(&find_channel(parsed_message[1]));
+    client->removeChannel(channel);
+    channel->remove_client(client);
+    channel->remove_invited(client);
+    channel->remove_operator(client);
+    reply(client, message);
+
+    if (channel->get_members().empty())
+    {
+        remove_channel(channel_name);
+    }
+    else
+    {
+        if (wasOperator && channel->get_operators().empty())
+        {
+            std::vector<Client*> clients = channel->get_members();
+            for (size_t j = 0; j < clients.size(); j++)
+            {
+                if (clients[j]->getNick() != client->getNick())
+                {
+                    channel->add_operator(clients[j]);
+                    break;
+                }
+            }
+        }
+        for (size_t i = 0; i < channel->get_members().size(); ++i)
+            reply(channel->get_members()[i], message);
+    }
     std::cout << "PART COMMAND\n";
 }
