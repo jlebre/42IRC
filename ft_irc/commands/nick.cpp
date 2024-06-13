@@ -43,6 +43,12 @@ void		Server::nick(Client *client)
         return ;
     }
     
+    if (_line.find("NICK") == std::string::npos)
+	{
+		reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "NICK"));
+		return;
+	}
+
     std::string nickname;
     parse_nick(nickname);
     if (nickname.empty())
