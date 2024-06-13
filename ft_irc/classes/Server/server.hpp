@@ -81,7 +81,6 @@ class Server
 		bool					is_operator(Client *client, std::string channel);
 		
 		// PARSE
-		void					parse_invite(std::string &invited_nick, std::string &channel_name);
 		void 					ParseCommand();
 		
 		// FIND

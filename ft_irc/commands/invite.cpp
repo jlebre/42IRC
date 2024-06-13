@@ -16,36 +16,6 @@ bool Server::check_client_on_channel(std::string nick, std::string channel_name)
     return false;
 }
 
-void Server::parse_invite(std::string &invitedNick, std::string &channel_name)
-{
-    size_t pos = _message.find("INVITE") + 7;  // Move past "INVITE "
-    if (pos != std::string::npos)
-    {
-        _message = _message.substr(pos);
-        pos = _message.find_first_of(" \r\n");
-        if (pos != std::string::npos)
-        {
-            invitedNick = _message.substr(0, pos);
-            _message = _message.substr(pos + 1);
-            pos = _message.find_first_of(" \r\n");
-            if (pos != std::string::npos)
-                channel_name = _message.substr(0, pos);
-            else
-                channel_name = _message;
-        }
-        else
-        {
-            invitedNick.clear();
-            channel_name.clear();
-        }
-    }
-    else
-    {
-        invitedNick.clear();
-        channel_name.clear();
-    }
-}
-
 void		Server::invite(Client *client)
 {
     if (!client->getRegistered())
@@ -53,8 +23,12 @@ void		Server::invite(Client *client)
         reply(client, ERR_NOTREGISTERED(client->getNick()));
         return ;
     }
-    std::string invitedNick, channel_name;
-    parse_invite(invitedNick, channel_name);
+    std::string invitedNick = "", channel_name = "";
+    if (parsed_message.size() > 2)
+    {
+        invitedNick = parsed_message[1];
+        channel_name = parsed_message[2];
+    }
     
     if (invitedNick.empty() || channel_name.empty())
     {

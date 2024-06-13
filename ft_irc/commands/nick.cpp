@@ -28,8 +28,7 @@ void		Server::nick(Client *client)
         reply(client, ERR_PASSWDMISMATCH(client->getNick()));
         return ;
     }
-    
-    std::cout << _line << std::endl;
+
     std::string nickname = "";
     if (parsed_message.size() > 1)
         nickname = parsed_message[1];

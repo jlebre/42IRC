@@ -17,11 +17,13 @@ void		Server::user(Client *client)
             reply(client, ERR_ALREADYREGISTERED(client->getUser()));
         else
         {
-            std::string user = "";
-            std::cout << _line << std::endl;
-            if (parsed_message.size() > 1)
+            std::string user = "", realname = "";
+            if (parsed_message.size() > 2)
+            {
                 user = parsed_message[1];
-            if (user.empty())
+                realname = leave_message(parsed_message, 2);
+            }
+            if (user.empty() || realname.empty())
                 reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "USER"));
             else
             {
@@ -31,9 +33,6 @@ void		Server::user(Client *client)
                     client->setUser(user);
                     client->setRegistered(true);
                     reply(client, RPL_WELCOME(client->getNick()));
-                    reply(client, RPL_YOURHOST(client->getNick()));
-                    reply(client, RPL_CREATED(client->getNick()));
-                    reply(client, RPL_MYINFO(client->getNick()));
                 }
             }
         }

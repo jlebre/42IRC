@@ -30,7 +30,7 @@ void    Server::process_input(Client *cli)
 	while (end != std::string::npos)
 	{
 		_line = _message.substr(begin, end - begin);
-		int command = check_command(_line);
+		int command = check_command(parsed_message[0]);
 		if (command != -1)
 		{
 			void    (Server::*commands[11])(Client *cli) = { \
@@ -54,7 +54,7 @@ void    Server::process_input(Client *cli)
 	if (begin < _message.size())
 	{
 		_line = _message.substr(begin);
-		int command = check_command(_line);
+		int command = check_command(parsed_message[0]);
 		if (command != -1)
 		{
 			void    (Server::*commands[11])(Client *cli) = { \

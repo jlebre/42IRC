@@ -40,26 +40,21 @@ void		Server::topic(Client *client)
         return;
     }
 
-    if (new_topic.empty())
-        reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
-    else
+    if (new_topic.length() > 390)
+        new_topic = new_topic.substr(0, 390);
+    channel->set_topic(new_topic);
+    if (new_topic[0] != ':')
+    new_topic = ":" + new_topic;
+    size_t pos = new_topic.find_first_of("\r\n");
+    if (pos != std::string::npos)
+        new_topic = new_topic.substr(0, pos);
+    reply(client, RPL_TOPIC(client->getNick(), channel_name, new_topic));
+    for (size_t i = 0; i < channel->get_members().size(); i++)
     {
-        if (new_topic.length() > 390)
-            new_topic = new_topic.substr(0, 390);
-        channel->set_topic(new_topic);
-        if (new_topic[0] != ':')
-        new_topic = ":" + new_topic;
-        size_t pos = new_topic.find_first_of("\r\n");
-		if (pos != std::string::npos)
-			new_topic = new_topic.substr(0, pos);
+        if (new_topic.empty())
+            reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
+        else
         reply(client, RPL_TOPIC(client->getNick(), channel_name, new_topic));
-        for (size_t i = 0; i < channel->get_members().size(); i++)
-        {
-            if (new_topic.empty())
-                reply(client, RPL_NOTOPIC(client->getNick(), channel_name));
-            else
-            reply(client, RPL_TOPIC(client->getNick(), channel_name, new_topic));
-        }
-        std::cout << "TOPIC COMMAND\n";
     }
+    std::cout << "TOPIC COMMAND\n";
 }
