@@ -36,11 +36,13 @@ void		Server::privmsg(Client *client)
             reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
             return;
         }
-        if (message.empty() || message.size() > 512)
+        if (message.empty())
         {
             //reply(client, ERR_NOTEXTTOSEND(client->getNick()));
             return;
         }
+        if (message.length() > 512)
+            message = message.substr(0, 512);
         for (size_t i = 0; i < channel->get_members().size(); i++)
         {
             if (channel->get_members()[i]->getNick() != client->getNick())

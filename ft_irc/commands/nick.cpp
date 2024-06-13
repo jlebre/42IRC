@@ -29,7 +29,7 @@ void    Server::parse_nick(std::string &nickname)
 
 bool    Server::is_valid_nickname(std::string nickname)
 {
-    if (nickname.empty() || nickname.size() > 9)
+    if (nickname.empty())
         return false;
     return nickname.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") == std::string::npos;
 }
@@ -54,7 +54,8 @@ void		Server::nick(Client *client)
         reply(client, ERR_ERRONEUSNICKNAME(nickname, nickname));
         return ;
     }
-    
+    if (nickname.length() > 9)
+        nickname = nickname.substr(0, 9);
     if (check_nickname(nickname))
     {
         reply(client, ERR_NICKNAMEINUSE(nickname, nickname));

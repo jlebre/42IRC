@@ -84,7 +84,7 @@ class Server
 		void					parse_invite(std::string &invited_nick, std::string &channel_name);
 		void					parse_pass(std::string &password);
 		void    				parse_nick(std::string &nickname);
-		void    				parse_user(std::string &user, std::string &real);
+		void    				parse_user(std::string &user);
 		void 					parse_kick(std::string &channel, std::string &nick, std::string &reason);
 		void 					ParseCommand();
 		
