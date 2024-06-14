@@ -18,22 +18,6 @@ Channel	*Server::get_channel(std::string channel_name)
 	throw std::exception();
 }
 
-std::string Channel::mode_string(Channel *channel)
-{
-    std::string mode = "";
-    if (channel->get_mode()._invite)
-        mode += "i";
-    if (channel->get_mode()._topic)
-        mode += "t";
-    if (channel->get_mode()._key)
-        mode += "k";
-    if (channel->get_mode()._limit)
-        mode += "l";
-    if (mode != "")
-        mode = "+" + mode;
-    return mode;
-}
-
 void Server::mode(Client *client)
 {
     if (!client->getRegistered())

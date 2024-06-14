@@ -75,6 +75,9 @@ void		Server::nick(Client *client)
     {
         client->setRegistered(true);
         reply(client, RPL_WELCOME(client->getNick()));
+        reply(client, RPL_YOURHOST(client->getNick()));
+        reply(client, RPL_CREATED(client->getNick()));
+        reply(client, RPL_MYINFO(client->getNick()));
     }
     else
     {

@@ -88,7 +88,6 @@ class Server
 		void 					ParseCommand();
 		
 		// FIND
-		Channel					&find_channel(std::string channel_name);
 		Client					*find_client(std::string nick);
 		Channel					*get_channel(std::string channel_name);
 

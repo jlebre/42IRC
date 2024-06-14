@@ -27,8 +27,11 @@
 # define ERR_INVITEONLYCHAN(client, channel) 				(":ircserv.42.fr 473 " + client + " " + channel + " :Cannot join channel (+i)")									//473
 # define ERR_CHANNELISFULL(client, channel) 				(":ircserv.42.fr 471 " + client + " " + channel + " :Cannot join channel (+l)")									//471
 
-# define RPL_WELCOME(nick)								    ":ircserv.42.fr 001 " + nick + " :Welcome to the FT_IRC, " + nick
- 
+# define RPL_WELCOME(nick)								    ":ircserv.42.fr 001 " + nick + " :Welcome to the Internet Relay Network, " + nick       //001
+# define RPL_YOURHOST(nick)								    ":ircserv.42.fr 002 " + nick + " :Your host is ircserv.42.fr running version 001.1"		//002
+# define RPL_CREATED(nick)								    ":ircserv.42.fr 003 " + nick + " :This server was created on fri Jun 14 2024"			//003
+# define RPL_MYINFO(nick)								    ":ircserv.42.fr 004 " + nick + " :ircserv.42.fr 001.1"									//004
+
 # define RPL_NOTOPIC(nick, channel)						    ":ircserv.42.fr 332 " + nick + " "	+ channel + " :No topic is set"						//331
 # define RPL_TOPIC(nick, channel, topic)					":ircserv.42.fr 332 " + nick + " "	+ channel + " :" + topic							//332
 # define RPL_TOPICWHOTIME(nick, channel, topic, setat)	    ":ircserv.42.fr 333 " + nick + " "	+ channel + " " + nick + " " + setat				//333
