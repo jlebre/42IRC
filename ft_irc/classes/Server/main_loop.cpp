@@ -21,7 +21,7 @@ void	Server::main_loop()
 			std::cerr << "Error(EPOLL)\n";
 			break;
 		}
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < n; i++)
 		{
 			if (_events[i].data.fd == _sock.fd)
 				connect_client();
@@ -35,13 +35,13 @@ void	Server::main_loop()
 					reading(it->second);
 					if (!it->second->get_status())
 					{
-						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
 						close(fd);
+						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
 						//close(it->first);
 						delete it->second;
 						_clients.erase(it);
 						n_events--;
-						it = _clients.begin();
+						i = 0;
 						continue;
 					}
 				}

@@ -4,7 +4,5 @@
 void   Server::reply(Client *client, std::string msg)
 {
     msg += "\r\n";
-    if (client->get_fd() == -1)
-        return;
     send(client->get_fd(), msg.c_str(), msg.length(), 0);
 }
