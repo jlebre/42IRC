@@ -77,9 +77,14 @@ void	Server::reading(Client *cli)
 		_message = "QUIT\r\n";
 		quit(cli);
 	}
+	else if (r == -1)
+	{
+		std::cerr << "Error(Reading)\n";
+		cli->setStatus(0);
+	}
 	else
 	{
-		_message.append(_buf);
+		_message.append(_buf, r);
 		if (_message.find("\n") != std::string::npos)
 		{
 			ParseCommand();
