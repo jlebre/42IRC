@@ -18,9 +18,15 @@ void Server::init_socket()
 
 	int en = 1;
 	if (setsockopt(_sock.fd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1)
+	{
 		std::cerr << "Error: (setsockopt) " << std::strerror(errno) << std::endl;
+		exit(1);
+	}
 	if (fcntl(_sock.fd, F_SETFL, O_NONBLOCK) == -1)
+	{
 		std::cerr << "Error: (fctnl) " << std::strerror(errno) << std::endl;
+		exit(1);
+	}
 	if (bind(_sock.fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
 	{
 		std::cerr << "Error: (Bind) " << std::strerror(errno) << std::endl;

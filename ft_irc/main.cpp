@@ -33,6 +33,6 @@ int main(int argc, char **argv)
 	signal(SIGTSTP, handleSignal);
 	signal(SIGTERM, handleSignal);
 	signal(SIGQUIT, handleSignal);
-	irc.parse(argv);
+	irc.parse(port_i, argv[2]);
 	return 0;
 }

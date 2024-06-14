@@ -1,11 +1,9 @@
 #include "server.hpp"
 
-void    Server::parse(char **argv)
+void    Server::parse(int port, std::string password)
 {
-    _sock.port = std::atoi(argv[1]);
-    if (_sock.port < 1024)
-        std::cerr << "Port should be a number between 1024 and 65534\n";
-    _password = argv[2];
+    _sock.port = port;
+    _password = password;
     _sock.ip = "127.0.0.1";
     _max_clients = MAX_CLIENTS;
     n_events = 5;

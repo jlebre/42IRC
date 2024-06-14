@@ -50,7 +50,7 @@ class Server
 		~Server();
 
 		//SERVER
-		void					parse(char **argv);
+		void					parse(int port, std::string password);
 		void					main_loop();
 		void					connect_client();
 		void					reading(Client *cli);
