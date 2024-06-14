@@ -28,14 +28,6 @@ void Server::mode(Client *client)
     std::string channel_name = parsed_message[1];
     Channel *channel;
 
-/*
-    if (parsed_message.size() < 2)
-    {
-        reply(client, ERR_NEEDMOREPARAMS(channel_name, client->getNick(), "MODE"));
-        return;
-    }
-*/
-    
     if (check_if_channel_exists(channel_name))
         channel = get_channel(channel_name);
     else
@@ -50,10 +42,11 @@ void Server::mode(Client *client)
         return;
     }
 
-    t_modes mode = channel->get_mode();
 
     for (size_t i = 2; i < parsed_message.size(); i++)
     {
+        t_modes mode = channel->get_mode();
+    
         std::string new_mode = parsed_message[i];
         if (!checkType(new_mode))
         {

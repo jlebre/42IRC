@@ -35,7 +35,7 @@ void Server::init_socket()
 	}
 
 	// LISTEN SOCKET
-	if (listen(_sock.fd, 10) == -1)
+	if (listen(_sock.fd, _max_clients) == -1)
 	{
 		std::cerr << "Error: (Listen) " << std::strerror(errno) << std::endl;
 		exit(1);
