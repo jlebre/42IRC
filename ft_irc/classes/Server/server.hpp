@@ -76,6 +76,8 @@ class Server
 		bool					compare_channel_name(const std::string& name1, const std::string& name2);
 		bool    				is_valid_nickname(std::string nickname);
 		bool					is_operator(Client *client, std::string channel);
+		std::string    			inChannel(Channel *channel);
+		void					update_list(Channel *channel);
 		
 		// PARSE
 		void    				parse_user(std::string &user, std::string &real);

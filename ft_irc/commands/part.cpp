@@ -93,6 +93,7 @@ void Server::part(Client *client)
 				if (clients[j]->getNick() != client->getNick())
 				{
 					channel->add_operator(clients[j]);
+					update_list(channel);
 					break;
 				}
 			}

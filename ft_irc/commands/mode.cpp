@@ -122,6 +122,7 @@ void Server::mode(Client *client)
                 {
                     //std::cout << "MODE OPERATOR ADD" << std::endl;
                     channel->add_operator(new_operator);
+                    update_list(channel);
                 }
                 else
                 {
@@ -132,6 +133,7 @@ void Server::mode(Client *client)
                     }
                     //std::cout << "MODE OPERATOR REMOVE" << std::endl;
                     channel->remove_operator(new_operator);
+                    update_list(channel);
                 }
                 new_mode = new_mode + " " + target_nick;
             }

@@ -48,6 +48,7 @@ void Server::quit(Client *client)
                         if (clients[j]->getNick() != nick)
                         {
                             channel->add_operator(clients[j]);
+                            update_list(channel);
                             break;
                         }
                     }

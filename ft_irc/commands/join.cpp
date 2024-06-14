@@ -52,11 +52,8 @@ bool is_invite_only(Channel *channel)
     return channel->get_mode()._invite;
 }
 
-void    Server::do_join(Channel *channel, Client *client)
+std::string    Server::inChannel(Channel *channel)
 {
-    channel->add_client(client);
-    client->addChannel(channel);
-
     std::string	in_channel = "";
     for (size_t i = 0; i < channel->get_members().size(); i++)
     {
@@ -67,16 +64,34 @@ void    Server::do_join(Channel *channel, Client *client)
         else
             in_channel += channel->get_members()[i]->getNick();
     }
+    return in_channel;
+}
+
+void Server::update_list(Channel *channel)
+{
+    std::string	in_channel = inChannel(channel);
     for (size_t i = 0; i < channel->get_members().size(); i++)
     {
-        reply(channel->get_members()[i], JOIN_REPLY(client->getNick(), client->getNick(), channel->get_name()));
-        if (!channel->get_topic().empty())
-            reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
-        else
-            reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
-        reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), in_channel));
-        reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
+        reply(channel->get_members()[i], RPL_NAMREPLY(channel->get_members()[i]->getNick(), channel->get_name(), in_channel));
+        reply(channel->get_members()[i], RPL_ENDOFNAMES(channel->get_members()[i]->getNick(), channel->get_name()));
     }
+}
+
+void    Server::do_join(Channel *channel, Client *client)
+{
+    channel->add_client(client);
+    client->addChannel(channel);
+
+    std::string	in_channel = inChannel(channel);
+    for (size_t i = 0; i < channel->get_members().size(); i++)
+        reply(channel->get_members()[i], JOIN_REPLY(client->getNick(), client->getNick(), channel->get_name()));
+        
+    if (!channel->get_topic().empty())
+        reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
+    else
+        reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
+    reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), in_channel));
+    reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
 }
 
 bool    is_invited(Channel *channel, Client *client)
@@ -133,7 +148,7 @@ void Server::join(Client *client)
 
                         if (channel->get_mode()._key)
                         {
-                            if (parsed_message.size() > i + 1 && parsed_message[i + 1] != channel->get_mode()._key_password)
+                            if (parsed_message.size() > i + 1 && parsed_message[i + 1] == channel->get_mode()._key_password)
                                 i++;
                             else
                             {

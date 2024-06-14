@@ -2,19 +2,7 @@
 
 int    Server::check_command(std::string line)
 {
-	std::string commands[] = { \
-	"PASS", \
-	"NICK", \
-	"USER", \
-	"JOIN", \
-	"PART", \
-	"QUIT", \
-	"PRIVMSG", \
-	"MODE", \
-	"TOPIC", \
-	"KICK", \
-	"INVITE"
-	};
+	std::string commands[] = {"PASS", "NICK", "USER", "JOIN", "PART", "QUIT", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE"};
 
 	for (int i = 0 ; i < 11 ; i++)
 		if (line.find(commands[i]) != std::string::npos)
@@ -33,19 +21,7 @@ void    Server::process_input(Client *cli)
 		int command = check_command(_line);
 		if (command != -1)
 		{
-			void    (Server::*commands[11])(Client *cli) = { \
-			&Server::pass, \
-			&Server::nick, \
-			&Server::user, \
-			&Server::join, \
-			&Server::part, \
-			&Server::quit, \
-			&Server::privmsg, \
-			&Server::mode, \
-			&Server::topic, \
-			&Server::kick, \
-			&Server::invite \
-			};
+			void    (Server::*commands[11])(Client *cli) = {&Server::pass, &Server::nick, &Server::user, &Server::join, &Server::part, &Server::quit, &Server::privmsg, &Server::mode, &Server::topic, &Server::kick, &Server::invite};
 			(this->*commands[command])(cli);
 		}
 		begin = end + 1;
@@ -57,19 +33,7 @@ void    Server::process_input(Client *cli)
 		int command = check_command(_line);
 		if (command != -1)
 		{
-			void    (Server::*commands[11])(Client *cli) = { \
-			&Server::pass, \
-			&Server::nick, \
-			&Server::user, \
-			&Server::join, \
-			&Server::part, \
-			&Server::quit, \
-			&Server::privmsg, \
-			&Server::mode, \
-			&Server::topic, \
-			&Server::kick, \
-			&Server::invite \
-			};
+			void    (Server::*commands[11])(Client *cli) = {&Server::pass, &Server::nick, &Server::user, &Server::join, &Server::part, &Server::quit, &Server::privmsg, &Server::mode, &Server::topic, &Server::kick, &Server::invite};
 			(this->*commands[command])(cli);
 		}
 	}
