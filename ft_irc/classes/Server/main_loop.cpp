@@ -74,7 +74,7 @@ void	Server::reading(Client *cli)
 	if (!r)
 	{
 		cli->setStatus(0);
-		_message = "QUIT\r\n";
+		_line = "QUIT\r\n";
 		quit(cli);
 	}
 	else if (r == -1)
