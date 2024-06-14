@@ -30,11 +30,12 @@ void Server::init_socket()
 	if (bind(_sock.fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
 	{
 		std::cerr << "Error: (Bind) " << std::strerror(errno) << std::endl;
+		close(_sock.fd);
 		exit(1);
 	}
 
 	// LISTEN SOCKET
-	if (listen(_sock.fd, _max_clients) == -1)
+	if (listen(_sock.fd, 10) == -1)
 	{
 		std::cerr << "Error: (Listen) " << std::strerror(errno) << std::endl;
 		exit(1);
