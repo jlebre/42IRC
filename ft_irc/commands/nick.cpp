@@ -14,6 +14,24 @@ bool Server::check_nickname(std::string nickname)
     return false;
 }
 
+void    Server::parse_nick(std::string &nickname)
+{
+    if (_line.size() < 5)
+	{
+		nickname.clear();
+		return;
+	}
+    size_t pos = _line.find("NICK");
+    if (pos != std::string::npos)
+    {
+        pos += 5;
+        size_t end = _line.find_first_of(" \r\n", pos);
+        nickname = _line.substr(pos, end - pos);
+    }
+    else
+        nickname.clear();
+}
+
 bool    Server::is_valid_nickname(std::string nickname)
 {
     if (nickname.empty())
@@ -28,10 +46,9 @@ void		Server::nick(Client *client)
         reply(client, ERR_PASSWDMISMATCH(client->getNick()));
         return ;
     }
-
+    
     std::string nickname = "";
-    if (parsed_message.size() > 1)
-        nickname = parsed_message[1];
+    parse_nick(nickname);
     if (nickname.empty())
     {
         reply(client, ERR_NONICKNAMEGIVEN(nickname));

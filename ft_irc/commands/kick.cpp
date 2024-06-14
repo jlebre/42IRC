@@ -94,7 +94,7 @@ void Server::kick(Client *client)
     channel_obj->remove_client(target_client);
     target_client->removeChannel(channel_obj);
 
-    std::string kickMessage = ":" + nick + " KICK " + channel + " " + target_client->getNick();
+    std::string kickMessage = ":" + client->getNick() + " KICK " + channel + " " + target_client->getNick();
     if (!reason.empty())
         kickMessage += " " + reason;
 

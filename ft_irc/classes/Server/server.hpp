@@ -59,6 +59,7 @@ class Server
 		void 					remove_channel(std::string str);
 		void 					delete_client(std::string nick);
 		void					delete_all();
+		std::vector<std::string> 	ft_split(std::string str, std::string delim);
 
 		// REPLY
 		void    				reply(Client *client, std::string msg);
@@ -81,6 +82,9 @@ class Server
 		bool					is_operator(Client *client, std::string channel);
 		
 		// PARSE
+		void    				parse_user(std::string &user, std::string &real);
+		void					parse_pass(std::string &password);
+		void    				parse_nick(std::string &nickname);
 		void 					ParseCommand();
 		
 		// FIND

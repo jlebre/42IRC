@@ -124,14 +124,14 @@ void Server::join(Client *client)
                                 return;
                             }
                             else
-                                do_join(channel, client);
+                                do_join(_channels[j], client);
                         }
                         else if (channel->get_mode()._key)
                         {
                             if (parsed_message.size() > i + 1 && parsed_message[i + 1] == channel->get_mode()._key_password)
                             {
                                 i++;
-                                do_join(channel, client);
+                                do_join(_channels[j], client);
                             }
                             else
                             {
@@ -142,7 +142,7 @@ void Server::join(Client *client)
                         else if (channel->get_mode()._limit)
                         {
                             if (channel->get_members().size() < channel->get_mode()._nb)
-                                do_join(channel, client);
+                                do_join(_channels[j], client);
                             else
                             {
                                 reply(client, ERR_CHANNELISFULL(client->getNick(), channel_name));
@@ -150,7 +150,7 @@ void Server::join(Client *client)
                             }
                         }
                         else
-                            do_join(channel, client);
+                            do_join(_channels[j], client);
                     }
                 }
             }
