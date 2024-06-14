@@ -19,10 +19,9 @@ void		Server::privmsg(Client *client)
     if (message[0] != ':')
         message = ":" + message;
     // If target is a channel
-    if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
+    if (check_if_is_channel(target))
     {
         Channel *channel;
-        
         if (check_if_channel_exists(target))
 		    channel = get_channel(target);
         else
@@ -36,11 +35,10 @@ void		Server::privmsg(Client *client)
             reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
             return;
         }
+
         if (message.empty())
-        {
-            //reply(client, ERR_NOTEXTTOSEND(client->getNick()));
             return;
-        }
+    
         if (message.length() > 512)
             message = message.substr(0, 512);
         for (size_t i = 0; i < channel->get_members().size(); i++)
@@ -58,6 +56,6 @@ void		Server::privmsg(Client *client)
         }
         else
             reply(client, ERR_NOSUCHNICK(client->getNick(), target));
-        std::cout << "PRIVMSG COMMAND\n";
+        //std::cout << "PRIVMSG COMMAND\n";
     }
 }

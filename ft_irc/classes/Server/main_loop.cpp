@@ -1,7 +1,16 @@
 #include "server.hpp"
 
+void Server::print_info()
+{
+	std::cout << "\033[1;32mIRC Server started:\033[0m\n";
+	std::cout << "__________________________" << std::endl;
+	std::cout << "|     Listening on: " << _sock.fd << "     |" << std::endl;
+	std::cout << "|_________________________|" << std::endl;
+}
+
 void	Server::main_loop()
 {
+	print_info();
 	while (run)
 	{
 		int n = epoll_wait(event_fd, _events, 200, -1);

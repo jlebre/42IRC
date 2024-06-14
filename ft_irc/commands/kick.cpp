@@ -105,5 +105,5 @@ void Server::kick(Client *client)
 
     for (size_t i = 0; i < channel->get_members().size(); i++)
         reply(channel->get_members()[i], kickMessage);
-    std::cout << "KICK COMMAND\n";
+    //std::cout << "KICK COMMAND\n";
 }

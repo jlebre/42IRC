@@ -100,5 +100,5 @@ void Server::part(Client *client)
 		for (size_t i = 0; i < channel->get_members().size(); ++i)
 			reply(channel->get_members()[i], message);
 	}
-	std::cout << "PART COMMAND\n";
+	//std::cout << "PART COMMAND\n";
 }

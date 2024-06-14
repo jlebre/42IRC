@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-bool check_if_is_channel(const std::string& str)
+bool Server::check_if_is_channel(const std::string& str)
 {
     if (str.empty() || str.size() > 50)
         return false;
@@ -54,15 +54,15 @@ bool is_invite_only(Channel *channel)
 
 void    Server::do_join(Channel *channel, Client *client)
 {
-    std::string	client_list = "";
-    for (unsigned long j = 0; j < channel->get_members().size(); j++)
+    std::string	in_channel = "";
+    for (size_t i = 0; i < channel->get_members().size(); i++)
     {
-        if (j != 0)
-            client_list += " ";
-        if (channel->get_members().at(j)->is_operator(channel))
-            client_list += "@" + channel->get_members().at(j)->getNick();
+        if (i != 0)
+            in_channel += " ";
+        if (channel->get_members()[i]->is_operator(channel))
+            in_channel += "@" + channel->get_members()[i]->getNick();
         else
-            client_list += channel->get_members().at(j)->getNick();
+            in_channel += channel->get_members()[i]->getNick();
     }
     channel->add_client(client);
     client->addChannel(channel);
@@ -72,7 +72,7 @@ void    Server::do_join(Channel *channel, Client *client)
         reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
     else
         reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
-    reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), client_list));
+    reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), in_channel));
     reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
 }
 
@@ -116,41 +116,29 @@ void Server::join(Client *client)
                     if (compare_channel_name(_channels[j]->get_name(),channel_name))
                     {
                         Channel *channel = _channels[j];
-                        if (is_invite_only(channel))
+                        if (is_invite_only(channel) && !is_invited(channel, client))
                         {
-                            if (!is_invited(channel, client))
-                            {
-                                reply(client, ERR_INVITEONLYCHAN(client->getNick(), channel->get_name()));
-                                return;
-                            }
-                            else
-                                do_join(_channels[j], client);
+                            reply(client, ERR_INVITEONLYCHAN(client->getNick(), channel->get_name()));
+                            return;
                         }
-                        else if (channel->get_mode()._key)
+
+                        if (channel->get_mode()._key)
                         {
-                            if (parsed_message.size() > i + 1 && parsed_message[i + 1] == channel->get_mode()._key_password)
-                            {
+                            if (parsed_message.size() > i + 1 && parsed_message[i + 1] != channel->get_mode()._key_password)
                                 i++;
-                                do_join(_channels[j], client);
-                            }
                             else
                             {
-                                reply(client, ERR_BADCHANNELKEY(client->getNick(), channel_name));
+                                reply(client, ERR_BADCHANNELKEY(client->getNick(), channel->get_name()));
                                 return;
                             }
                         }
-                        else if (channel->get_mode()._limit)
+
+                        if (channel->get_mode()._limit && channel->get_members().size() >= channel->get_mode()._nb)
                         {
-                            if (channel->get_members().size() < channel->get_mode()._nb)
-                                do_join(_channels[j], client);
-                            else
-                            {
-                                reply(client, ERR_CHANNELISFULL(client->getNick(), channel_name));
-                                return;
-                            }
+                            reply(client, ERR_CHANNELISFULL(client->getNick(), channel->get_name()));
+                            return;
                         }
-                        else
-                            do_join(_channels[j], client);
+                        do_join(_channels[j], client);
                     }
                 }
             }
@@ -158,5 +146,5 @@ void Server::join(Client *client)
         else
             reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
     }
-    std::cout << "JOIN COMMAND\n";
+    //std::cout << "JOIN COMMAND\n";
 }

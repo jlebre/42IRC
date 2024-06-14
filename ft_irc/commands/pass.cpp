@@ -48,5 +48,5 @@ void	Server::pass(Client *client)
 		return;
 	}
 	client->setAuth(true);
-	std::cout << "PASS COMMAND\n";
+	//std::cout << "PASS COMMAND\n";
 }

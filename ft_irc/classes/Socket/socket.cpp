@@ -33,5 +33,4 @@ void Server::init_socket()
 		std::cerr << "Error: (Listen) " << std::strerror(errno) << std::endl;
 		exit(1);
 	}
-	std::cout << "Listening on " << _sock.fd << std::endl;
 }

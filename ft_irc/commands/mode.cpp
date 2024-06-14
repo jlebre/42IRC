@@ -69,12 +69,12 @@ void Server::mode(Client *client)
 
         if (new_mode[1] == 'i')
         {
-            std::cout << "MODE INVITE" << std::endl;
+            //std::cout << "MODE INVITE" << std::endl;
             mode._invite = ver;
         }
         else if (new_mode[1] == 't')
         {
-            std::cout << "MODE TOPIC" << std::endl;
+            //std::cout << "MODE TOPIC" << std::endl;
             mode._topic = ver;
         }
         else if (new_mode[1] == 'k')
@@ -83,13 +83,13 @@ void Server::mode(Client *client)
             {
                 mode._key = true;
                 mode._key_password = parsed_message[++i];
-                std::cout << "MODE KEY SET" << std::endl;
+                //std::cout << "MODE KEY SET" << std::endl;
             }
             else if (!ver)
             {
                 mode._key = false;
                 mode._key_password.clear();
-                std::cout << "MODE KEY UNSET" << std::endl;
+                //std::cout << "MODE KEY UNSET" << std::endl;
             }
         }
         else if (new_mode[1] == 'l')
@@ -98,18 +98,18 @@ void Server::mode(Client *client)
             {
                 mode._limit = true;
                 mode._nb = std::atoi(parsed_message[++i].c_str());
-                std::cout << "MODE LIMIT SET" << std::endl;
+                //std::cout << "MODE LIMIT SET" << std::endl;
             }
             else if (!ver)
             {
                 mode._limit = false;
                 mode._nb = 0;
-                std::cout << "MODE LIMIT UNSET" << std::endl;
+                //std::cout << "MODE LIMIT UNSET" << std::endl;
             }
         }
         else if (new_mode[1] == 'o')
         {
-            std::cout << "MODE OPERATOR" << std::endl;
+            //std::cout << "MODE OPERATOR" << std::endl;
             if (parsed_message.size() > i + 1)
             {
                 std::string target_nick = parsed_message[++i];
@@ -123,12 +123,12 @@ void Server::mode(Client *client)
 				}
                 if (ver)
                 {
-                    std::cout << "MODE OPERATOR ADD" << std::endl;
+                    //std::cout << "MODE OPERATOR ADD" << std::endl;
                     channel->add_operator(new_operator);
                 }
                 else
                 {
-                    std::cout << "MODE OPERATOR REMOVE" << std::endl;
+                    //std::cout << "MODE OPERATOR REMOVE" << std::endl;
                     channel->remove_operator(new_operator);
                 }
             }
@@ -140,12 +140,12 @@ void Server::mode(Client *client)
         }
         else
         {
-            std::cout << "MODE UNKNOWN" << std::endl;
+            //std::cout << "MODE UNKNOWN" << std::endl;
             reply(client, ERR_UMODEUNKNOWNFLAG(client->getNick()));
         }
         channel->set_mode(mode);
         for (size_t i = 0; i < channel->get_members().size(); i++)
             reply(channel->get_members()[i], RPL_CHANNELMODEIS(client->getNick(), channel_name, new_mode));
     }
-    std::cout << std::endl << "MODE" << std::endl;
+    //std::cout << std::endl << "MODE" << std::endl;
 }

@@ -45,16 +45,16 @@ void		Server::invite(Client *client)
 		reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
 		return ;
 	}
-    
-    if (!client->is_operator(channel))
-    {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
-        return ;
-    }
 
     if (!check_client_on_channel(client->getNick(), channel->get_name()))
     {
-        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
+        return ;
+    }
+
+    if (!client->is_operator(channel))
+    {
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return ;
     }
 
@@ -69,10 +69,10 @@ void		Server::invite(Client *client)
 
     if (check_client_on_channel(invitedNick, channel->get_name()))
     {
-        reply(client, ERR_USERONCHANNEL(client->getNick(), invitedNick, channel_name));
+        reply(client, ERR_USERONCHANNEL(client->getNick(), invitedNick, channel->get_name()));
         return ;
     }
     channel->add_invited(invited);
-    reply(invited, RPL_INVITING(client->getNick(), invited->getNick(), channel_name));
-    std::cout << "INVITE COMMAND\n";
+    reply(invited, RPL_INVITING(client->getNick(), invited->getNick(), channel->get_name()));
+    //std::cout << "INVITE COMMAND\n";
 }

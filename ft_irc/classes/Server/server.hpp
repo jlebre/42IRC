@@ -59,6 +59,7 @@ class Server
 		void 					remove_channel(std::string str);
 		void 					delete_client(std::string nick);
 		void					delete_all();
+		void 					print_info();
 	
 		// REPLY
 		void    				reply(Client *client, std::string msg);
@@ -75,6 +76,7 @@ class Server
 		bool 					check_if_channel_exists(std::string name);
 		bool    				check_if_client_exists(std::string nick);
 		bool 					check_if_is_mods(std::string str);
+		bool 					check_if_is_channel(const std::string& str);
 		bool					compare_channel_name(const std::string& name1, const std::string& name2);
 		bool    				is_valid_nickname(std::string nickname);
 		bool					is_operator(Client *client, std::string channel);

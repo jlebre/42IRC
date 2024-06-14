@@ -61,6 +61,6 @@ void Server::quit(Client *client)
     }
     for (size_t i = 0; i < channel_names.size(); i++)
         remove_channel(channel_names[i]);
-    std::cout << "QUIT COMMAND\n";
+    //std::cout << "QUIT COMMAND\n";
 }
 

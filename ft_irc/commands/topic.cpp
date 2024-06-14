@@ -28,15 +28,15 @@ void		Server::topic(Client *client)
         return;
     }
 
-    if (channel->get_mode()._topic && !is_operator(client, channel_name))
+    if (!check_client_on_channel(client->getNick(), channel->get_name()))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
         return;
     }
 
-    if (!check_client_on_channel(client->getNick(), channel_name))
+    if (channel->get_mode()._topic && !is_operator(client, channel->get_name()))
     {
-        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return;
     }
 
@@ -51,9 +51,9 @@ void		Server::topic(Client *client)
     for (size_t i = 0; i < channel->get_members().size(); i++) {
         Client *member = channel->get_members()[i];
         if (new_topic.empty())
-            reply(member, RPL_NOTOPIC(member->getNick(), channel_name));
+            reply(member, RPL_NOTOPIC(member->getNick(), channel->get_name()));
         else
-            reply(member, RPL_TOPIC(member->getNick(), channel_name, new_topic));
+            reply(member, RPL_TOPIC(member->getNick(), channel->get_name(), new_topic));
     }
-    std::cout << "TOPIC COMMAND\n";
+    //std::cout << "TOPIC COMMAND\n";
 }

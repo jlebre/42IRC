@@ -100,5 +100,5 @@ void		Server::nick(Client *client)
             }
         }
     }
-    std::cout << "NICK COMMAND\n";
+    //std::cout << "NICK COMMAND\n";
 }
