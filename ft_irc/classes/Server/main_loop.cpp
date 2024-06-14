@@ -13,8 +13,6 @@ void	Server::main_loop()
 	print_info();
 	while (run)
 	{
-		if (n_events < 200)
-		{
 			int n = epoll_wait(event_fd, _events, 200, -1);
 			if (n == -1)
 			{
@@ -25,7 +23,7 @@ void	Server::main_loop()
 			}
 			for (int i = 0; i < n; i++)
 			{
-				if (_events[i].data.fd == _sock.fd)
+				if (_events[i].data.fd == _sock.fd && n_events < _max_clients)
 					connect_client();
 				else
 				{
@@ -48,9 +46,6 @@ void	Server::main_loop()
 					}
 				}
 			}
-		}
-		else 
-			std::cerr << "Error(EPOLL): Too many events\n";
 	}
 	delete_all();
 }
