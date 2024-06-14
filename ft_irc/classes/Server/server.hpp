@@ -57,7 +57,6 @@ class Server
 		void					process_input(Client *cli);
 		int	    				check_command(std::string line);
 		void 					remove_channel(std::string str);
-		void 					delete_client(std::string nick);
 		void					delete_all();
 		void 					print_info();
 	
