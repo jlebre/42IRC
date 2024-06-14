@@ -13,39 +13,44 @@ void	Server::main_loop()
 	print_info();
 	while (run)
 	{
-		int n = epoll_wait(event_fd, _events, 200, -1);
-		if (n == -1)
+		if (n_events < 200)
 		{
-			if (errno == EINTR)
-				continue;
-			std::cerr << "Error(EPOLL)\n";
-			break;
-		}
-		for (int i = 0; i < n; i++)
-		{
-			if (_events[i].data.fd == _sock.fd)
-				connect_client();
-			else
+			int n = epoll_wait(event_fd, _events, 200, -1);
+			if (n == -1)
 			{
-				int fd = _events[i].data.fd;
-				std::map<int, Client*>::iterator it = _clients.find(fd);
-				if (it->second && it != _clients.end())
+				if (errno == EINTR)
+					continue;
+				std::cerr << "Error(EPOLL)\n";
+				break;
+			}
+			for (int i = 0; i < n; i++)
+			{
+				if (_events[i].data.fd == _sock.fd)
+					connect_client();
+				else
 				{
-					it->second->setStatus(1);
-					reading(it->second);
-					if (!it->second->get_status())
+					int fd = _events[i].data.fd;
+					std::map<int, Client*>::iterator it = _clients.find(fd);
+					if (it->second && it != _clients.end())
 					{
-						close(fd);
-						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
-						delete it->second;
-						_clients.erase(it);
-						n_events--;
-						i = 0;
-						continue;
+						it->second->setStatus(1);
+						reading(it->second);
+						if (!it->second->get_status())
+						{
+							close(fd);
+							epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
+							delete it->second;
+							_clients.erase(it);
+							n_events--;
+							i = 0;
+							continue;
+						}
 					}
 				}
 			}
 		}
+		else 
+			std::cerr << "Error(EPOLL): Too many events\n";
 	}
 	delete_all();
 }
