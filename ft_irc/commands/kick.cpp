@@ -37,45 +37,44 @@ bool    Server::is_operator(Client *client, std::string channel)
 
 void Server::kick(Client *client)
 {
-
     if (!client->getRegistered()) {
         reply(client, ERR_NOTREGISTERED(client->getNick()));
         return;
     }
 
-    std::string reason = "", channel = "", nick = "";
+    std::string reason = "", channel_name = "", nick = "";
     if (parsed_message.size() > 2)
     {
-        channel = parsed_message[1];
+        channel_name = parsed_message[1];
         nick = parsed_message[2];
         if (parsed_message.size() > 3)
             reason = parsed_message[3];
     }
 
-    if (channel.empty() || nick.empty())
+    if (channel_name.empty() || nick.empty())
     {
         reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "KICK"));
         return;
     }
 
-    Channel *channel_obj;
-    if (check_if_channel_exists(channel))
+    Channel *channel;
+    if (check_if_channel_exists(channel_name))
+        channel = get_channel(channel_name);
+    else
     {
-        channel_obj = get_channel(channel);
-    } else {
-        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel));
+        reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
         return;
     }
 
-    if (!check_client_on_channel(nick, channel))
+    if (!is_operator(client, channel->get_name()))
     {
-        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel));
+        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel->get_name()));
         return;
     }
 
-    if (!is_operator(client, channel))
+    if (!check_client_on_channel(client->getNick(), channel->get_name()))
     {
-        reply(client, ERR_CHANOPRIVSNEEDED(client->getNick(), channel));
+        reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
         return;
     }
 
@@ -85,20 +84,26 @@ void Server::kick(Client *client)
         return;
     }
 
-    if (!check_client_on_channel(nick, channel))
+    if (!check_client_on_channel(nick, channel->get_name()))
     {
-        reply(client, ERR_USERNOTINCHANNEL(client->getNick(), nick, channel));
+        reply(client, ERR_USERNOTINCHANNEL(client->getNick(), nick, channel->get_name()));
         return;
     }
 
-    channel_obj->remove_client(target_client);
-    target_client->removeChannel(channel_obj);
-
-    std::string kickMessage = ":" + client->getNick() + " KICK " + channel + " " + target_client->getNick();
+    std::string kickMessage = ":" + client->getNick() + " KICK " + channel->get_name() + " " + target_client->getNick();
     if (!reason.empty())
         kickMessage += " " + reason;
+    
+    reply(target_client, kickMessage);
+    channel->remove_client(target_client);
+    channel->remove_operator(target_client);
+    channel->remove_invited(target_client);
+    target_client->removeChannel(channel);
+    
+    if (channel->get_members().empty())
+        remove_channel(channel->get_name());
 
-    for (size_t i = 0; i < channel_obj->get_members().size(); i++)
-        reply(channel_obj->get_members()[i], kickMessage);
+    for (size_t i = 0; i < channel->get_members().size(); i++)
+        reply(channel->get_members()[i], kickMessage);
     std::cout << "KICK COMMAND\n";
 }

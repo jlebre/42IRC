@@ -23,25 +23,25 @@ typedef struct socket_s
 class Server
 {
 	private:
-		int							_max_clients;
-		char						_buf[BUF_SIZE];
-		std::string					_password;
-		std::vector<std::string>	parsed_message;
-		std::string					_message;
-		std::string					_line;
-		std::map<int, Client*>		_clients;
+		int										_max_clients;
+		char									_buf[BUF_SIZE];
+		std::string								_password;
+		std::vector<std::string>				parsed_message;
+		std::string								_message;
+		std::string								_line;
+		std::map<int, Client*>					_clients;
 
 		// SOCKET
-		socket_t 				_sock;
+		socket_t 								_sock;
 
 		// POLL
-		int						event_fd;
-		int						n_events;
-		struct epoll_event		_events[200];
-		struct epoll_event		_event;
+		int										event_fd;
+		int										n_events;
+		struct epoll_event						_events[200];
+		struct epoll_event						_event;
 
 		// CHANNELS
-		std::vector<Channel*>	_channels;
+		std::vector<Channel*>					_channels;
 
 	public:
 		Server();
@@ -59,8 +59,7 @@ class Server
 		void 					remove_channel(std::string str);
 		void 					delete_client(std::string nick);
 		void					delete_all();
-		std::vector<std::string> 	ft_split(std::string str, std::string delim);
-
+	
 		// REPLY
 		void    				reply(Client *client, std::string msg);
 		void    				reply_all(std::string msg, Client *client);
@@ -78,7 +77,6 @@ class Server
 		bool 					check_if_is_mods(std::string str);
 		bool					compare_channel_name(const std::string& name1, const std::string& name2);
 		bool    				is_valid_nickname(std::string nickname);
-		bool    				is_valid_user(std::string user);
 		bool					is_operator(Client *client, std::string channel);
 		
 		// PARSE
@@ -99,7 +97,6 @@ class Server
 
 		// POLL
 		void					init_poll();
-		void					disconnect_client(int fd);
 
 		// COMMANDS
 		void					pass(Client *client);
@@ -115,9 +112,6 @@ class Server
 		void					invite(Client *client);
 
 		void    				do_join(Channel *channel, Client *client);
-
-		// mzarichn
-		//void modeOperator(Client *c, Channel *ch, mode_struct *modes);
 };
 
 std::string leave_message(std::vector<std::string> tmp, int it);

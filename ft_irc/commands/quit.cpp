@@ -20,40 +20,44 @@ void Server::quit(Client *client)
         return;
     }
     std::string nick = client->getNick();
+    std::string reason = "";
+    size_t res = _line.find(":");
+    if (res != std::string::npos)
+        reason = _line.substr(res + 1);
     std::vector<Channel*> channels = client->getChannels();
     bool wasOperator = false;
-    for (size_t i = 0; i < channels.size(); i++)
-    {
-        if (is_operator(client, channels[i]->get_name()))
-        {
-            wasOperator = true;
-            break;
-        }
-    }
+    client->setStatus(false);
     std::cout << "Client " << nick << " has quit\n";
     for (size_t i = 0; i < channels.size(); i++)
     {
         Channel *channel = get_channel(channels[i]->get_name());
-        channel->remove_client(client);
+        if (is_operator(client, channel->get_name()))
+            wasOperator = true;
+        reply(client, ":" + nick + " ERROR " + " :" + reason);
         client->removeChannel(channel);
+        channel->remove_client(client);
         channel->remove_operator(client);
         channel->remove_invited(client);
-        for (size_t j = 0; j < channel->get_members().size(); j++)
-            reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + leave_message(parsed_message, 1));
-        if (wasOperator && channel->get_operators().empty())
+        if (channel->get_members().empty())
+            remove_channel(channel->get_name());
+        else
         {
-            std::vector<Client*> clients = channel->get_members();
-            for (size_t j = 0; j < clients.size(); j++)
+            if (wasOperator && channel->get_operators().empty())
             {
-                if (clients[j]->getNick() != nick)
+                std::vector<Client*> clients = channel->get_members();
+                for (size_t j = 0; j < clients.size(); j++)
                 {
-                    channel->add_operator(clients[j]);
-                    break;
+                    if (clients[j]->getNick() != nick)
+                    {
+                        channel->add_operator(clients[j]);
+                        break;
+                    }
                 }
             }
         }
+        for (size_t j = 0; j < channel->get_members().size(); j++)
+            reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + reason);
     }
-    client->setStatus(false);
     std::cout << "QUIT COMMAND\n";
 }
 

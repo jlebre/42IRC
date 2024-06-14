@@ -54,27 +54,25 @@ void Server::part(Client *client)
 
 	Channel *channel;
 	if (check_if_channel_exists(channel_name)) 
-	{
 		channel = get_channel(channel_name);
-	} 
 	else 
 	{
 		reply(client, ERR_NOSUCHCHANNEL(client->getNick(), channel_name));
 		return;
 	}
 
-	if (!check_client_on_channel(client->getNick(), channel_name)) 
+	if (!check_client_on_channel(client->getNick(), channel->get_name())) 
 	{
-		reply(client, ERR_NOTONCHANNEL(client->getNick(), channel_name));
+		reply(client, ERR_NOTONCHANNEL(client->getNick(), channel->get_name()));
 		return;
 	}
 
-	std::string message = ":" + client->getNick() + " PART " + channel_name;
+	std::string message = ":" + client->getNick() + " PART " + channel->get_name();
 	if (!reason.empty())
 		message += " :" + reason;
 
 	bool wasOperator = false;
-	if (is_operator(client, channel_name))
+	if (is_operator(client, channel->get_name()))
 		wasOperator = true;
 
 	client->removeChannel(channel);
@@ -84,9 +82,7 @@ void Server::part(Client *client)
 	reply(client, message);
 
 	if (channel->get_members().empty())
-	{
-		remove_channel(channel_name);
-	}
+		remove_channel(channel->get_name());
 	else
 	{
 		if (wasOperator && channel->get_operators().empty())
