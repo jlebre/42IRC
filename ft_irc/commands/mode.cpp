@@ -86,6 +86,7 @@ void Server::mode(Client *client)
                 mode._key_password.clear();
                 //std::cout << "MODE KEY UNSET" << std::endl;
             }
+            new_mode = new_mode + " " + parsed_message[i];
         }
         else if (new_mode[1] == 'l')
         {
@@ -101,6 +102,7 @@ void Server::mode(Client *client)
                 mode._nb = 0;
                 //std::cout << "MODE LIMIT UNSET" << std::endl;
             }
+            new_mode = new_mode + " " + parsed_message[i];
         }
         else if (new_mode[1] == 'o')
         {
@@ -131,6 +133,7 @@ void Server::mode(Client *client)
                     //std::cout << "MODE OPERATOR REMOVE" << std::endl;
                     channel->remove_operator(new_operator);
                 }
+                new_mode = new_mode + " " + target_nick;
             }
             else
             {

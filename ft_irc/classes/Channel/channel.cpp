@@ -8,7 +8,7 @@ Channel::Channel()
     _mode._key = false;
     _mode._limit = false;
     _mode._nb = 0;
-    _mode._topic = false;
+    _mode._topic = true;
 }
 
 Channel::Channel(std::string name) : _name(name) {
@@ -18,7 +18,7 @@ Channel::Channel(std::string name) : _name(name) {
     _mode._key_password = "";
     _mode._limit = false;
     _mode._nb = 0;
-    _mode._topic = false;
+    _mode._topic = true;
 }
 
 Channel::Channel(std::string name, std::string password) : _name(name), _password(password) {
@@ -27,7 +27,7 @@ Channel::Channel(std::string name, std::string password) : _name(name), _passwor
     _mode._key_password = "";
     _mode._limit = false;
     _mode._nb = 0;
-    _mode._topic = false;
+    _mode._topic = true;
 }
 
 Channel::~Channel()

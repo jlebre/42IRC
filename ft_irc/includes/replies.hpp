@@ -7,7 +7,7 @@
 # define RPL_MYINFO(nick)								    ":localhost 004 " + nick + " :localhost 0.1"								
 
 // REPLIES
-# define RPL_CHANNELMODEIS(nick, channel, modes)			":localhost 324 " + nick + " "	+ channel + " " + modes
+# define RPL_CHANNELMODEIS(nick, channel, modes)			":localhost 324 " + nick + "!" + nick + "@localhost MODE " + channel + " " + modes
 # define RPL_NOTOPIC(nick, channel)						    ":localhost 332 " + nick + " "	+ channel + " :No topic is set"
 # define RPL_TOPIC(nick, channel, topic)					":localhost 332 " + nick + " "	+ channel + " :" + topic
 # define RPL_INVITING(nick, invited, channel)			    ":" + nick + " INVITING " + invited + " " + channel	
