@@ -37,7 +37,7 @@ void	Server::main_loop()
 					{
 						epoll_ctl(event_fd, EPOLL_CTL_DEL, fd, &_events[i]);
 						close(fd);
-						close(it->first);
+						//close(it->first);
 						delete it->second;
 						_clients.erase(it);
 						n_events--;
