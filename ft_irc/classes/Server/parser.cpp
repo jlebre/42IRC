@@ -1,12 +1,7 @@
 #include "server.hpp"
 
-void    Server::parse(int argc, char **argv)
+void    Server::parse(char **argv)
 {
-	if (argc != 3)
-	{
-		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
-		return;
-	}
     _sock.port = std::atoi(argv[1]);
     if (_sock.port < 1024)
         std::cerr << "Port should be a number between 1024 and 65534\n";

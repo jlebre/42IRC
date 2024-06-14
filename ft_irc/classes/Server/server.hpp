@@ -50,7 +50,7 @@ class Server
 		~Server();
 
 		//SERVER
-		void					parse(int argc, char **argv);
+		void					parse(char **argv);
 		void					main_loop();
 		void					connect_client();
 		void					reading(Client *cli);

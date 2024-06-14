@@ -67,5 +67,5 @@ void		Server::user(Client *client)
             }
         }
     }
-    std::cout << "USER COMMAND\n";
+    //std::cout << "USER COMMAND\n";
 }

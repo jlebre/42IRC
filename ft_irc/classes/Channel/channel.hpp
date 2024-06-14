@@ -59,6 +59,8 @@ class Channel
         void set_password(std::string password);
         void set_mode(t_modes mode);
         void change_nickname(std::string old_nick, std::string new_nick);
+
+        std::string mode_string(Channel *channel);
 };
 
 #endif
