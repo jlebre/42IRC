@@ -54,6 +54,9 @@ bool is_invite_only(Channel *channel)
 
 void    Server::do_join(Channel *channel, Client *client)
 {
+    channel->add_client(client);
+    client->addChannel(channel);
+
     std::string	in_channel = "";
     for (size_t i = 0; i < channel->get_members().size(); i++)
     {
@@ -64,16 +67,16 @@ void    Server::do_join(Channel *channel, Client *client)
         else
             in_channel += channel->get_members()[i]->getNick();
     }
-    channel->add_client(client);
-    client->addChannel(channel);
     for (size_t i = 0; i < channel->get_members().size(); i++)
-            reply(channel->get_members()[i], JOIN_REPLY(client->getNick(), channel->get_name()));
-    if (!channel->get_topic().empty())
-        reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
-    else
-        reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
-    reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), in_channel));
-    reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
+    {
+        reply(channel->get_members()[i], JOIN_REPLY(client->getNick(), client->getNick(), channel->get_name()));
+        if (!channel->get_topic().empty())
+            reply(client, RPL_TOPIC(client->getNick(), channel->get_name(), channel->get_topic()));
+        else
+            reply(client, RPL_NOTOPIC(client->getNick(), channel->get_name()));
+        reply(client, RPL_NAMREPLY(client->getNick(), channel->get_name(), in_channel));
+        reply(client, RPL_ENDOFNAMES(client->getNick(), channel->get_name()));
+    }
 }
 
 bool    is_invited(Channel *channel, Client *client)
@@ -116,6 +119,12 @@ void Server::join(Client *client)
                     if (compare_channel_name(_channels[j]->get_name(),channel_name))
                     {
                         Channel *channel = _channels[j];
+                        if (check_client_on_channel(client->getNick(), channel->get_name()))
+                        {
+                            reply(client, ERR_USERONCHANNEL(client->getNick(), client->getNick(), channel->get_name()));
+                            return;
+                        }
+
                         if (is_invite_only(channel) && !is_invited(channel, client))
                         {
                             reply(client, ERR_INVITEONLYCHAN(client->getNick(), channel->get_name()));
