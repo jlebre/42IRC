@@ -25,6 +25,7 @@ void Server::quit(Client *client)
     if (res != std::string::npos)
         reason = _line.substr(res + 1);
     std::vector<Channel*> channels = client->getChannels();
+    std::vector<std::string> channel_names;
     bool wasOperator = false;
     client->setStatus(false);
     std::cout << "Client " << nick << " has quit\n";
@@ -39,7 +40,7 @@ void Server::quit(Client *client)
         channel->remove_operator(client);
         channel->remove_invited(client);
         if (channel->get_members().empty())
-            remove_channel(channel->get_name());
+            channel_names.push_back(channel->get_name());
         else
         {
             if (wasOperator && channel->get_operators().empty())
@@ -58,6 +59,8 @@ void Server::quit(Client *client)
         for (size_t j = 0; j < channel->get_members().size(); j++)
             reply(channel->get_members()[j], ":" + nick + " PART " + channel->get_name() + " :" + reason);
     }
+    for (size_t i = 0; i < channel_names.size(); i++)
+        remove_channel(channel_names[i]);
     std::cout << "QUIT COMMAND\n";
 }
 
