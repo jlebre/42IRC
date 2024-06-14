@@ -128,6 +128,11 @@ void Server::mode(Client *client)
                 }
                 else
                 {
+                    if (client->getNick() == new_operator->getNick())
+                    {
+                        reply(client, "You can't remove yourself from operator list");
+                        return;
+                    }
                     //std::cout << "MODE OPERATOR REMOVE" << std::endl;
                     channel->remove_operator(new_operator);
                 }

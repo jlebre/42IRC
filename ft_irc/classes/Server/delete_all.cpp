@@ -16,5 +16,9 @@ void Server::delete_all()
             delete _channels[i];
     _channels.clear();
     close(event_fd);
-    std::cout << "Server has been closed\n";
+    std::cout << "\nAll clients have been disconnected\n";
+    std::cout << "All channels have been deleted\n";
+    std::cout << "Poll has been closed\n";
+    std::cout << "\033[1;32mServer has been successfully closed!\033[0m \n";
+    exit(0);
 }

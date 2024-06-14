@@ -12,6 +12,13 @@ void Server::delete_client(std::string nick)
     }
 }
 
+void    print_quit(std::string nick)
+{
+    std::cout << " __________________________" << std::endl;
+	std::cout << "|  \033[1;31mClient " << nick << " has quit\033[0m  |\n";
+	std::cout << "|__________________________|" << std::endl;
+}
+
 void Server::quit(Client *client)
 {
     if (!client->getRegistered())
@@ -28,7 +35,7 @@ void Server::quit(Client *client)
     std::vector<std::string> channel_names;
     bool wasOperator = false;
     client->setStatus(false);
-    std::cout << "Client " << nick << " has quit\n";
+    print_quit(nick);
     for (size_t i = 0; i < channels.size(); i++)
     {
         Channel *channel = get_channel(channels[i]->get_name());
