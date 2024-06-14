@@ -48,6 +48,5 @@ void	Server::pass(Client *client)
 		return;
 	}
 	client->setAuth(true);
-	reply(client, "381 :You are now logged in");
 	std::cout << "PASS COMMAND\n";
 }

@@ -67,12 +67,17 @@ void		Server::nick(Client *client)
         return ;
     }
 
+    std::string old;
+    if (!client->getNick().empty())
+        old = client->getNick();
+    client->setNick(nickname);
     if (!client->getRegistered() && !client->getUser().empty())
+    {
         client->setRegistered(true);
+        reply(client, RPL_WELCOME(client->getNick()));
+    }
     else
     {
-        std::string old = client->getNick();
-        client->setNick(nickname);
         for (size_t i = 0; i < _channels.size(); i++)
         {
             if (check_client_on_channel(old, _channels[i]->get_name()))
@@ -80,6 +85,18 @@ void		Server::nick(Client *client)
                 Channel *channel = get_channel(_channels[i]->get_name());
                 for (size_t j = 0; j < channel->get_members().size(); j++)
                     reply(channel->get_members()[j], ":" + old + " NICK " + nickname);
+            }
+        }
+    }
+
+    for (size_t i = 0; i < _channels.size(); i++)
+    {
+        if (check_client_on_channel(old, _channels[i]->get_name()))
+        {
+            for (size_t j = 0; j < _channels[i]->get_members().size(); j++)
+            {
+                if (_channels[i]->get_members()[j]->getNick() == old)
+                    _channels[i]->change_nickname(old, nickname);
             }
         }
     }

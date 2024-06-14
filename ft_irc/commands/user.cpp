@@ -52,17 +52,18 @@ void		Server::user(Client *client)
             }
             parse_user(user, real);
             if (user.empty())
-                reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "USER"));
-            else
             {
-                if (!client->getNick().empty())
-                {
-                    user = "~" + user;
-                    client->setReal(real);
-                    client->setUser(user);
-                    client->setRegistered(true);
-                    reply(client, RPL_WELCOME(client->getNick()));
-                }
+                reply(client, ERR_NEEDMOREPARAMS("", client->getNick(), "USER"));
+                return;
+            }
+
+            user = "~" + user;
+            client->setReal(real);
+            client->setUser(user);
+            if (!client->getRegistered() && !client->getNick().empty())
+            {
+                client->setRegistered(true);
+                reply(client, RPL_WELCOME(client->getNick()));
             }
         }
     }

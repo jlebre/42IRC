@@ -100,3 +100,24 @@ void Channel::remove_invited(Client *client)
     if (it != _invited.end())
         _invited.erase(it);
 }
+
+void    Channel::change_nickname(std::string old_nick, std::string new_nick)
+{
+    for (size_t i = 0; i < _members.size(); i++)
+    {
+        if (!_members[i]->getNick().compare(old_nick.c_str()))
+            _members[i]->setNick(new_nick);
+    }
+
+    for (size_t i = 0; i < _invited.size(); i++)
+    {
+        if (!_invited[i]->getNick().compare(old_nick.c_str()))
+            _invited[i]->setNick(new_nick);
+    }
+
+    for (size_t i = 0; i < _operators.size(); i++)
+    {
+        if (!_operators[i]->getNick().compare(old_nick.c_str()))
+            _operators[i]->setNick(new_nick);
+    }
+}
