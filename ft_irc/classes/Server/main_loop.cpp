@@ -23,7 +23,7 @@ void	Server::main_loop()
 			}
 			for (int i = 0; i < n; i++)
 			{
-				if (_events[i].data.fd == _sock.fd && n_events < _max_clients)
+				if (_events[i].data.fd == _sock.fd && n_events <= _max_clients)
 					connect_client();
 				else
 				{
