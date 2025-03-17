@@ -1,6 +1,12 @@
-# 🌍 42IRC - IRC Server
+# 42IRC
 
-![IRC Logo](https://upload.wikimedia.org/wikipedia/commons/6/69/Internet_Relay_Chat_logo.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/94384240/170144677-24ff4d41-6e4a-491a-adfa-7dcf0eac630a.jpeg" alt="42 School Logo" width="300">
+</p>
+
+## 🌍 42 Cursus - IRC Server
+
+---
 
 ## 📚 Introduction
 
