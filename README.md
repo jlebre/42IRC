@@ -27,6 +27,11 @@ Internet Relay Chat (IRC) is a protocol for real-time text communication. It all
 
 ## ⚙️ Configuration
 
+### 🧑‍🔧 Client Installation
+[HexChat](https://hexchat.github.io/downloads.html)
+
+Configure it with port `6667` and password `hello` for example.
+
 ### 🧑‍🔧 Server Installation
 To test the IRC server, use **HexChat** or another IRC client.
 
