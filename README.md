@@ -6,6 +6,8 @@
 
 ## 🌍 42 Cursus - IRC Server
 
+📜 To see the project subject, [click here](https://github.com/jlebre/42IRC/blob/main/fr_irc.pdf)!
+
 ---
 
 ## 📚 Introduction
@@ -46,44 +48,6 @@ This project utilizes several system functions:
 - 🤝 **accept()** → Accepts client connections
 - ✉ **send()/recv()** → Sends and receives data
 - 🚦 **poll()/epoll()** → Ensures efficient connection management
-
----
-
-## 🚀 Server Setup
-
-### 🔹 Main Function
-```cpp
-int main(int argc, char **argv) {
-    Server irc;
-    irc.parse(argc, argv);
-    return 0;
-}
-```
-
-### 🔹 Socket Initialization
-```cpp
-void Server::init_socket() {
-    _sock.fd = socket(AF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
-    if (_sock.fd == -1) {
-        std::cerr << "Error: (Create Socket) " << std::strerror(errno) << std::endl;
-        exit(1);
-    }
-}
-```
-
----
-
-## ⚡ Connection Management with EPOLL
-EPOLL is used for efficient handling of multiple connections.
-
-```cpp
-void Server::init_poll() {
-    _event.events = EPOLLIN | EPOLLOUT;
-    _event.data.fd = _sock.fd;
-    event_fd = epoll_create1(0);
-    epoll_ctl(event_fd, EPOLL_CTL_ADD, _sock.fd, &_event);
-}
-```
 
 ---
 
